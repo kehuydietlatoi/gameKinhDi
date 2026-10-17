@@ -73,7 +73,6 @@ nodes:
       - {ch: npc, who: chi_dung, text: "Ai uống chè không? Uống cho ấm bụng."}
       - {ch: sound, src: "gầm bàn", vol: 1, text: "Cộc. Cộc. Cộc. — ông Lâm gõ ba lần, mắt nhìn bạn không chớp."}
       - {ch: npc, who: bac_tam, text: "Còn ít thời gian. Cậu muốn xem gì thì xem đi, rồi ta chọn người đi tìm."}
-      - {ch: system, text: "Bạn có 3 lượt hành động trước khi chọn vai."}
     next: m1_n04
 
   # ---------- Pha 1 – Quan sát ----------

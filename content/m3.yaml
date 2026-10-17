@@ -71,7 +71,6 @@ nodes:
       - {ch: npc, who: ong_quy, text: "Tôi già rồi. Để tôi vào."}
       - {ch: env, sense: nhìn, text: "Thằng Bin đứng nép sau lưng bà Sáu, không nói gì."}
       - {ch: npc, who: ba_sau, text: "Còn gần bốn tiếng nữa mới đến mười hai giờ. Ai cần làm gì thì làm đi, rồi quay lại đây."}
-      - {ch: system, text: "Bạn có 3 lượt hành động trước khi quyết định."}
     next: m3_n10
 
   # ---------- Pha 1 – Chuẩn bị ----------

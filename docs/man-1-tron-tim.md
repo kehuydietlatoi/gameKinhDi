@@ -145,7 +145,6 @@ Mỗi dòng mở đầu bằng kênh theo dạng `kênh · tham số`. Với `so
 - `npc · chi_dung` Ai uống chè không? Uống cho ấm bụng.
 - `sound · gầm bàn · 1` Cộc. Cộc. Cộc. — ông Lâm gõ ba lần, mắt nhìn bạn không chớp.
 - `npc · bac_tam` Còn ít thời gian. Cậu muốn xem gì thì xem đi, rồi ta chọn người đi tìm.
-- `system` Bạn có 3 lượt hành động trước khi chọn vai.
 - Tiếp: M1-04
 
 ### Pha 1 – Quan sát

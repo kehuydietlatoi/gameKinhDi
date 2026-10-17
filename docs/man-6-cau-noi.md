@@ -109,7 +109,6 @@ Lưu ý: hub M6-03 không khai báo `scene`, nên sau M6-05 hoặc M6-06 cảnh 
 - `env · nhìn` Chữ đỏ rỉ ra trên bức tường phòng bà Sáu.
 - `bloodtext` L1–L4.
 - `highlight: true`: mở giao diện đánh dấu (k1–k6) sau khi các dòng hiện hết, cho phép bỏ qua.
-- `system` Bạn có 2 lượt hành động trước khi phải đi.
 - Tiếp: M6-03
 
 #### M6-03 · Hub phòng 305
@@ -240,7 +239,7 @@ Lưu ý: hub M6-03 không khai báo `scene`, nên sau M6-05 hoặc M6-06 cảnh 
 | E1 · Sang được C5 | M6-33 | `env · nhìn` Trên mặt cầu có hai hàng dấu chân ướt: một hàng của bạn, lùi; một hàng của nó, tiến. Cả hai dừng ở cùng một chỗ. | — | [k1, k3] | L2 chỉ cấm quay đầu khi đã ở trên cầu. Quay mặt về phía C4 trước khi bước lên, rồi đi lùi: bạn không quay lưng về phía nó, cũng không phải quay đầu. |
 | D1 · Không đi | M6-11 | `env · chạm` Bàn tay bà Sáu trong tay bạn lạnh dần. Rồi tay bạn cũng lạnh. | `violates: [L1]` | [L1] | Phải sang được C5 trước khi gà gáy. |
 | D2 · Quay đầu | M6-20, M6-30, M6-31, M6-32 | `env · nhìn` Bạn quay lại. Nó ở sát mặt bạn, và nó cũng đang ngoái nhìn về phía sau. | `violates: [L2]` | [k1] | Trên cầu nối, không được quay đầu lại. Phải quay người trước khi bước lên cầu. |
-| D3 · Dừng bước | M6-20, M6-30, M6-31, M6-32 | `sound · trên gáy · 2` Tách. — một giọt nước rơi lên gáy bạn. Rồi một bàn tay ướt. | `violates: [L3]` | [k4] | Trên cầu nối, không được dừng bước, kể cả khi có người gọi. |
+| D3 · Dừng bước | M6-20, M6-30, M6-31, M6-32 | `sound · trên gáy · 2` Tách. — một giọt nước rơi lên gáy bạn. Rồi một bàn tay ướt. | `violates: [L3]` | [k4] | Trên cầu nối, không được dừng bước, kể cả khi có người gọi. Đứng yên không phải lúc nào cũng an toàn. |
 | D4 · Quay lưng | M6-21 | `env · chạm` Mấy ngón tay ướt siết lấy vai, kéo bạn ngược về phía C4. | `consequence_of: [L4]` | [k3] | Nó đi từ phía C4. Đi tiến sang C5 là quay lưng về phía nó. |
 
 ## Kiểm tra nhanh

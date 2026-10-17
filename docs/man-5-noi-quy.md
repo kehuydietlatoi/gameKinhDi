@@ -123,7 +123,6 @@ Bàn tay, bút lông và lọ mực ở M5-06 là manh mối c3; để chữ k�
 - `bloodtext` L1, F1, L2, L3, L4, F2, L5, L6 (F1 và F2 mực `nau`).
 - `env · nhìn` Dòng thứ hai và dòng thứ sáu không đỏ. Chúng có màu nâu đen.
 - `highlight: true`: mở giao diện đánh dấu (k1–k6) sau khi các dòng hiện hết, cho phép bỏ qua.
-- `system` Bạn có 2 lượt hành động trước mười một giờ.
 - Tiếp: M5-03
 
 #### M5-03 · Hub căn hộ

@@ -114,7 +114,6 @@ Màn 4 cần 1 ảnh mới.
 - `bloodtext` L1–L4.
 - `highlight: true`: mở giao diện đánh dấu (k1–k6) sau khi các dòng hiện hết, cho phép bỏ qua.
 - `sound · sau bình phong · 1` Khục khục… — có người cười khẽ sau tấm bình phong.
-- `system` Bạn có 3 lượt hành động trước chín giờ.
 - Tiếp: M4-03
 
 ### Pha 1 – Trước giờ uống thuốc

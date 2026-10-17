@@ -126,7 +126,6 @@ Màn 9 cần 2 ảnh mới. Dùng lại `can_ho_304`, `hanh_lang_tang_2` (hành 
 - `bloodtext` L1, L2, L3, L4 (mực `kho`), F1 (mực `nau`).
 - `env · nhìn` Ba dòng đầu đỏ tươi, còn ướt. Dòng thứ tư nâu sẫm, nứt nẻ, như đã khô từ rất lâu. Dòng thứ năm nâu đen, nét trơn.
 - `highlight: true`: mở giao diện đánh dấu (k1–k6) sau khi các dòng hiện hết, cho phép bỏ qua.
-- `system` Bạn có 3 lượt hành động.
 - Tiếp: M9-03
 
 #### M9-03 · Hub tầng 3

@@ -125,7 +125,6 @@ Ký hiệu giống màn 1: mỗi dòng mở đầu bằng `kênh · tham số`. 
 - `env · nhìn` Những vệt đỏ sẫm rỉ ra từ bức tường cạnh cửa, chảy thành chữ.
 - `bloodtext` L1–L4.
 - `highlight: true`: mở giao diện đánh dấu (k1–k6) sau khi các dòng hiện hết, cho phép bỏ qua.
-- `system` Bạn có 2 lượt hành động trước khi đêm xuống hẳn.
 - Tiếp: M2-03
 
 #### M2-03 · Hub căn hộ

@@ -59,7 +59,6 @@ nodes:
       - {ch: npc, who: anh_tuan, text: "Đủ sáu người. May quá."}
       - {ch: npc, who: ba_hoa, text: "Hạnh nào? Hạnh phòng 302 à?"}
       - {ch: env, sense: nhìn, text: "Không ai trả lời."}
-      - {ch: system, text: "Bạn có 2 lượt hành động."}
     highlight: true
     next: m7_n03
 

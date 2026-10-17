@@ -51,7 +51,6 @@ nodes:
     lines:
       - {ch: env, sense: nhìn, text: "Chữ đỏ rỉ ra trên bức tường phòng bà Sáu."}
       - {ch: bloodtext, lines: [L1, L2, L3, L4]}
-      - {ch: system, text: "Bạn có 2 lượt hành động trước khi phải đi."}
     highlight: true
     next: m6_n03
 
@@ -236,7 +235,7 @@ nodes:
     cause: "Dừng bước"
     lines:
       - {ch: sound, src: "trên gáy", vol: 2, text: "Tách. — một giọt nước rơi lên gáy bạn. Rồi một bàn tay ướt."}
-    reveal: "Trên cầu nối, không được dừng bước, kể cả khi có người gọi."
+    reveal: "Trên cầu nối, không được dừng bước, kể cả khi có người gọi. Đứng yên không phải lúc nào cũng an toàn."
     violates: [L3]
     solution: [k4]
 

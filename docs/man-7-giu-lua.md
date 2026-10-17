@@ -115,7 +115,6 @@ Màn 7 cần 1 ảnh mới.
 - `npc · anh_tuan` Đủ sáu người. May quá.
 - `npc · ba_hoa` Hạnh nào? Hạnh phòng 302 à?
 - `env · nhìn` Không ai trả lời.
-- `system` Bạn có 2 lượt hành động.
 - Tiếp: M7-03
 
 #### M7-03 · Hub bếp

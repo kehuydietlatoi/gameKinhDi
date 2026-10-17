@@ -58,7 +58,6 @@ nodes:
     lines:
       - {ch: env, sense: nhìn, text: "Những vệt đỏ sẫm rỉ ra từ bức tường cạnh cửa, chảy thành chữ."}
       - {ch: bloodtext, lines: [L1, L2, L3, L4]}
-      - {ch: system, text: "Bạn có 2 lượt hành động trước khi đêm xuống hẳn."}
     highlight: true
     next: m2_n03
 

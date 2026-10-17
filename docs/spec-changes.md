@@ -550,3 +550,11 @@ Sau một lượt chơi thử cả 9 màn, người chơi qua mọi màn ngay l�
 | `docs/man-2-canh-linh-cuu.md` | M2-50: "Mở mắt" → "Mở mắt, rồi bước ra khỏi quan tài" | Lựa chọn chết sáu chữ cái đứng cạnh một câu dài 47 ký tự; giờ hai lựa chọn chỉ khác thứ tự hai hành động |
 | `docs/man-8-binh-minh-khong-den.md` | M8-05 thêm dòng `env · nhìn` "Bạn quay lưng vào bức tranh. Đầu kia căn phòng, thẳng trước mặt, là ô cửa sổ bếp tối om."; M8-30 hai lựa chọn tường sai bật cờ `ve_cua_ra_vao` / `ve_ban_hoc`; M8-32 không còn chỉ sẵn tường cửa sổ bếp mà cho chọn lại giữa hai tường chưa vẽ; cập nhật Sinh lộ, bảng manh mối c2 và "Kiểm tra nhanh" | Trước đây vẽ sai tường lần đầu thì M8-32 đưa sẵn đáp án, nên manh mối phía đông (c1) không có tác dụng. Giờ có hai đường suy ra phía đông (c1, hoặc c2: mặt trời lặn ở tường cửa ra vào, tường đó đối diện cửa sổ bếp) và đoán sai hai lần là D2 |
 | `docs/dac-ta-kich-ban.md` | Mục 4.7: cách ghi từ khoá trên màn hình kết quả | G48 |
+
+## Sửa trực tiếp `docs/` lần 4 (quyết định người dùng duyệt, 2026-10-17)
+
+| File | Chỗ sửa | Lý do |
+| --- | --- | --- |
+| `docs/man-6-cau-noi.md` | Hé lộ của D3 thêm câu "Đứng yên không phải lúc nào cũng an toàn." | Quyết định B4: M6 là màn phá mẹo "đứng yên là thắng" của các màn trước; L3 "không được dừng bước" đã sẵn có, không thêm node |
+| `docs/man-1-tron-tim.md` … `docs/man-9-nguoi-dan-ba-khong-mat.md` | Bỏ dòng `system` "Bạn có N lượt hành động…" trước hub quan sát (9 màn) | Quyết định D14: trùng với dòng "Còn N lượt hành động." của G46 |
+| `docs/man-8-binh-minh-khong-den.md` | Brief `phong_404_1986` thêm câu "Cửa ra vào nằm ở bức tường đối diện cửa sổ bếp, ngoài khung hình." | Quyết định C11: khớp với dòng mới ở M8-05, để người vẽ không vẽ trái ngược |

@@ -55,7 +55,6 @@ nodes:
       - {ch: env, sense: nhìn, text: "Chữ đỏ rỉ ra trên tường cạnh bàn học, chảy lem vào một bức tranh."}
       - {ch: bloodtext, lines: [L1, L2, L3, L4]}
       - {ch: npc, who: be_na, text: "Ai viết bậy lên tường nhà em thế?"}
-      - {ch: system, text: "Bạn có 3 lượt hành động."}
     highlight: true
     next: m8_n03
 

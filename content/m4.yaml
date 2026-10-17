@@ -60,7 +60,6 @@ nodes:
       - {ch: env, sense: nhìn, text: "Những vệt đỏ sẫm rỉ ra giữa bức tường đối diện, chảy thành chữ."}
       - {ch: bloodtext, lines: [L1, L2, L3, L4]}
       - {ch: sound, src: "sau bình phong", vol: 1, text: "Khục khục… — có người cười khẽ sau tấm bình phong."}
-      - {ch: system, text: "Bạn có 3 lượt hành động trước chín giờ."}
     highlight: true
     next: m4_n03
 

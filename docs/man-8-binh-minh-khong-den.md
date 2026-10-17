@@ -76,7 +76,7 @@ Màn 8 cần 2 ảnh mới.
 
 | id | Góc nhìn và nội dung | Bắt buộc có | Cấm vẽ | `clue` |
 | --- | --- | --- | --- | --- |
-| `phong_404_1986` | Phòng một gian năm 1986, nhìn vào góc giữa tường cửa sổ bếp (bên trái) và tường đầu giường (bên phải). | Tường kín tranh bút sáp nét trẻ con (sông, thuyền giấy, nhà, cây); trên tường cửa sổ bếp có một khoảng trống lớn chưa vẽ; trên tường đầu giường có một hình con ma đen khổng lồ, nét sáp dày đè nhiều lớp; cửa sổ bếp tối om; bàn học nhỏ với hộp bút; đồng hồ treo tường | Người thật, chữ đọc được, mặt trời, màu đỏ máu | không |
+| `phong_404_1986` | Phòng một gian năm 1986, nhìn vào góc giữa tường cửa sổ bếp (bên trái) và tường đầu giường (bên phải). Cửa ra vào nằm ở bức tường đối diện cửa sổ bếp, ngoài khung hình. | Tường kín tranh bút sáp nét trẻ con (sông, thuyền giấy, nhà, cây); trên tường cửa sổ bếp có một khoảng trống lớn chưa vẽ; trên tường đầu giường có một hình con ma đen khổng lồ, nét sáp dày đè nhiều lớp; cửa sổ bếp tối om; bàn học nhỏ với hộp bút; đồng hồ treo tường | Người thật, chữ đọc được, mặt trời, màu đỏ máu | không |
 | `phong_404_1986_mat_troi` | Dựng từ code của `phong_404_1986`, cùng góc nhìn; chỉ khác ở tường cửa sổ bếp. Dùng cho M8-31. | Trong khoảng trống trên tường cửa sổ bếp, một ông mặt trời vẽ bằng sáp vàng, nét trẻ con, tia nắng là những nét sáp ngắn; ô cửa sổ bếp không còn tối om mà sáng lên; con ma đen trên tường đầu giường giữ nguyên như bản gốc | Người thật, chữ đọc được, màu đỏ máu, mặt trời đỏ đang lặn, song sắt quanh con ma | không |
 
 Ghi chú cho `phong_404_1986_mat_troi`: bảng màu không có vàng tươi; dùng `#d9cfa8` và `#b8a77a` cho sáp vàng, `#e8e6dc` cho ô cửa sổ sáng. Ô cửa sổ sáng là nội dung (mặt trời đã mọc), không phải biến thể ánh sáng; ánh bình minh vẫn do lớp `dawn` lo. Không vẽ song sắt vì chỉ một nhánh có (cờ `long_sat`).
@@ -112,7 +112,6 @@ Ghi chú cho `phong_404_1986_mat_troi`: bảng màu không có vàng tươi; dù
 - `bloodtext` L1–L4.
 - `highlight: true`: mở giao diện đánh dấu (k1–k6) sau khi các dòng hiện hết, cho phép bỏ qua.
 - `npc · be_na` Ai viết bậy lên tường nhà em thế?
-- `system` Bạn có 3 lượt hành động.
 - Tiếp: M8-03
 
 #### M8-03 · Hub phòng 404

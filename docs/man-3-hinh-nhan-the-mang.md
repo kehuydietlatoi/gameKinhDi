@@ -145,7 +145,6 @@ Node không có trong bảng thì giữ cảnh trước đó.
 - `npc · ong_quy` Tôi già rồi. Để tôi vào.
 - `env · nhìn` Thằng Bin đứng nép sau lưng bà Sáu, không nói gì.
 - `npc · ba_sau` Còn gần bốn tiếng nữa mới đến mười hai giờ. Ai cần làm gì thì làm đi, rồi quay lại đây.
-- `system` Bạn có 3 lượt hành động trước khi quyết định.
 - Tiếp: M3-10
 
 ### Pha 1 – Chuẩn bị
