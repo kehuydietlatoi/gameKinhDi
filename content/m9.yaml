@@ -1,0 +1,293 @@
+# Màn 9 – Người đàn bà không mắt (màn cuối). Nguồn: docs/man-9-nguoi-dan-ba-khong-mat.md
+# (file đó là đúng khi hai bên khác nhau). Bổ sung đặc tả dùng ở đây: docs/spec-changes.md
+# (G1–G44), nhất là G36–G38 (mực, dòng giả), G41 (màn cuối), G43 (dùng lại ảnh có clue của màn 3).
+level: m9
+title: "Người đàn bà không mắt"
+start: m9_n01
+final: true
+init: {sanity: 5, actions_left: 3, time: "22:00"}
+
+# Năm dòng theo thứ tự hiển thị. L4 là máu khô (Huyết tự thật); F1 là dòng giả mực nâu.
+bloodtext:
+  - {id: L1, text: "Đêm nay là đêm cuối tháng cô hồn. Người đàn bà áo trắng sẽ đi qua từng tầng.", violable: false}
+  - {id: L2, text: "Đừng nhìn vào mắt người đàn bà áo trắng."}
+  - {id: L3, text: "Trước khi gà gáy, bàn thờ chung phải có đủ hương cho mọi vong."}
+  - {id: L4, text: "Khi đủ bảy cái tên được khấn, lửa sẽ tắt.", ink: kho, violable: false}
+  - {id: F1, text: "Hũ của bà ấy phải được mở ra.", fake: true, ink: nau}
+
+keywords:
+  - {id: k1, line: L2, text: "vào mắt", correct: true}
+  - {id: k2, line: L2, text: "người đàn bà áo trắng", correct: false}
+  - {id: k3, line: L3, text: "đủ hương cho mọi vong", correct: true}
+  - {id: k4, line: L4, text: "đủ bảy cái tên", correct: true}
+  - {id: k5, line: L4, text: "lửa sẽ tắt", correct: false}
+  - {id: k6, line: L1, text: "đêm cuối tháng cô hồn", correct: false}
+
+distortions:
+  - {line: L2, unless_highlighted: k1, text: "Đừng nhìn vào mặt người đàn bà áo trắng."}
+  - {line: L4, unless_highlighted: k4, text: "Khi đủ sáu cái tên được khấn, lửa sẽ tắt."}
+  - {line: F1, ink: kho}   # G37: mực đổi sang kho, nội dung giữ nguyên
+
+solution: [k1, k3, k4]
+
+npcs:
+  - {id: ba_sau, name: "Bà Sáu"}
+  - {id: ba_hoa, name: "Bà Hoa"}
+  - {id: bac_si_thanh, name: "Bác sĩ Thanh"}
+  - {id: ba_hai, name: "Người đàn bà áo trắng"}
+
+clues: [c1, c2, c3, c4, c5]
+
+nodes:
+  # ---------- Pha 0 – Đêm cuối ----------
+
+  - id: m9_n01   # Đêm cuối tháng cô hồn
+    type: scene
+    scene: {bg: can_ho_304, light: normal}
+    effects: [{time: "22:00"}]
+    lines:
+      - {ch: narration, text: "Đêm cuối cùng của tháng cô hồn."}
+      - {ch: sound, src: "khắp tòa nhà", vol: 2, text: "Cạch. Cạch. Cạch. — nhà nào cũng cài then cửa."}
+      - {ch: sound, src: "bức tường cạnh cửa", vol: 2, text: "Sột… soạt…"}
+    next: m9_n02
+
+  - id: m9_n02   # Chữ cũ
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Chữ đỏ rỉ ra trên bức tường cạnh cửa. Rồi lớp vôi bong ra từng mảng, để lộ những dòng chữ cũ bên dưới."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4, F1]}
+      - {ch: env, sense: nhìn, text: "Ba dòng đầu đỏ tươi, còn ướt. Dòng thứ tư nâu sẫm, nứt nẻ, như đã khô từ rất lâu. Dòng thứ năm nâu đen, nét trơn."}
+      - {ch: system, text: "Bạn có 3 lượt hành động."}
+    highlight: true
+    next: m9_n03
+
+  - id: m9_n03   # Hub tầng 3
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m9_n10
+    scene: {bg: can_ho_304, light: normal}
+    choices:
+      - {text: "Hỏi bà Sáu về đêm cháy năm 1986", goto: m9_n04, effects: [{actions_left: -1}]}
+      - {text: "Xem sổ hộ khẩu năm 1986 của bà Sáu", goto: m9_n05, effects: [{actions_left: -1}]}
+      - {text: "Xuống tiệm bà Hoa mua hương", goto: m9_n06, effects: [{actions_left: -1}]}
+      - {text: "Nhìn kỹ dòng thứ tư và thứ năm", goto: m9_n07, effects: [{actions_left: -1}]}
+      - {text: "Đọc lại hồ sơ vụ cháy", goto: m9_n08, if: {has_dossier: hs_chay_c4_1986}, effects: [{actions_left: -1}]}
+
+  - id: m9_n04   # Bà Sáu kể
+    type: scene
+    lines:
+      - {ch: npc, who: ba_sau, text: "Đêm ấy tổ trưởng là bà Hai. Bà ấy nấu cỗ rằm trên tầng bốn."}
+      - {ch: npc, who: ba_sau, text: "Cháy xong, người ta bảo tại bếp nhà bà ấy."}
+      - {ch: npc, who: ba_sau, text: "Bà Hai chạy lên tầng bốn lần cuối, rồi không thấy xuống. Tìm không ra xác. Người ta gạch tên bà khỏi sổ, chẳng ai lập bài vị."}
+    effects: [{clue: c1}, {flag: biet_ten_hai}]
+    next: m9_n03
+
+  - id: m9_n05   # Sổ hộ khẩu cũ
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Cuốn sổ bìa nâu, giấy giòn như lá khô."}
+      - {ch: env, sense: nhìn, text: "Trang tầng 4 có sáu dòng gạch đỏ, cạnh mỗi dòng ghi \"mất 15/7/1986\"."}
+      - {ch: env, sense: nhìn, text: "Dòng thứ bảy bị gạch bằng mực đen, đè nhiều lần: \"Đỗ Thị Hai – tổ trưởng\". Bên cạnh ghi: \"mất tích\"."}
+    effects: [{clue: c2}, {flag: biet_ten_hai}, {sanity: -1}]
+    next: m9_n03
+
+  - id: m9_n06   # Bó hương
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Tiệm vàng mã đóng cửa, nhưng bà Hoa đứng chờ sẵn ở bậc thềm."}
+      - {ch: npc, who: ba_hoa, text: "Bó này bảy nén. Bà để dành từ năm tám sáu."}
+      - {ch: npc, who: ba_hoa, text: "Mỗi vong một nén. Đếm cho đủ, thiếu là có vong đói."}
+    effects: [{clue: c3}, {flag: co_bay_nen}]
+    next: m9_n03
+
+  - id: m9_n07   # Hai loại nâu
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Dòng thứ tư nâu sẫm, mặt chữ nứt thành vảy, phía dưới có những vệt chảy dài đã khô cứng."}
+      - {ch: env, sense: nhìn, text: "Dòng thứ năm nâu đen, nét đều và trơn, không có một vệt chảy nào."}
+      - {ch: npc, who: bac_si_thanh, text: "Máu khô lâu năm thì ngả nâu và nứt. Mực thì không chảy thành vệt như thế."}
+    effects: [{clue: c4}]
+    next: m9_n03
+
+  - id: m9_n08   # Hồ sơ
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Hồ sơ vụ cháy nhà C4 ghi sáu nạn nhân."}
+      - {ch: env, sense: nhìn, text: "Nhưng biên bản của đội cứu hoả kẹp ở trang cuối ghi: \"Tìm thấy bảy người trên tầng 4.\""}
+    effects: [{clue: c5}]
+    next: m9_n03
+
+  # ---------- Pha 1 – Người đàn bà áo trắng ----------
+
+  - id: m9_n10   # Bà ấy lên
+    type: scene
+    scene: {bg: hanh_lang_tang_2, light: flicker}   # hành lang tầng 3 cùng kiểu tầng 2
+    effects: [{time: "23:30"}, {sanity: -1}]
+    lines:
+      - {ch: sound, src: "cầu thang", vol: 2, text: "Lẹp xẹp… lẹp xẹp… — đúng tiếng dép lê bạn đã nghe cạnh quan tài đêm nào."}
+      - {ch: npc, who: ba_sau, text: "Bà ấy lên đến tầng ba rồi!"}
+      - {ch: npc, who: ba_hoa, text: "Bịt mắt lại hết! Đừng nhìn!"}
+      - {ch: env, sense: nhìn, text: "Bà Hoa xé vạt áo thành từng dải, chia cho mọi người."}
+    choices:
+      - {text: "Bịt mắt", goto: m9_n11, effects: [{eyes_closed: true}]}
+      - {text: "Không bịt mắt, nhìn về phía cầu thang", goto: m9_n12}
+
+  - id: m9_n11   # Bịt mắt
+    type: scene
+    lines:
+      - {ch: sound, src: "cầu thang", vol: 3, text: "Uỵch! — có người vấp ngã."}
+      - {ch: npc, who: bac_si_thanh, tone: shout, text: "Bà Sáu ngã!"}
+      - {ch: narration, text: "Cầu thang xuống bàn thờ chung ở ngay trước mặt bạn. Bạn không nhìn thấy gì."}
+      - {ch: npc, who: ba_hai, tone: whisper, note: "sát tai", text: "Cháu bịt mắt làm gì. Mặt bà có gì đâu mà sợ."}
+    choices:
+      - {text: "Giữ khăn, lần xuống cầu thang", goto: m9_d2}
+      - {text: "Tháo khăn, nhìn vào mặt bà", goto: m9_n12, effects: [{eyes_closed: false}]}
+
+  - id: m9_n12   # Khuôn mặt
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Người đàn bà áo trắng đứng ở đầu cầu thang. Mặt bà không có mắt, chỉ có hai vùng da nhẵn."}
+      - {ch: env, sense: nhìn, text: "Hai tay bà ôm một cái hũ sành trước ngực. Nắp hũ hé mở."}
+      - {ch: sound, src: "trong hũ", vol: 1, text: "Lạo xạo… — như có những thứ tròn tròn lăn bên trong."}
+      - {ch: npc, who: ba_hai, text: "Mở hũ ra cho bà. Bà muốn nhìn thấy."}
+      # "Nếu sanity ≤ 2: Huyết tự L2 (chưa đánh dấu k1) hiện bản méo; dòng F1 hiện mực kho."
+      - {ch: bloodtext, lines: [L2], if: {sanity_lte: 2, not_highlighted: k1}}
+      - {ch: bloodtext, lines: [F1], if: {sanity_lte: 2}}
+    choices:
+      - {text: "Mở nắp hũ", goto: m9_d1}
+      - {text: "Hỏi: \"Bà là ai?\"", goto: m9_n13}
+      - {text: "Lách qua bà, chạy xuống bàn thờ chung", goto: m9_n20}
+
+  - id: m9_n13   # Không ai nhớ
+    type: scene
+    lines:
+      - {ch: npc, who: ba_hai, text: "Không ai còn nhớ tên bà nữa."}
+      - {ch: npc, who: ba_hai, text: "Bốn mươi năm nay, bà đi tìm người nhớ."}
+      - {ch: narration, if: {flag: biet_ten_hai}, text: "Bạn nhớ dòng tên bị gạch đen trong cuốn sổ cũ."}
+    choices:
+      - {text: "\"Bà là bà Hai.\"", goto: m9_n14, if: {flag: biet_ten_hai}}
+      - {text: "Lách qua bà, chạy xuống bàn thờ chung", goto: m9_n20}
+      - {text: "Mở nắp hũ cho bà", goto: m9_d1}
+
+  - id: m9_n14   # Bà Hai
+    type: scene
+    lines:
+      - {ch: npc, who: ba_hai, text: "Ừ."}
+      - {ch: sound, src: "trong hũ", vol: 1, text: "Cạch. — nắp hũ khép lại."}
+      - {ch: npc, who: ba_hai, text: "Xuống thắp cho bà một nén."}
+    next: m9_n20
+
+  # ---------- Pha 2 – Bàn thờ chung ----------
+
+  - id: m9_n20   # Sáu bài vị
+    type: scene
+    scene: {bg: ban_tho_chieu_nghi, light: candle}   # G43: ảnh có clue m3:c1, dùng tự do ở màn 9
+    effects: [{time: "04:30"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Bàn thờ ở chiếu nghỉ. Sáu bài vị gỗ: Tâm, Hằng, Khải, Na, Dung, Lâm."}
+      - {ch: env, sense: nhìn, if: {not_flag: co_bay_nen}, text: "Ống hương trên bàn thờ còn đúng sáu nén."}
+      - {ch: env, sense: nhìn, if: {flag: co_bay_nen}, text: "Bạn cầm bó hương bảy nén của bà Hoa."}
+      - {ch: sound, src: "sau lưng", vol: 1, text: "Lẹp xẹp… — tiếng dép lê dừng lại ngay sau lưng bạn."}
+      - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k4}}
+    choices:
+      - {text: "Thắp sáu nén, khấn sáu tên trên bài vị", goto: m9_d3}
+      - {text: "Bẻ đôi một nén cho đủ bảy", goto: m9_n23, if: {not_flag: co_bay_nen}, effects: [{flag: co_bay_nen}]}
+      - {text: "Thắp bảy nén", goto: m9_n23, if: {flag: co_bay_nen}}
+
+  - id: m9_n23   # Khấn
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bảy đốm lửa đỏ trong bát hương."}
+      - {ch: narration, text: "Bạn chắp tay."}
+    choices:
+      - {text: "Khấn sáu tên trên bài vị", goto: m9_n21}
+      - {text: "Khấn sáu tên, và tên bà Đỗ Thị Hai", goto: m9_n22, if: {flag: biet_ten_hai}}
+      - {text: "Khấn sáu tên, và tên của chính bạn", goto: m9_d4}
+
+  - id: m9_n21   # Sáu tên
+    type: scene
+    scene: {bg: ban_tho_chieu_nghi, light: dawn}
+    effects: [{time: "05:30"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Bảy nén hương cháy đều."}
+      - {ch: sound, src: "rất xa", vol: 2, text: "Ò… ó… o…"}
+      - {ch: npc, who: ba_hai, text: "Vẫn chưa ai gọi tên bà."}
+      - {ch: sound, src: "cầu thang", vol: 1, text: "Lẹp xẹp… lẹp xẹp… — tiếng dép lê đi ngược lên tầng bốn."}
+    next: m9_e2
+
+  - id: m9_n22   # Bảy tên
+    type: scene
+    scene: {bg: ban_tho_chieu_nghi, light: dawn}
+    effects: [{time: "05:30"}]
+    lines:
+      - {ch: narration, text: "Tâm. Hằng. Khải. Na. Dung. Lâm. Và Đỗ Thị Hai."}
+      - {ch: sound, src: "sau lưng", vol: 1, text: "Cạch. — nắp hũ đậy lại."}
+      - {ch: env, sense: nhìn, text: "Bảy sợi khói bện vào nhau thành một dải, bay thẳng lên trần."}
+      - {ch: npc, who: ba_hai, text: "Có người nhớ rồi."}
+      - {ch: env, sense: ngửi, text: "Mùi khét cũ, mùi khói bốn mươi năm, tan dần rồi mất hẳn."}
+      - {ch: sound, src: "rất xa", vol: 2, text: "Ò… ó… o… Ò… ó… o… Ò… ó… o…"}
+    next: m9_e1
+
+  # ---------- Kết cục ----------
+
+  - id: m9_e1
+    type: ending
+    result: survive
+    cause: "Lửa đã tắt"
+    scene: {bg: bang_tin_cao_pho_7_day, light: dawn}
+    lines:
+      - {ch: env, sense: nhìn, text: "Trên bảng tin tầng một, tờ cáo phó ố vàng giờ có đủ bảy khung ảnh. Khung thứ bảy là một bà cụ, đôi mắt hiền."}
+    reveal: "Đôi mắt nằm trong hũ, không nằm trên mặt bà. Dòng máu khô năm 1986 là Huyết tự thật: phải đủ bảy tên. Vong thứ bảy là bà Hai, tổ trưởng chết khi lên cứu người, bị gạch tên suốt bốn mươi năm."
+    solution: [k1, k3, k4]
+
+  - id: m9_e2
+    type: ending
+    result: survive
+    open: true   # G41: kết thúc mở, chơi lại màn 9 để tìm E1
+    cause: "Bình minh, chưa hết"
+    scene: {bg: ban_tho_chieu_nghi, light: dawn}
+    lines:
+      - {ch: narration, text: "Tháng Bảy năm sau, bà ấy sẽ lại đến."}
+    reveal: "Bạn đã đủ hương cho mọi vong, nhưng mới khấn sáu cái tên. Dòng máu khô đòi bảy."
+    solution: [k4]
+
+  - id: m9_d1
+    type: ending
+    result: death
+    cause: "Nhìn vào hũ"
+    lines:
+      - {ch: env, sense: nhìn, text: "Trong hũ, hàng chục con mắt cùng lúc ngước lên nhìn bạn."}
+    reveal: "Đôi mắt của bà nằm trong hũ. Dòng bảo mở hũ là mực nâu, không phải Huyết tự."
+    violates: [L2]
+    solution: [k1, F1]
+
+  - id: m9_d2
+    type: ending
+    result: death
+    cause: "Ngã cầu thang"
+    lines:
+      - {ch: env, sense: chạm, text: "Bậc thang hụt dưới chân. Bạn rơi vào bóng tối, và không ai đỡ."}
+    reveal: "Luật chỉ cấm nhìn vào mắt bà, không cấm nhìn mặt. Bịt mắt trên cầu thang tối là tự đẩy mình xuống."
+    solution: [k1]   # G44: không gắn với dòng luật nào
+
+  - id: m9_d3
+    type: ending
+    result: death
+    cause: "Thiếu hương"
+    lines:
+      - {ch: env, sense: chạm, text: "Sáu nén hương tắt cùng lúc. Một bàn tay khô, lạnh đặt lên vai bạn: \"Phần của bà đâu?\""}
+    reveal: "Bàn thờ có sáu bài vị, nhưng dòng máu khô nói bảy cái tên. Mọi vong là bảy vong."
+    violates: [L3]
+    solution: [k3, k4]
+
+  - id: m9_d4
+    type: ending
+    result: death
+    cause: "Khấn tên mình"
+    lines:
+      - {ch: env, sense: nhìn, text: "Khung ảnh thứ bảy trên tờ cáo phó không còn trống. Đó là ảnh của bạn."}
+    reveal: "Khấn tên người sống là đưa người ấy vào hàng vong. Vong thứ bảy phải là người đã khuất."
+    consequence_of: [L4]
+    solution: [k4]
