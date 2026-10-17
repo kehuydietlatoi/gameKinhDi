@@ -159,6 +159,7 @@ next: m1_n31
 - **Ngày:** 2026-10-17
 - **Cần cho:** M1-40, M1-42, M1-61, M1-63 (`eyes_closed` phải đổi trước dòng `env · nhìn`), M1-41 (điều kiện `sanity` cần hiệu ứng của M1-40)
 - **Bổ sung:** hiệu ứng của lựa chọn → vào node → áp `scene` → hiệu ứng của node (theo thứ tự trong danh sách) → xét `if` của từng dòng → hiện các dòng → hiện thông báo Tỉnh táo → nếu `sanity` = 0 thì chuyển tới `on_sanity_zero`. `sanity` bị kẹp trong 0–5.
+- **Chi tiết cài đặt:** khi `sanity` = 0 ở một node scene, các dòng của node vẫn hiện, rồi mọi lựa chọn được thay bằng một nút "Tiếp" dẫn tới `on_sanity_zero` (cùng cách với hub ở G4). Thông báo "Tỉnh táo" chỉ sinh ra khi giá trị thật sự đổi (đã kẹp). Kết cục chết không khai báo `scene` thì nền đen; kết cục sống giữ cảnh trước đó.
 
 ## G14 · Giao diện đánh dấu từ khoá
 
