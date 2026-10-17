@@ -89,6 +89,13 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
   const ending = endingView(level, state);
   const msPerChar = reducedMotion ? 0 : MS_PER_CHAR[settings.speed];
   const replay = () => dispatch({ type: 'restart' });
+  // G34: chơi thẳng một màn từ đầu, giữ hồ sơ đã mở khoá.
+  const selectLevel = (id: string) => {
+    const target = levels.find((l) => l.level === id);
+    if (!target) return;
+    setPanelOpen(false);
+    setGame((g) => ({ ...g, state: initialState(target, { unlocked: g.state.unlocked }), entry: g.entry + 1 }));
+  };
   // G33: sang màn kế, mang theo hồ sơ đã mở khoá; Tỉnh táo về init của màn mới (G23).
   const goNext = nextLevel
     ? () =>
@@ -144,6 +151,9 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
         settings={settings}
         onSettings={setSettings}
         reducedMotion={reducedMotion}
+        levels={levels.map((l) => ({ id: l.level, title: l.title }))}
+        currentLevel={level.level}
+        onSelectLevel={selectLevel}
       />
       <SceneLayer scene={v.scene} assets={assets} />
       <section className="text-panel">

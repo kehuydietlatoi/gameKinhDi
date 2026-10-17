@@ -381,3 +381,9 @@ choices:
 - **Ngày:** 2026-10-17
 - **Cần cho:** M3-12 (`has_dossier` cần hồ sơ mở khoá ở màn 1 trong cùng lượt chơi); mục 4.7 của đặc tả nói "rồi về hub" nhưng hub căn hộ chưa có
 - **Bổ sung:** cho tới khi có hub, màn hình hoàn thành màn có nút "Màn tiếp theo" (khi còn màn) bên cạnh "Chơi lại". Thứ tự màn theo số trong `level` (m1, m2, m3, …); UI nạp mọi `content/m*.yaml`. Sang màn mới: `initialState` của màn đó, mang theo hồ sơ đã mở khoá (G18), số lần chết về 0, Tỉnh táo theo G23. Bản lưu ghi `state.level` nên tải lại trang vẫn ở đúng màn.
+
+## G34 · Chọn màn
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** chơi thử thẳng một màn (ví dụ màn 2) mà không phải qua các màn trước
+- **Bổ sung:** bảng cài đặt (nút ⚙) có ô "Chọn màn" liệt kê mọi màn theo thứ tự G33. Chọn một màn thì bắt đầu màn đó từ `start` như G33: Tỉnh táo theo `init` (G23), giữ hồ sơ đã mở khoá, số lần chết về 0. Không đổi schema hay engine.

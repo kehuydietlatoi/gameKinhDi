@@ -12,6 +12,10 @@ type Props = {
   settings: Settings;
   onSettings: (s: Settings) => void;
   reducedMotion: boolean;
+  /** G34: chọn màn để chơi thẳng. */
+  levels: { id: string; title: string }[];
+  currentLevel: string;
+  onSelectLevel: (id: string) => void;
 };
 
 export function SanityBar({ value }: { value: number }) {
@@ -64,6 +68,23 @@ export function TopBar(props: Props) {
               </select>
             </label>
             {props.reducedMotion && <p className="hint">{strings.reducedMotionNote}</p>}
+            <label>
+              {strings.chooseLevel}
+              <select
+                value={props.currentLevel}
+                onChange={(e) => {
+                  setOpen(false);
+                  props.onSelectLevel(e.target.value);
+                }}
+              >
+                {props.levels.map((l, i) => (
+                  <option key={l.id} value={l.id}>
+                    {strings.levelLabel(i + 1, l.title)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="hint">{strings.chooseLevelNote}</p>
           </div>
         )}
       </div>
