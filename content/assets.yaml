@@ -42,7 +42,7 @@ assets:
     file: bg/phong_sinh_hoat_tang.png
     alt: "Phòng sinh hoạt chung dựng thành nơi để linh cữu, quan tài gỗ mở nắp giữa sàn, bàn thờ thấp với bát hương và hai cây nến."
 
-  # Màn 3 (alt là bản nháp chờ duyệt, G21)
+  # Màn 3 (alt đã duyệt)
   - id: hanh_lang_tang_4
     file: bg/hanh_lang_tang_4.png
     alt: "Hành lang tầng 4 nhìn dọc về phía cuối, cửa gỗ sơn xanh hai bên, bếp than tổ ong trước cửa và một bóng đèn vàng giữa hành lang."
