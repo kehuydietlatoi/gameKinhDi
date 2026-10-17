@@ -612,3 +612,10 @@ epilogue:
 - **Ngày:** 2026-10-17
 - **Cần cho:** quyết định C10.
 - **Bổ sung:** bỏ mục "Hồ sơ được mở khoá" khỏi màn hình kết quả. Hồ sơ vẫn được mở khoá như G18 và vẫn mở lựa chọn có điều kiện `has_dossier` (M3-12, M9 c5); chỉ không hiển thị ở đâu cả.
+
+## Sửa trực tiếp `docs/` lần 5 (đồng bộ quyết định C11, 2026-10-17)
+
+| File | Chỗ sửa | Lý do |
+| --- | --- | --- |
+| `docs/man-8-binh-minh-khong-den.md` | Brief `phong_404_1986`: bỏ "đồng hồ treo tường" khỏi "Bắt buộc có", thêm "đồng hồ" vào "Cấm vẽ"; brief `phong_404_1986_mat_troi` thêm "đồng hồ" vào "Cấm vẽ" | M8-05 đặt đồng hồ "ngay trên bức tranh" mặt trời lặn ở tường cửa ra vào; câu brief đã duyệt ở C11 đặt tường đó ngoài khung hình. Ảnh của Codex (d987493) vẽ đồng hồ trên tường cửa sổ bếp, trái kịch bản |
+
