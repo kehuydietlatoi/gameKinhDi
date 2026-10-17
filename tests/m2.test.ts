@@ -35,7 +35,7 @@ describe('đường sống', () => {
     expect(t.state).toMatchObject({ node: 'm2_e1', phase: 'ending', sanity: 2, eyes_closed: false, time: '05:30' });
     expect(t.state.scene).toEqual({ bg: 'phong_sinh_hoat_tang', light: 'dawn' });
     expect(t.path).toEqual([
-      'm2_n01', 'm2_n02', 'm2_n03', 'm2_n04', 'm2_n03', 'm2_n07', 'm2_n03', 'm2_n08', 'm2_n09', 'm2_n10',
+      'm2_n01', 'm2_n02', 'm2_n03', 'm2_n04', 'm2_n03', 'm2_n07', 'm2_n08', 'm2_n09', 'm2_n10',
       'm2_n11', 'm2_n20', 'm2_n21', 'm2_n30', 'm2_n31', 'm2_n40', 'm2_n50', 'm2_n51', 'm2_e1',
     ]);
     const e = endingView(level, t.state)!;

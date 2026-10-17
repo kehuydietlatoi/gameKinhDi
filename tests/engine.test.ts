@@ -217,6 +217,24 @@ describe('luồng', () => {
     expect(s.scene).toEqual({ bg: 'nen_a', light: 'flicker' });
   });
 
+  test('hub: xong mà không có dòng nào hiện thì đi thẳng tới hub_exit (G45)', () => {
+    const silent = levelAfter((raw) => {
+      raw.node('m9_n02').lines = [];
+    });
+    let s = run(silent, ['Đi B']).state;
+    s = step(silent, s, { type: 'choose', index: 2 });
+    s = step(silent, s, { type: 'continue' });
+    expect(s.node).toBe('m9_n05');
+    expect(s.scene).toEqual({ bg: 'nen_a', light: 'flicker' }); // cảnh của hub vẫn được áp (G4)
+  });
+
+  test('hub tính theo lượt cho biết số lượt còn lại; nơi khác thì không (G46)', () => {
+    const t = run(level, ['Đi A']);
+    expect(t.views.find((x) => x.node === 'm9_n02')!.actionsLeft).toBe(2);
+    expect(view(level, t.state).actionsLeft).toBe(1);
+    expect(t.views.find((x) => x.node === 'm9_n03')!.actionsLeft).toBeNull();
+  });
+
   test('chọn lựa chọn đang ẩn là lỗi', () => {
     const s = run(level, []).state;
     expect(s.node).toBe('m9_n02');

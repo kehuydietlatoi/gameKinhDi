@@ -76,7 +76,17 @@ function enter(level: Level, state: GameState, id: string): GameState {
   if (s.sanity === 0 && !level.on_sanity_zero) {
     throw new EngineError(`Tỉnh táo về 0 ở ${id} nhưng màn ${level.level} không có on_sanity_zero (G19)`);
   }
+  // G45: hub đã xong mà không có dòng nào hiện thì đi thẳng tới hub_exit, không dừng ở màn hình trống.
+  if (node.hub && s.phase === 'scene' && !lines.some((i) => shown(node.lines[i]!, s))) {
+    const exit = exits(level, s);
+    if (exit.kind === 'continue' && exit.to === node.hub_exit) return enter(level, s, exit.to);
+  }
   return s;
+}
+
+/** Dòng có hiện ra không: khi nhắm mắt, dòng env nhìn bị ẩn (AGENTS.md mục 7). */
+function shown(line: SceneNode['lines'][number], state: GameState): boolean {
+  return !(state.eyes_closed && line.ch === 'env' && line.sense === 'nhìn');
 }
 
 function enterEnding(level: Level, state: GameState, node: EndingNode): GameState {

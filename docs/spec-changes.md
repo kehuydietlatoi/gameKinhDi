@@ -487,6 +487,28 @@ nodes:
 - **Cần cho:** M9 D2 "Ngã cầu thang" (cột Luật là "—")
 - **Bổ sung:** bỏ quy tắc của G16 "kết cục chết phải có `violates` hoặc `consequence_of`". Quy tắc "mỗi dòng `violable` phải có ít nhất một kết cục chết `violates` nó" vẫn giữ.
 
+## G45 · Hub xong mà không có dòng nào thì đi thẳng tới `hub_exit` (sửa G4)
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** hub quan sát của M1–M9 (M1-04, M2-03, …). Khi chơi thử, hết lượt hành động là gặp một màn hình trống chỉ có nút "Tiếp", vì các hub này không có `lines`.
+- **Bổ sung:** khi vào hub, nếu `hub_done` đúng và không có dòng nào hiện ra (tính cả việc ẩn dòng `env · nhìn` khi nhắm mắt), engine vào thẳng `hub_exit`. `scene` của hub vẫn được áp trước, nên ý của G4 về ảnh có clue không đổi. Hub có dòng (như M1-50) vẫn hiện dòng rồi một nút "Tiếp" như G4. Ưu tiên `on_sanity_zero` (G19) giữ nguyên: chỉ bỏ qua khi lối ra đúng là `hub_exit`. Không đổi YAML.
+
+## G46 · Hub tính theo lượt hiện số lượt còn lại
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** hub quan sát của M1–M9. Câu "Bạn có N lượt hành động" chỉ hiện một lần trước hub; sau đó người chơi không biết còn mấy lượt.
+- **Bổ sung:** ở hub có `hub_done` dùng `actions_left_lte`, khi đang hiện lựa chọn, UI hiện dòng kênh `system` "Còn N lượt hành động." (chuỗi UI trong `src/ui/strings.ts`) phía trên lựa chọn. Hub đếm theo `visited_count_gte` (M1-50) không hiện. Không đổi YAML.
+
+## G47 · Màn hình kết thúc: nhãn dòng, dòng bị vi phạm, bản méo đã đọc
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** phần hé lộ nhắc dòng theo id ("Vi phạm L3." ở M1 D3; "L2 ràng buộc bạn… L4 chỉ cho phép dậy." ở M2 E1; M3, M5, M6, M7). Bảng Huyết tự không đánh số dòng nên người chơi không biết L3 là dòng nào.
+- **Bổ sung:**
+  - Trên màn hình kết thúc (chết và sống), mỗi dòng thật (không `fake`) có nhãn là id của dòng (`L1`, `L2`, …), khớp với cách phần hé lộ nhắc tới. Dòng giả không có nhãn. Nhãn chỉ hiện ở màn hình kết thúc; trong lúc chơi và trong bảng Huyết tự không có nhãn, để không lộ dòng nào là giả (G36).
+  - Kết cục chết tô các dòng trong `violates` (G16) bằng viền trái và chữ "vi phạm".
+  - Kết cục chết có mục "Huyết tự bạn đã đọc": những dòng mà người chơi đang thấy khác bản gốc (đổi chữ hoặc đổi mực, theo Tỉnh táo và từ khoá lúc chết), gạch ngang; ngay dưới là "Huyết tự thật". Không có dòng méo thì không có mục này.
+  - Không đổi YAML.
+
 ## Sửa trực tiếp `docs/` lần 2 (được duyệt một lần, 2026-10-17)
 
 Người dùng cho phép chép brief ảnh bổ sung (do Claude viết) vào docs. Lý do: rà ảnh nền thực tế ở từng node, thấy hai chỗ ảnh mâu thuẫn với chữ (M8-31, M6-30 → M6-33) và ba chỗ lệch địa điểm (M9-06, M2-09/M3-15, M5-06).

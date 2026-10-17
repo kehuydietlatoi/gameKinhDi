@@ -66,6 +66,8 @@ describe('đường sống', () => {
       ['F1', 'nau'],
       ['F2', 'nau'],
     ]);
+    // G47: nhãn chỉ cho dòng thật, khớp với "Theo L5" trong phần hé lộ.
+    expect(e.labels).toEqual(['L1', 'L2', 'L3', 'L4', 'L5', 'L6']);
   });
 
   test('M5-10: dòng nhắc lời bà Sáu chỉ hiện khi có c1', () => {

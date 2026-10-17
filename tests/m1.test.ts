@@ -47,7 +47,7 @@ describe('đường sống', () => {
       unlocked: [],
     });
     expect(t.path).toEqual([
-      'm1_n01', 'm1_n02', 'm1_n03', 'm1_n04', 'm1_n07', 'm1_n04', 'm1_n08', 'm1_n04', 'm1_n10', 'm1_n04',
+      'm1_n01', 'm1_n02', 'm1_n03', 'm1_n04', 'm1_n07', 'm1_n04', 'm1_n08', 'm1_n04', 'm1_n10',
       'm1_n20', 'm1_n21', 'm1_n40', 'm1_n41', 'm1_n42', 'm1_n50', 'm1_n51', 'm1_n50', 'm1_n52', 'm1_n52b',
       'm1_n50', 'm1_n53', 'm1_n53b', 'm1_n50', 'm1_n54', 'm1_n50', 'm1_n60', 'm1_n61', 'm1_n63', 'm1_e1',
     ]);
@@ -197,6 +197,32 @@ describe('kết cục chết', () => {
       { text: 'đếm đến một trăm rồi mới được mở mắt', mark: 'solution' },
       { text: '.' },
     ]);
+  });
+
+  test('màn hình chết: nhãn dòng, dòng bị vi phạm, không có bản méo khi còn tỉnh táo (G47)', () => {
+    const s = playM1([...QUIET, '"Tôi sẽ đi tìm."', 'Mở mắt, quay lại']);
+    const e = endingView(level, s)!;
+    expect(e.labels).toEqual(['L1', 'L2', 'L3', 'L4', 'L5']);
+    expect(e.violates).toEqual(['L3']);
+    expect(e.misread).toEqual([]);
+  });
+
+  test('màn hình chết: chết vì tin bản méo thì hiện lại câu đã đọc (G47)', () => {
+    const s = playM1([...CLUE_SANITY, '"Tôi sẽ đi tìm."', 'Mở mắt, quay lại']);
+    expect(s).toMatchObject({ node: 'm1_d3', sanity: 2, highlights: [] });
+    const e = endingView(level, s)!;
+    expect(e.misread.map((l) => [l.id, l.segments.map((x) => x.text).join('')])).toEqual([
+      ['L3', 'Người đi tìm được mở mắt khi có người gọi.'],
+      ['L4', 'Kẻ nào đi tìm sẽ chết.'],
+    ]);
+    // Đánh dấu đúng cụm thì dòng đó không méo nên không hiện lại.
+    const marked = playM1([...CLUE_SANITY, '"Tôi sẽ đi tìm."', 'Mở mắt, quay lại'], { highlights: ['k3'] });
+    expect(endingView(level, marked)!.misread.map((l) => l.id)).toEqual(['L4']);
+  });
+
+  test('kết cục sống không có dòng vi phạm hay bản méo (G47)', () => {
+    const e = endingView(level, playM1([...QUIET, ...SEEK, ...SEARCH, 'Đứng yên, nhắm mắt chờ']))!;
+    expect(e).toMatchObject({ result: 'survive', violates: [], misread: [] });
   });
 
   test('D4 · Đổi lượt', () => {

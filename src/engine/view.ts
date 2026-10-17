@@ -1,7 +1,7 @@
 // Dữ liệu hiển thị suy ra từ (level, state). UI chỉ đọc các hàm này, không tự tính luật.
 import type { EndingNode, Level, Light } from '../content/types.ts';
 import { check } from './conditions.ts';
-import { viewAll, viewLine, viewSolution, type BloodtextView } from './bloodtext.ts';
+import { displayLine, viewAll, viewLine, viewSolution, type BloodtextView } from './bloodtext.ts';
 import { interpolate } from './interpolate.ts';
 import { displayedScene } from './scene.ts';
 import { following, type GameState } from './state.ts';
@@ -27,6 +27,8 @@ export type View = {
   eyesClosed: boolean;
   notices: GameState['notices'];
   bloodtextAvailable: boolean;
+  /** Số lượt hành động còn lại, chỉ có ở hub tính theo lượt (G46); null ở chỗ khác. */
+  actionsLeft: number | null;
 };
 
 const fill = (state: GameState, text: string) =>
@@ -73,7 +75,14 @@ export function view(level: Level, state: GameState): View {
     eyesClosed: state.eyes_closed,
     notices: state.notices,
     bloodtextAvailable: state.bloodtextSeen,
+    actionsLeft: exit.kind === 'choices' && countsActions(level, state) ? state.actions_left : null,
   };
+}
+
+/** Hub có `hub_done` dựa trên `actions_left_lte` (G2) thì người chơi cần biết còn mấy lượt. */
+function countsActions(level: Level, state: GameState): boolean {
+  const node = nodeById(level, state.node);
+  return node.type === 'scene' && !!node.hub && !!node.hub_done && 'actions_left_lte' in node.hub_done;
 }
 
 /** Nội dung nút "Huyết tự": bản gốc hoặc bản méo, gạch chân cụm đã đánh dấu. */
@@ -96,6 +105,12 @@ export type EndingView = {
   cause: string;
   reveal: string;
   solution: BloodtextView[];
+  /** Id các dòng thật, hiện làm nhãn để phần hé lộ nhắc "L2", "L4" đọc được (G47). Dòng giả không có nhãn. */
+  labels: string[];
+  /** Dòng bị vi phạm ở kết cục chết (G16); rỗng ở kết cục sống. */
+  violates: string[];
+  /** Kết cục chết: những dòng người chơi đang đọc thấy khác bản gốc (bị bóp méo), như lúc chết (G47). */
+  misread: BloodtextView[];
   keywords: { id: string; text: string; correct: boolean }[];
   dossiers: string[];
   /**
@@ -114,6 +129,17 @@ export function endingView(level: Level, state: GameState): EndingView | null {
     cause: node.cause,
     reveal: fill(state, node.reveal),
     solution: viewSolution(level, node.solution ?? level.solution),
+    labels: level.bloodtext.filter((b) => !b.fake).map((b) => b.id),
+    violates: node.result === 'death' ? (node.violates ?? []) : [],
+    misread:
+      node.result === 'death'
+        ? level.bloodtext
+            .filter((b) => {
+              const seen = displayLine(level, state, b.id);
+              return seen.text !== b.text || seen.ink !== b.ink;
+            })
+            .map((b) => viewLine(level, state, b.id))
+        : [],
     keywords: state.highlights.flatMap((id) => {
       const k = level.keywords.find((x) => x.id === id);
       return k ? [{ id: k.id, text: k.text, correct: k.correct }] : [];
