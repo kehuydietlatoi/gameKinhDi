@@ -1,9 +1,20 @@
 // Màn hình chết (đặc tả 4.5) và màn hình kết quả (4.7).
-import type { EndingView } from '../engine/index.ts';
+import type { BloodtextView, EndingView } from '../engine/index.ts';
 import { BloodLines } from './channels/Bloodtext.tsx';
 import { strings } from './strings.ts';
 
-export function DeathScreen({ ending, onReplay }: { ending: EndingView; onReplay: () => void }) {
+const hasSolutionMark = (lines: BloodtextView[]) => lines.some((l) => l.segments.some((s) => s.mark === 'solution'));
+
+type DeathProps = {
+  ending: EndingView;
+  /** Tỉnh táo lúc chết, để giải thích vì sao Huyết tự hiện sai (G58). */
+  sanity: number;
+  onReplay: () => void;
+  /** G60: quay về ngay trước lựa chọn cuối cùng; không có thì chỉ chơi lại từ đầu màn. */
+  onRetry?: (() => void) | undefined;
+};
+
+export function DeathScreen({ ending, sanity, onReplay, onRetry }: DeathProps) {
   return (
     <section className="ending death">
       <p className="death-title">{strings.death}</p>
@@ -14,9 +25,11 @@ export function DeathScreen({ ending, onReplay }: { ending: EndingView; onReplay
           <div className="misread">
             <BloodLines lines={ending.misread} labels={ending.labels} />
           </div>
+          <p className="hint">{strings.misreadWhy(sanity)}</p>
           <h3>{strings.trueBloodtextTitle}</h3>
         </>
       )}
+      {hasSolutionMark(ending.solution) && <p className="hint">{strings.solutionLegend}</p>}
       <BloodLines lines={ending.solution} labels={ending.labels} violated={ending.violates} />
       {ending.revealHidden ? (
         <p className="hint">{strings.revealLater}</p>
@@ -26,9 +39,16 @@ export function DeathScreen({ ending, onReplay }: { ending: EndingView; onReplay
           {ending.reveal}
         </p>
       )}
-      <button type="button" className="btn btn-primary" onClick={onReplay} autoFocus>
-        {strings.replay}
-      </button>
+      <div className="row">
+        {onRetry && (
+          <button type="button" className="btn btn-primary" onClick={onRetry} autoFocus>
+            {strings.retryChoice}
+          </button>
+        )}
+        <button type="button" className={onRetry ? 'btn' : 'btn btn-primary'} onClick={onReplay} autoFocus={!onRetry}>
+          {onRetry ? strings.replayLevelFromStart : strings.replay}
+        </button>
+      </div>
     </section>
   );
 }
@@ -52,12 +72,14 @@ export function ResultScreen({ ending, onReplay, onNext, onFinale }: ResultProps
       {ending.finale === 'complete' && <p className="finale">{strings.gameComplete}</p>}
       {ending.finale === 'open' && <p className="finale">{strings.openEnding}</p>}
       <h2>{ending.cause}</h2>
+      {hasSolutionMark(ending.solution) && <p className="hint">{strings.solutionLegend}</p>}
       <BloodLines lines={ending.solution} labels={ending.labels} />
       <p className="reveal">
         <span className="ch-prefix">{strings.reveal} · </span>
         {ending.reveal}
       </p>
       <h3>{strings.keywordsTitle}</h3>
+      <p className="hint">{strings.keywordsHelp}</p>
       {ending.keywords.length ? (
         <ul className="kw-results">
           {ending.keywords.map((k) => (

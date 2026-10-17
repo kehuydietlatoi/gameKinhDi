@@ -640,3 +640,41 @@ epilogue:
 | File | Chỗ sửa | Lý do |
 | --- | --- | --- |
 | `docs/man-9-nguoi-dan-ba-khong-mat.md` | Thêm mục "Đoạn kết" (9 đoạn, nguyên văn người dùng gửi, hướng A đã chỉnh) trước "Kiểm tra nhanh" | C9: đoạn kết đặt sau E1, trước màn tổng kết. Dạng văn thường, mỗi đoạn một chuỗi, không mở rộng schema thành dạng có kênh (G51). `content/m9.yaml` thêm `epilogue` cùng nội dung |
+
+## G57 · Hướng dẫn cách chơi
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** lượt chơi thử vai người chơi trung bình. Bốn khái niệm cốt lõi (Huyết tự luôn đúng từng chữ, sinh lộ, Tỉnh táo, bóp méo) chưa được giải thích ở đâu; Tỉnh táo giảm mà không ai biết để làm gì.
+- **Bổ sung (chuỗi UI chung trong `src/ui/strings.ts`, không đổi câu chữ của màn):**
+  - Màn tiêu đề có dòng giới thiệu và mục "Cách chơi" (năm đoạn ngắn). Chưa có tiến trình thì mục này mở sẵn.
+  - Thanh Tỉnh táo là một nút: bấm để hiện giải thích ngắn.
+  - Lần Tỉnh táo vừa tụt xuống 2 trở xuống, dưới thông báo "Tỉnh táo −N" hiện thêm dòng cảnh báo Huyết tự có thể không còn đúng.
+  - Giao diện đánh dấu có đoạn giải thích: Huyết tự luôn đúng từng chữ; Tỉnh táo ≤ 2 thì có thể bị bóp méo, trừ cụm đã đánh dấu; nên chọn cụm là mấu chốt để sống sót.
+  - Nút "Huyết tự" khi chưa có Huyết tự vẫn mở bảng, báo "Huyết tự chưa xuất hiện" (trước đây chỉ có tooltip, màn cảm ứng không thấy).
+
+## G58 · Chú thích trên màn kết thúc
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** như G57. Khung viền ở phần sinh lộ không có chú thích; chết vì bóp méo mà không biết vì sao; nhãn "chìa khoá" chưa được giải thích.
+- **Bổ sung:**
+  - Khi phần Huyết tự có cụm sinh lộ, phía trên có dòng "Chữ có khung viền là mấu chốt của kết cục này."
+  - Màn chết có mục "Huyết tự bạn đã đọc" (G47) thì thêm dòng nói rõ Tỉnh táo lúc chết và việc cụm đã đánh dấu không bị đổi.
+  - Mục từ khoá trên màn kết quả có dòng giải thích "chìa khoá của sinh lộ".
+  - Dòng thay câu hé lộ ở lần chết đầu (G50) đổi thành "Gợi ý: đọc lại thật kỹ những chữ có khung viền.", không còn rủ người chơi chết lại để xem lời giải.
+
+## G59 · Bước đánh dấu dễ thấy hơn
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** như G57. Cụm chọn được chỉ có gạch chân chấm mảnh cùng màu chữ; hai cụm sát nhau không thấy ranh giới; luật hiện hai lần liền nhau; sau khi xác nhận không thấy đã chọn gì.
+- **Bổ sung:**
+  - Mỗi cụm chọn được có khung riêng, cách nhau; cụm đã chọn đổ nền đỏ, chữ nền tối (6.4:1). Màn cảm ứng (`pointer: coarse`) có vùng chạm cao hơn.
+  - Lúc đang đánh dấu, các dòng `bloodtext` của node không hiện trong phần chữ (đã có trong giao diện đánh dấu). Xác nhận xong thì hiện lại ngay, không gõ lại chữ.
+  - `View.marked`: ở node có `highlight: true`, sau khi xác nhận, là chữ các cụm đã đánh dấu (rỗng nếu bỏ qua); UI hiện "Đã đánh dấu: …" hoặc "Bạn không đánh dấu cụm nào."
+  - Dòng "Còn N lượt hành động." (G46) là chữ nhỏ, không có khung như nút lựa chọn.
+  - Nhãn "vi phạm" (G47) không bị ngắt dòng.
+
+## G60 · Thử lại lựa chọn vừa rồi
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** như G57. "Chơi lại" luôn về đầu màn: ở M1, người chơi trung bình chết 4 lần, mỗi lần mất khoảng 11 lần bấm và đọc lại phần mở đầu.
+- **Bổ sung:** UI giữ trạng thái ngay trước lựa chọn gần nhất (chỉ trong phiên, không ghi vào bản lưu). Màn chết có hai nút: "Thử lại lựa chọn vừa rồi" (về trạng thái đó, giữ `deaths`, `campaign`, `unlocked` của lần vừa chết, nên lần chết vẫn được đếm) và "Chơi lại từ đầu màn" (như cũ). Chưa có lựa chọn nào trong màn, hoặc đã tải lại trang, thì chỉ có nút "Chơi lại". Engine không đổi.

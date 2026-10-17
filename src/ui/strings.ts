@@ -1,8 +1,29 @@
 // Chuỗi UI chung (AGENTS.md mục 5.3). Không chứa câu chữ của màn chơi.
 export const strings = {
   gameTitle: 'Sinh lộ',
+  // G57: hướng dẫn cách chơi (chuỗi UI chung, không phải câu chữ của màn).
+  tagline: 'Luật viết bằng máu luôn đúng từng chữ. Đường sống nằm trong chính câu chữ ấy.',
+  howToPlay: 'Cách chơi',
+  howToPlayLines: [
+    'Mỗi đêm, chữ máu hiện lên tường: đó là Huyết tự. Huyết tự luôn đúng từng chữ. Làm trái một dòng là chết.',
+    'Sinh lộ là cách sống sót suy ra được từ chính câu chữ của Huyết tự. Đọc kỹ từng chữ, đừng đọc theo thói quen.',
+    'Tỉnh táo giảm khi bạn gặp chuyện rợn người. Khi còn 2 trở xuống, Huyết tự bạn đọc có thể bị bóp méo, tức là hiện sai.',
+    'Khi Huyết tự hiện lần đầu, bạn được đánh dấu tối đa 3 cụm từ. Cụm đã đánh dấu không bao giờ bị bóp méo. Hãy chọn những cụm bạn nghĩ là mấu chốt để sống sót.',
+    'Nút "Huyết tự" ở góc trên mở lại các dòng luật bất cứ lúc nào.',
+  ] as readonly string[],
+  sanityHelp:
+    'Tỉnh táo giảm khi bạn gặp chuyện rợn người. Còn 2 trở xuống thì Huyết tự bạn đọc có thể bị bóp méo, trừ những cụm đã đánh dấu.',
+  sanityLowWarning: 'Tỉnh táo thấp: từ giờ, Huyết tự bạn đọc có thể không còn đúng. Chỉ những cụm đã đánh dấu là chắc chắn.',
+  highlightHelp:
+    'Huyết tự luôn đúng từng chữ. Khi Tỉnh táo còn 2 trở xuống, chữ bạn đọc có thể bị bóp méo, trừ những cụm bạn đánh dấu ở đây. Hãy chọn những cụm bạn nghĩ là mấu chốt để sống sót.',
+  highlightTap: 'Chạm vào cụm từ có khung để đánh dấu.',
+  marked: (texts: string[]) => `Đã đánh dấu: ${texts.map((t) => `“${t}”`).join(', ')}.`,
+  markedNone: 'Bạn không đánh dấu cụm nào.',
   continue: 'Tiếp',
   replay: 'Chơi lại',
+  // G60: thử lại từ lựa chọn ngay trước kết cục chết.
+  retryChoice: 'Thử lại lựa chọn vừa rồi',
+  replayLevelFromStart: 'Chơi lại từ đầu màn',
   nextLevel: 'Màn tiếp theo',
   inkLabel: { nau: ' (mực nâu đen)', kho: ' (máu khô)' },
   gameComplete: 'Kết thúc',
@@ -50,7 +71,12 @@ export const strings = {
   trueBloodtextTitle: 'Huyết tự thật',
   reveal: 'Hé lộ',
   // G50: lần chết đầu ở một kết cục chưa hiện câu hé lộ.
-  revealLater: 'Chết theo cách này thêm một lần nữa, Huyết tự sẽ hé lộ vì sao.',
+  revealLater: 'Gợi ý: đọc lại thật kỹ những chữ có khung viền.',
+  // G58: chú thích trên màn kết thúc.
+  solutionLegend: 'Chữ có khung viền là mấu chốt của kết cục này.',
+  misreadWhy: (sanity: number) =>
+    `Tỉnh táo của bạn chỉ còn ${sanity}, nên những dòng trên đã hiện sai. Cụm đã đánh dấu thì không bao giờ bị đổi.`,
+  keywordsHelp: 'Chìa khoá của sinh lộ là cụm mà nếu đọc đúng nghĩa sẽ chỉ ra cách sống sót.',
   keywordsTitle: 'Từ khoá đã đánh dấu',
   keywordsNone: 'Không đánh dấu từ khoá nào.',
   // G48: "đúng" của từ khoá nghĩa là cụm đó thuộc sinh lộ, không phải người chơi đánh dấu sai.

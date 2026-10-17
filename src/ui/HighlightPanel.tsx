@@ -38,6 +38,8 @@ export function HighlightPanel({ options, initial = [], onDone }: Props) {
   return (
     <section className="highlight" aria-label={strings.highlightTitle}>
       <h2>{strings.highlightTitle}</h2>
+      <p className="highlight-help">{strings.highlightHelp}</p>
+      <p className="hint">{strings.highlightTap}</p>
       <div className="bloodtext">
         {options.map((o) => (
           <p key={o.line} className={`blood-line ink-${o.ink}`}>

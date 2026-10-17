@@ -171,6 +171,16 @@ describe('cảnh', () => {
 });
 
 describe('luồng', () => {
+  test('G59: sau khi xác nhận, node đánh dấu cho biết các cụm đã chọn; nơi khác thì không', () => {
+    const s = fresh();
+    expect(view(level, s).marked).toBeNull(); // đang chọn, chưa xác nhận
+    const kw = level.keywords.find((k) => k.id === 'k1')!;
+    const t = step(level, s, { type: 'highlight', ids: ['k1'] });
+    expect(view(level, t).marked).toEqual([kw.text]);
+    expect(view(level, step(level, s, { type: 'highlight', ids: [] })).marked).toEqual([]);
+    expect(view(level, step(level, t, { type: 'continue' })).marked).toBeNull();
+  });
+
   test('bước đánh dấu chặn mọi lối ra cho tới khi xác nhận', () => {
     const s = fresh();
     expect(view(level, s).exit).toEqual({ kind: 'none' });

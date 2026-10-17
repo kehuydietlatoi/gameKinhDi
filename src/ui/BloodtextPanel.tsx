@@ -17,7 +17,7 @@ export function BloodtextPanel({ lines, onClose }: { lines: BloodtextView[]; onC
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" role="dialog" aria-modal="true" aria-label={strings.bloodtext} onClick={(e) => e.stopPropagation()}>
         <h2>{strings.bloodtext}</h2>
-        <BloodLines lines={lines} />
+        {lines.length ? <BloodLines lines={lines} /> : <p className="hint">{strings.bloodtextLocked}.</p>}
         <button ref={closeRef} type="button" className="btn" onClick={onClose}>
           {strings.close}
         </button>

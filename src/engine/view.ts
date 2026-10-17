@@ -29,6 +29,8 @@ export type View = {
   bloodtextAvailable: boolean;
   /** Số lượt hành động còn lại, chỉ có ở hub tính theo lượt (G46); null ở chỗ khác. */
   actionsLeft: number | null;
+  /** G59: ở node đánh dấu, sau khi xác nhận: chữ các cụm đã đánh dấu; null ở chỗ khác. */
+  marked: string[] | null;
 };
 
 const fill = (state: GameState, text: string) =>
@@ -76,7 +78,14 @@ export function view(level: Level, state: GameState): View {
     notices: state.notices,
     bloodtextAvailable: state.bloodtextSeen,
     actionsLeft: exit.kind === 'choices' && countsActions(level, state) ? state.actions_left : null,
+    marked: markedAt(level, state),
   };
+}
+
+function markedAt(level: Level, state: GameState): string[] | null {
+  const node = nodeById(level, state.node);
+  if (node.type !== 'scene' || !node.highlight || state.phase !== 'scene' || !state.highlightDone) return null;
+  return state.highlights.flatMap((id) => level.keywords.find((k) => k.id === id)?.text ?? []);
 }
 
 /** Hub có `hub_done` dựa trên `actions_left_lte` (G2) thì người chơi cần biết còn mấy lượt. */

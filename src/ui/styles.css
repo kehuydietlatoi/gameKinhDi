@@ -341,24 +341,53 @@ select {
   margin: 0.5em 0;
 }
 
+/* G59: cụm chọn được có khung riêng, cách nhau, để thấy ranh giới giữa hai cụm sát nhau. */
 .kw {
   font: inherit;
   color: var(--c-blood);
-  background: none;
-  border: none;
-  border-bottom: 1px dashed var(--c-blood);
-  padding: 0;
+  background: var(--c-surface);
+  border: 1px dashed var(--c-blood);
+  border-radius: 3px;
+  margin: 0 2px;
+  padding: 1px 4px;
   cursor: pointer;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
+.kw:hover {
+  border-style: solid;
+}
+
+/* Đã chọn: đổ nền đỏ, chữ nền tối (#0b0b0d trên #ff5a52 đạt 6.4:1). */
 .kw[aria-pressed='true'] {
-  border-bottom: 2px solid var(--c-accent);
-  background: var(--c-surface);
+  color: var(--c-bg);
+  background: var(--c-blood);
+  border-style: solid;
 }
 
 .kw:disabled {
   cursor: not-allowed;
-  border-bottom-style: dotted;
+  border-style: dotted;
+}
+
+.highlight .blood-line {
+  line-height: 2;
+}
+
+.highlight-help {
+  margin: 0 0 0.25em;
+  font-size: 0.92em;
+}
+
+/* Màn cảm ứng: vùng chạm cao hơn (G59). */
+@media (pointer: coarse) {
+  .kw {
+    padding: 8px 6px;
+  }
+  .highlight .blood-line {
+    line-height: 2.9;
+  }
 }
 
 .ending {
@@ -498,6 +527,8 @@ select {
 }
 
 .violated-tag {
+  display: inline-block;
+  white-space: nowrap;
   margin-left: 0.5em;
   padding: 0 0.35em;
   border: 1px solid var(--c-blood);
@@ -616,4 +647,77 @@ select {
 .thanks {
   margin: 1.5em 0;
   color: var(--c-muted);
+}
+
+/* ---------- G57–G59: hướng dẫn và trạng thái ---------- */
+
+/* "Còn N lượt" là chữ thường, không có khung như nút lựa chọn. */
+.ch-system.actions-left {
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--c-muted);
+  font-size: 0.85em;
+}
+
+.ch-system.warning {
+  border-left-color: var(--c-blood);
+}
+
+.ch-system.marked {
+  border-left-color: var(--c-accent);
+}
+
+.tagline {
+  margin: -1em 0 1.5em;
+  color: var(--c-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.how-to-play {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+}
+
+.how-to-play h2 {
+  margin: 0 0 0.5em;
+  font-size: 1rem;
+}
+
+.how-to-play p {
+  margin: 0 0 0.6em;
+  font-size: 0.92em;
+  line-height: 1.6;
+}
+
+/* Thanh Tỉnh táo là nút: bấm để xem giải thích. */
+.sanity-wrap {
+  position: relative;
+  margin-right: auto;
+}
+
+button.sanity {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: help;
+}
+
+.sanity-help {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 6;
+  width: min(280px, calc(100vw - 32px));
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  font-size: 0.85rem;
+  line-height: 1.5;
 }

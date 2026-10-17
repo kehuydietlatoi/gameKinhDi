@@ -16,6 +16,8 @@ export function TitleScreen({ canContinue, onContinue, onNewGame, settings, onSe
   // Có tiến trình thì Chơi mới cần bấm hai lần, không dùng hộp thoại của trình duyệt.
   const [confirming, setConfirming] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  // Người mới thấy sẵn cách chơi; người đã có tiến trình thì gập lại.
+  const [showHelp, setShowHelp] = useState(!canContinue);
   const newGame = () => {
     if (canContinue && !confirming) setConfirming(true);
     else onNewGame();
@@ -24,6 +26,7 @@ export function TitleScreen({ canContinue, onContinue, onNewGame, settings, onSe
   return (
     <section className="title-screen">
       <h1>{strings.gameTitle}</h1>
+      <p className="tagline">{strings.tagline}</p>
       <nav className="exits">
         {canContinue && (
           <button type="button" className="btn btn-primary" onClick={onContinue} autoFocus>
@@ -34,10 +37,21 @@ export function TitleScreen({ canContinue, onContinue, onNewGame, settings, onSe
           {strings.newGame}
         </button>
         {confirming && <p className="hint">{strings.newGameConfirm}</p>}
+        <button type="button" className="btn" aria-expanded={showHelp} onClick={() => setShowHelp(!showHelp)}>
+          {strings.howToPlay}
+        </button>
         <button type="button" className="btn" aria-expanded={showSettings} onClick={() => setShowSettings(!showSettings)}>
           {strings.settings}
         </button>
       </nav>
+      {showHelp && (
+        <div className="how-to-play">
+          <h2>{strings.howToPlay}</h2>
+          {strings.howToPlayLines.map((line, i) => (
+            <p key={i}>{line}</p>
+          ))}
+        </div>
+      )}
       {showSettings && (
         <div className="title-settings">
           <label>

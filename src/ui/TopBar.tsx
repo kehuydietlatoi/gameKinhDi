@@ -21,8 +21,16 @@ type Props = {
 };
 
 export function SanityBar({ value }: { value: number }) {
+  const [help, setHelp] = useState(false);
   return (
-    <div className="sanity" role="meter" aria-valuemin={0} aria-valuemax={5} aria-valuenow={value} aria-label={strings.sanityLabel(value)}>
+    <div className="sanity-wrap">
+    <button
+      type="button"
+      className="sanity"
+      aria-expanded={help}
+      aria-label={`${strings.sanityLabel(value)}. ${strings.sanityHelp}`}
+      onClick={() => setHelp(!help)}
+    >
       <span className="sanity-label">{strings.sanity}</span>
       {[1, 2, 3, 4, 5].map((n) => (
         <span key={n} className={`notch${n <= value ? ' on' : ''}`} />
@@ -31,6 +39,12 @@ export function SanityBar({ value }: { value: number }) {
       <span className="sanity-value" aria-hidden="true">
         {value}/5
       </span>
+    </button>
+    {help && (
+      <p className="sanity-help" role="note">
+        {strings.sanityHelp}
+      </p>
+    )}
     </div>
   );
 }
@@ -50,7 +64,8 @@ export function TopBar(props: Props) {
         className="btn btn-blood"
         aria-disabled={!props.bloodtextAvailable}
         title={props.bloodtextAvailable ? undefined : strings.bloodtextLocked}
-        onClick={() => props.bloodtextAvailable && props.onOpenBloodtext()}
+        // Chưa có Huyết tự vẫn mở bảng, để báo "chưa xuất hiện" cả trên màn cảm ứng.
+        onClick={props.onOpenBloodtext}
       >
         {strings.bloodtext}
       </button>

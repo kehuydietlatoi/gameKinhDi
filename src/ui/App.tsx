@@ -81,6 +81,10 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
       lastMarks: save.lastMarks,
       /** Có tiến trình để "Chơi tiếp" (G52). */
       hasProgress: save.state !== null,
+      /** G60: trạng thái ngay trước lựa chọn gần nhất, để thử lại sau khi chết. Chỉ giữ trong phiên. */
+      checkpoint: null as GameState | null,
+      /** Lần vẽ node này hiện chữ ngay, không gõ (sau bước đánh dấu). */
+      instant: false,
     };
   });
   const [screen, setScreen] = useState<Screen>('title');
@@ -100,9 +104,11 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
       setGame((g) => ({
         ...g,
         state: step(levelOf(g.state), g.state, action),
+        checkpoint: action.type === 'choose' ? g.state : action.type === 'restart' ? null : g.checkpoint,
         lastMarks: action.type === 'highlight' ? { level: g.state.level, ids: action.ids } : g.lastMarks,
-        // Đánh dấu từ khoá không đổi node nên không gõ lại chữ.
-        entry: action.type === 'highlight' ? g.entry : g.entry + 1,
+        // Đánh dấu xong thì các dòng Huyết tự hiện lại (G59): vẽ lại node nhưng hiện ngay, không gõ lại chữ.
+        entry: g.entry + 1,
+        instant: action.type === 'highlight',
       })),
     [levelOf],
   );
@@ -116,6 +122,8 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
     setGame((g) => ({
       ...g,
       state: initialState(target, { unlocked: g.state.unlocked, campaign: g.state.campaign }),
+      checkpoint: null,
+      instant: false,
       entry: g.entry + 1,
     }));
   };
@@ -125,7 +133,15 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
   };
   const newGame = () => {
     setScreen('play');
-    setGame((g) => ({ ...g, state: initialState(levels[0]!), lastMarks: null, hasProgress: true, entry: g.entry + 1 }));
+    setGame((g) => ({
+      ...g,
+      state: initialState(levels[0]!),
+      lastMarks: null,
+      hasProgress: true,
+      checkpoint: null,
+      instant: false,
+      entry: g.entry + 1,
+    }));
   };
 
   if (screen === 'title') {
@@ -161,8 +177,20 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
     );
   }
 
-  const msPerChar = reducedMotion ? 0 : MS_PER_CHAR[settings.speed];
+  const msPerChar = reducedMotion || game.instant ? 0 : MS_PER_CHAR[settings.speed];
   const replay = () => dispatch({ type: 'restart' });
+  // G60: về ngay trước lựa chọn cuối, giữ số lần chết và số liệu chuyến chơi của lần vừa chết.
+  const checkpoint = game.checkpoint;
+  const retry =
+    checkpoint && checkpoint.level === state.level
+      ? () =>
+          setGame((g) => ({
+            ...g,
+            state: { ...checkpoint, deaths: g.state.deaths, campaign: g.state.campaign, unlocked: g.state.unlocked, notices: [] },
+            instant: false,
+            entry: g.entry + 1,
+          }))
+      : undefined;
   // G51: không có đoạn kết thì vào thẳng tổng kết.
   const finale = () => setScreen(ending?.epilogue.length ? 'epilogue' : 'summary');
   const selectable = dev ? levels : levels.filter((l) => state.campaign.reached.includes(l.level));
@@ -179,7 +207,7 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
   } else if (ending) {
     footer =
       ending.result === 'death' ? (
-        <DeathScreen ending={ending} onReplay={replay} />
+        <DeathScreen ending={ending} sanity={state.sanity} onReplay={replay} onRetry={retry} />
       ) : (
         <ResultScreen
           ending={ending}
@@ -196,6 +224,13 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
             {strings.sanityNotice(n.delta)}
           </p>
         ))}
+        {/* G57: lần Tỉnh táo vừa tụt xuống 2 thì cảnh báo Huyết tự có thể hiện sai. */}
+        {v.notices.some((n) => n.delta < 0 && v.sanity <= 2 && v.sanity - n.delta > 2) && (
+          <p className="ch ch-system notice warning">{strings.sanityLowWarning}</p>
+        )}
+        {v.marked && (
+          <p className="ch ch-system marked">{v.marked.length ? strings.marked(v.marked) : strings.markedNone}</p>
+        )}
         {v.actionsLeft !== null && <p className="ch ch-system actions-left">{strings.actionsLeft(v.actionsLeft)}</p>}
         <nav className="exits">
           {v.exit.kind === 'choices' &&
@@ -231,7 +266,13 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
       />
       <SceneLayer scene={v.scene} assets={assets} />
       <section className="text-panel">
-        <Typewriter key={`${game.entry}:${state.node}`} lines={v.lines} msPerChar={msPerChar} footer={footer} />
+        <Typewriter
+          key={`${game.entry}:${state.node}`}
+          // G59: lúc đánh dấu, các dòng Huyết tự đã có trong bảng đánh dấu nên không hiện lặp lại.
+          lines={v.phase === 'highlight' ? v.lines.filter((l) => l.ch !== 'bloodtext') : v.lines}
+          msPerChar={msPerChar}
+          footer={footer}
+        />
       </section>
       {panelOpen && <BloodtextPanel lines={bloodtextPanel(level, state)} onClose={closePanel} />}
     </main>
