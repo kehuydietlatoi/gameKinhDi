@@ -281,8 +281,8 @@ nodes:
       - {ch: env, sense: ngửi, text: "Mùi rêu nhạt dần rồi mất hẳn."}
       - {ch: narration, text: "Phòng im lặng."}
     choices:
-      - {text: "Mở mắt", goto: m2_d3, effects: [{eyes_closed: false}]}
-      - {text: "Ngồi dậy, bước ra khỏi quan tài, rồi mới mở mắt", goto: m2_n51}
+      - {text: "Mở mắt, rồi bước ra khỏi quan tài", goto: m2_d3, effects: [{eyes_closed: false}]}
+      - {text: "Bước ra khỏi quan tài, rồi mới mở mắt", goto: m2_n51}
 
   - id: m2_n51   # Bước ra
     type: scene

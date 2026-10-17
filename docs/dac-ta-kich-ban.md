@@ -94,7 +94,7 @@ Quy ước:
 4. **Tỉnh táo:** thanh 5 nấc ở góc màn hình. Mỗi lần thay đổi, kênh `system` báo "Tỉnh táo −1". Khi về 0, engine chuyển tới `on_sanity_zero`.
 5. **Màn hình chết:** hiện dòng cuối của kết cục, sau đó hiện lại Huyết tự với cụm sinh lộ được tô sáng và câu `reveal`. Có nút "Chơi lại".
 6. **Chơi lại:** quay về node `start` với trạng thái `init` và `sanity` đầu màn. Các biến thể Huyết tự (nếu màn có) được xoay vòng theo số lần chết.
-7. **Hoàn thành màn:** màn hình kết quả liệt kê từ khoá đã đánh dấu đúng/sai và hồ sơ được mở khoá, rồi về hub.
+7. **Hoàn thành màn:** màn hình kết quả liệt kê từ khoá đã đánh dấu, ghi rõ cụm nào là chìa khoá của sinh lộ (`correct: true`) và cụm nào không, cùng hồ sơ được mở khoá, rồi về hub.
 
 ## 5. Lớp hình ảnh
 

@@ -101,6 +101,32 @@ describe('kết cục chết', () => {
     const s = playM8([...QUIET, ASK, SUN, 'Vẽ mặt trời lên tường bàn học', 'Vẽ lại một ông mặt trời to hơn ở chỗ cũ']);
     expect(s.node).toBe('m8_d2');
   });
+
+  test.each([
+    ['Vẽ mặt trời lên tường bàn học', 'Vẽ lên tường cửa ra vào'],
+    ['Vẽ mặt trời lên tường cửa ra vào, cạnh ông mặt trời đỏ', 'Vẽ lên tường bàn học'],
+  ])('D2 · đoán sai hai lần: %s rồi %s', (first, second) => {
+    const t = run(level, [...QUIET, ASK, SUN, first]);
+    // M8-32 không chỉ sẵn tường đúng: còn hai tường chưa vẽ và lựa chọn vẽ lại chỗ cũ.
+    const exit = view(level, t.state).exit;
+    expect(exit.kind === 'choices' && exit.choices.map((c) => c.text)).toEqual([
+      'Vẽ lên tường cửa sổ bếp',
+      second,
+      'Vẽ lại một ông mặt trời to hơn ở chỗ cũ',
+    ]);
+    expect(playM8([second], { from: t.state }).node).toBe('m8_d2');
+  });
+});
+
+describe('manh mối phía đông', () => {
+  test('tranh "chiều" (c2) cho biết tường cửa ra vào đối diện cửa sổ bếp', () => {
+    const t = run(level, [SUNSET]);
+    expect(t.views.find((v) => v.node === 'm8_n05')!.lines.at(-1)).toEqual({
+      ch: 'env',
+      sense: 'nhìn',
+      text: 'Bạn quay lưng vào bức tranh. Đầu kia căn phòng, thẳng trước mặt, là ô cửa sổ bếp tối om.',
+    });
+  });
 });
 
 describe('Tỉnh táo và bản méo ở M8-30', () => {

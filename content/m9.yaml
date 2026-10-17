@@ -166,7 +166,6 @@ nodes:
     lines:
       - {ch: npc, who: ba_hai, text: "Không ai còn nhớ tên bà nữa."}
       - {ch: npc, who: ba_hai, text: "Bốn mươi năm nay, bà đi tìm người nhớ."}
-      - {ch: narration, if: {flag: biet_ten_hai}, text: "Bạn nhớ dòng tên bị gạch đen trong cuốn sổ cũ."}
     choices:
       - {text: "\"Bà là bà Hai.\"", goto: m9_n14, if: {flag: biet_ten_hai}}
       - {text: "Lách qua bà, chạy xuống bàn thờ chung", goto: m9_n20}

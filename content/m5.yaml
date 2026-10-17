@@ -142,9 +142,9 @@ nodes:
       - {ch: env, sense: ngửi, text: "Tanh mùi sắt."}
       - {ch: narration, text: "Cổ họng bạn khô rát. Cơn sốt chưa dứt hẳn."}
     choices:
-      - {text: "Vốc nước rửa mặt", goto: m5_d3}
-      - {text: "Khoá vòi, không chạm vào nước", goto: m5_n20}
-      - {text: "Uống một ngụm", goto: m5_d3}
+      - {text: "Vốc nước rửa mặt cho tỉnh", goto: m5_d3}
+      - {text: "Khoá vòi lại", goto: m5_n20}
+      - {text: "Uống một ngụm cho đỡ khát", goto: m5_d3}
 
   - id: m5_n20   # Tiếng mẹ
     type: scene
@@ -189,9 +189,9 @@ nodes:
       - {ch: sound, src: "gầm giường", vol: 1, text: "Sột soạt."}
       - {ch: npc, who: giong_gam_giuong, text: "Anh thổi nến đi mà. Em sợ lắm."}
     choices:
-      - {text: "Thổi nến", goto: m5_d4}
+      - {text: "Thổi nến cho em bé đỡ sợ", goto: m5_d4}
       - {text: "Cúi nhìn xuống gầm giường", goto: m5_n32, effects: [{sanity: -1}]}
-      - {text: "Nhìn thẳng vào ngọn nến, không đáp", goto: m5_n40}
+      - {text: "Nhìn ngọn nến, không đáp", goto: m5_n40}
 
   - id: m5_n32   # Gầm giường
     type: scene

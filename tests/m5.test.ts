@@ -18,11 +18,11 @@ const WALL = 'Gõ vách sang phòng 305';
 const CANDLE = 'Tìm nến và diêm';
 const KEYHOLE = 'Nhìn qua lỗ khoá ra hành lang';
 const LOOK = 'Nhìn kỹ các dòng chữ trên tường';
-const TO_N20 = ['Im lặng', 'Khoá vòi, không chạm vào nước'];
+const TO_N20 = ['Im lặng', 'Khoá vòi lại'];
 const TO_N30 = [...TO_N20, 'Bịt tai, ngồi im'];
 const LIGHT_WITH = 'Thắp nến';
 const LIGHT_WITHOUT = 'Lần mò ngăn kéo tìm nến, rồi thắp lên';
-const FINISH = ['Nhìn thẳng vào ngọn nến, không đáp', 'Chờ'];
+const FINISH = ['Nhìn ngọn nến, không đáp', 'Chờ'];
 
 const panel = (s: GameState) => bloodtextPanel(level, s).map((l) => [l.id, l.ink, l.segments.map((x) => x.text).join('')]);
 const bloodIn = (s: GameState) =>
@@ -98,7 +98,7 @@ describe('kết cục chết', () => {
     ['M5-10', [WALL, CANDLE, 'Mở cửa']],
     ['M5-20', [WALL, CANDLE, ...TO_N20, 'Mở cửa']],
     ['M5-30', [WALL, CANDLE, ...TO_N30, 'Ra hành lang xin lửa']],
-    ['M5-40', [WALL, CANDLE, ...TO_N30, LIGHT_WITH, 'Nhìn thẳng vào ngọn nến, không đáp', 'Mở cửa']],
+    ['M5-40', [WALL, CANDLE, ...TO_N30, LIGHT_WITH, 'Nhìn ngọn nến, không đáp', 'Mở cửa']],
   ])('D2 · Mở cửa từ %s', (_from, choices) => {
     const s = playM5(choices);
     expect(s.node).toBe('m5_d2');
@@ -107,13 +107,13 @@ describe('kết cục chết', () => {
     expect(solution[1]).toEqual({ id: 'F1', ink: 'nau', segments: [{ text: 'Nếu nghe tiếng mẹ gọi, hãy mở cửa.', mark: 'struck' }] });
   });
 
-  test.each([['Vốc nước rửa mặt'], ['Uống một ngụm']])('D3 · Dùng nước đỏ: %s', (choice) => {
+  test.each([['Vốc nước rửa mặt cho tỉnh'], ['Uống một ngụm cho đỡ khát']])('D3 · Dùng nước đỏ: %s', (choice) => {
     expect(playM5([WALL, CANDLE, 'Im lặng', choice]).node).toBe('m5_d3');
   });
 
   test.each([
     ['M5-30', [WALL, CANDLE, ...TO_N30, 'Ngồi yên trong bóng tối']],
-    ['M5-31', [WALL, CANDLE, ...TO_N30, LIGHT_WITH, 'Thổi nến']],
+    ['M5-31', [WALL, CANDLE, ...TO_N30, LIGHT_WITH, 'Thổi nến cho em bé đỡ sợ']],
   ])('D4 · Bóng tối từ %s', (_from, choices) => {
     const s = playM5(choices);
     expect(s.node).toBe('m5_d4');

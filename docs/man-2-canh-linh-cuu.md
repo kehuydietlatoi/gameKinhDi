@@ -324,8 +324,8 @@ Ký hiệu giống màn 1: mỗi dòng mở đầu bằng `kênh · tham số`. 
 - `env · ngửi` Mùi rêu nhạt dần rồi mất hẳn.
 - `narration` Phòng im lặng.
 
-1. Mở mắt → D3 · `eyes_closed` false
-2. Ngồi dậy, bước ra khỏi quan tài, rồi mới mở mắt → M2-51
+1. Mở mắt, rồi bước ra khỏi quan tài → D3 · `eyes_closed` false
+2. Bước ra khỏi quan tài, rồi mới mở mắt → M2-51
 
 #### M2-51 · Bước ra
 

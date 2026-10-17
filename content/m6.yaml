@@ -117,7 +117,7 @@ nodes:
       - {ch: narration, text: "Bạn đứng ở ngưỡng cầu, mặt hướng về phía C5."}
     choices:
       - {text: "Bước lên cầu, đi thẳng sang C5", goto: m6_n20}
-      - {text: "Quay người lại nhìn về phía C4, rồi bước lùi lên cầu", goto: m6_n30}
+      - {text: "Quay mặt về phía C4, bước lùi lên cầu", goto: m6_n30}
       - {text: "Không đi nữa, quay về với bà Sáu", goto: m6_n11}
 
   - id: m6_n11   # Ở lại
@@ -174,9 +174,9 @@ nodes:
       - {ch: bloodtext, lines: [L3], if: {sanity_lte: 2, not_highlighted: k4}}
       - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k3}}
     choices:
-      - {text: "Quay lại nhìn đường", goto: m6_d2}
-      - {text: "Dừng lại cho chắc", goto: m6_d3}
-      - {text: "Lùi tiếp, một tay lần theo lan can", goto: m6_n32}
+      - {text: "Quay lại xem lan can có gãy không", goto: m6_d2}
+      - {text: "Dừng lại, bám chặt lấy lan can", goto: m6_d3}
+      - {text: "Lùi tiếp, tay lần theo lan can", goto: m6_n32}
 
   - id: m6_n32   # Gần tới
     type: scene
@@ -185,9 +185,9 @@ nodes:
       - {ch: sound, src: "sau lưng, phía C5", vol: 2, text: "Cộp. Cộp. — tiếng guốc gỗ."}
       - {ch: npc, who: bac_si_thanh, text: "Ai đấy? Đứng lại cho tôi soi đèn!"}
     choices:
-      - {text: "Dừng lại, đáp lời", goto: m6_d3}
-      - {text: "Quay lại cho bà ấy thấy mặt", goto: m6_d2}
-      - {text: "Vừa lùi vừa đáp: \"Cháu bên C4, bà Sáu ốm!\"", goto: m6_n33}
+      - {text: "Dừng lại, đáp: \"Cháu bên C4, bà Sáu ốm!\"", goto: m6_d3}
+      - {text: "Quay lại cho bà ấy soi mặt", goto: m6_d2}
+      - {text: "Vừa lùi vừa đáp: \"Cháu bên C4!\"", goto: m6_n33}
 
   - id: m6_n33   # Ngưỡng cửa
     type: scene

@@ -218,7 +218,6 @@ Màn 9 cần 2 ảnh mới. Dùng lại `can_ho_304`, `hanh_lang_tang_2` (hành 
 
 - `npc · ba_hai` Không ai còn nhớ tên bà nữa.
 - `npc · ba_hai` Bốn mươi năm nay, bà đi tìm người nhớ.
-- `narration` (nếu flag `biet_ten_hai`) Bạn nhớ dòng tên bị gạch đen trong cuốn sổ cũ.
 
 1. (nếu flag `biet_ten_hai`) "Bà là bà Hai." → M9-14
 2. Lách qua bà, chạy xuống bàn thờ chung → M9-20

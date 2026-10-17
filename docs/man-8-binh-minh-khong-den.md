@@ -21,7 +21,7 @@ Sinh lộ: đây là giấc mơ của bé Na. Ở đây, thứ gì có trên tư
 
 ### Sinh lộ
 
-Đồng hồ đứng ở 23:59 vì trên tường chỉ có một ông mặt trời đang lặn: bức tranh "buổi chiều" trên tường cửa ra vào. Theo L4, vẽ một ông mặt trời mọc thì mặt trời sẽ mọc; theo L2, phải vẽ ở phía đông. Vở tập vẽ của Na cho biết mặt trời lên ở cửa sổ bếp.
+Đồng hồ đứng ở 23:59 vì trên tường chỉ có một ông mặt trời đang lặn: bức tranh "buổi chiều" trên tường cửa ra vào. Theo L4, vẽ một ông mặt trời mọc thì mặt trời sẽ mọc; theo L2, phải vẽ ở phía đông. Có hai cách biết phía đông là tường cửa sổ bếp: vở tập vẽ của Na nói thẳng (c1); hoặc tranh "chiều" cho thấy mặt trời lặn ở tường cửa ra vào, tức phía tây, và tường đó đối diện cửa sổ bếp (c2). Vẽ sai tường lần đầu thì còn một lần chọn lại giữa hai tường chưa vẽ; không có manh mối nào thì đó là đoán.
 
 Con ma đen cũng có thật vì nó ở trên tường, nhưng đó là con ma Na vẽ để canh cho mình ngủ. Xoá nó, vẽ đè lên nó hay giật bút của Na đều làm Na khóc (L3). Hộp bút của Na đã hết màu; chỉ Na có cây bút vàng, và phải xin cho tử tế.
 
@@ -63,7 +63,7 @@ Giờ trong game giữ nguyên "23:59" cho đến M8-31; màn này không dùng 
 | id | Hành động | Node | Phát hiện | Tỉnh táo |
 | --- | --- | --- | --- | --- |
 | c1 | Xem vở tập vẽ trên bàn học | M8-04 | "Sáng nào ông mặt trời cũng lên ở cửa sổ bếp nhà em." | 0 |
-| c2 | Nhìn tranh trên tường cửa ra vào | M8-05 | Ông mặt trời đỏ đang lặn sau dãy nhà, chữ sáp "chiều"; đồng hồ trên tường ấy đứng ở 23:59 | 0 |
+| c2 | Nhìn tranh trên tường cửa ra vào | M8-05 | Ông mặt trời đỏ đang lặn sau dãy nhà, chữ sáp "chiều"; tường cửa ra vào đối diện cửa sổ bếp; đồng hồ trên tường ấy đứng ở 23:59 | 0 |
 | c3 | Nhìn tranh con ma đen | M8-06 | Mỗi lần nhìn lại, nó gần mép tranh hơn | −1 |
 | c4 | Nói chuyện với bé Na | M8-07 | Na vẽ con ma để nó canh cho mình ngủ; ai lấy bút vàng của Na là Na khóc | 0 |
 | c5 | Mở hộp bút sáp trên bàn | M8-08 | Hộp chỉ còn một mẩu bút đen | 0 |
@@ -136,6 +136,7 @@ Ghi chú cho `phong_404_1986_mat_troi`: bảng màu không có vàng tươi; dù
 
 - `env · nhìn` Trên tường cửa ra vào, một ông mặt trời đỏ đang lặn xuống sau dãy nhà. Bên dưới có chữ sáp: "chiều".
 - `env · nhìn` Chiếc đồng hồ treo ngay trên bức tranh, kim chỉ 23:59.
+- `env · nhìn` Bạn quay lưng vào bức tranh. Đầu kia căn phòng, thẳng trước mặt, là ô cửa sổ bếp tối om.
 - Hiệu ứng: clue c2.
 - Tiếp: M8-03
 
@@ -226,8 +227,8 @@ Ghi chú cho `phong_404_1986_mat_troi`: bảng màu không có vàng tươi; dù
 - Nếu sanity ≤ 2: Huyết tự L2 (chưa đánh dấu k2) và L4 (chưa đánh dấu k4) hiện bản méo.
 
 1. Vẽ mặt trời lên tường cửa sổ bếp → M8-31
-2. Vẽ mặt trời lên tường cửa ra vào, cạnh ông mặt trời đỏ → M8-32
-3. Vẽ mặt trời lên tường bàn học → M8-32
+2. Vẽ mặt trời lên tường cửa ra vào, cạnh ông mặt trời đỏ → M8-32 · flag `ve_cua_ra_vao`
+3. Vẽ mặt trời lên tường bàn học → M8-32 · flag `ve_ban_hoc`
 4. Vẽ mặt trời đè lên con ma → D1
 
 #### M8-32 · Mặt trời lặn
@@ -236,8 +237,12 @@ Ghi chú cho `phong_404_1986_mat_troi`: bảng màu không có vàng tươi; dù
 - `env · nhìn` Ông mặt trời vàng vừa vẽ xong từ từ chìm xuống mép tranh, như mặt trời lặn.
 - `sound · rất gần · 3` Sột soạt sột soạt — con ma đã ra khỏi tường.
 
+Chỉ còn hai bức tường chưa vẽ; lựa chọn không chỉ sẵn tường đúng.
+
 1. Vẽ lên tường cửa sổ bếp → M8-31
-2. Vẽ lại một ông mặt trời to hơn ở chỗ cũ → D2
+2. (nếu flag `ve_cua_ra_vao`) Vẽ lên tường bàn học → D2
+3. (nếu flag `ve_ban_hoc`) Vẽ lên tường cửa ra vào → D2
+4. Vẽ lại một ông mặt trời to hơn ở chỗ cũ → D2
 
 #### M8-31 · Bình minh
 
@@ -262,5 +267,5 @@ Ghi chú cho `phong_404_1986_mat_troi`: bảng màu không có vàng tươi; dù
 
 - Mức mất tối đa là 4 (c3, M8-10, M8-30 khi không có `long_sat`, M8-32).
 - Bản méo ở M8-30 tới được khi đã chọn c3 và không vẽ song sắt.
-- Đường sống ngắn nhất không cần manh mối nào: hỏi mượn bút, nói để vẽ mặt trời, vẽ lên tường cửa sổ bếp. Không có c1 thì người chơi phải đoán; vẽ sai một lần vẫn còn cơ hội sửa.
-- Test cần có: đường sống có và không có `long_sat`; đường sống qua M8-22 rồi xin lỗi; đường sống qua M8-32 rồi sửa; D1 từ cả năm node; D2; hai bản méo ở M8-30.
+- Đường sống ngắn nhất không cần manh mối nào: hỏi mượn bút, nói để vẽ mặt trời, vẽ lên tường cửa sổ bếp. Không có c1 hoặc c2 thì người chơi phải đoán; vẽ sai một lần thì còn một lần chọn lại giữa hai tường chưa vẽ, sai lần nữa là D2.
+- Test cần có: đường sống có và không có `long_sat`; đường sống qua M8-22 rồi xin lỗi; đường sống qua M8-32 rồi sửa; D1 từ cả năm node; D2 từ lựa chọn vẽ lại chỗ cũ và từ lần đoán sai thứ hai; hai bản méo ở M8-30.

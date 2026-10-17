@@ -162,7 +162,7 @@ Lưu ý: hub M6-03 không khai báo `scene`, nên sau M6-05 hoặc M6-06 cảnh 
 - `narration` Bạn đứng ở ngưỡng cầu, mặt hướng về phía C5.
 
 1. Bước lên cầu, đi thẳng sang C5 → M6-20
-2. Quay người lại nhìn về phía C4, rồi bước lùi lên cầu → M6-30
+2. Quay mặt về phía C4, bước lùi lên cầu → M6-30
 3. Không đi nữa, quay về với bà Sáu → M6-11
 
 #### M6-11 · Ở lại
@@ -211,9 +211,9 @@ Lưu ý: hub M6-03 không khai báo `scene`, nên sau M6-05 hoặc M6-06 cảnh 
 - `npc · ke_tren_cau` (giọng mẹ) Con ơi, nhìn đường kìa. Sau lưng con lan can gãy đấy. Quay lại mà nhìn.
 - Nếu sanity ≤ 2: Huyết tự L3 (chưa đánh dấu k4) và L4 (chưa đánh dấu k3) hiện bản méo.
 
-1. Quay lại nhìn đường → D2
-2. Dừng lại cho chắc → D3
-3. Lùi tiếp, một tay lần theo lan can → M6-32
+1. Quay lại xem lan can có gãy không → D2
+2. Dừng lại, bám chặt lấy lan can → D3
+3. Lùi tiếp, tay lần theo lan can → M6-32
 
 #### M6-32 · Gần tới
 
@@ -221,9 +221,9 @@ Lưu ý: hub M6-03 không khai báo `scene`, nên sau M6-05 hoặc M6-06 cảnh 
 - `sound · sau lưng, phía C5 · 2` Cộp. Cộp. — tiếng guốc gỗ.
 - `npc · bac_si_thanh` Ai đấy? Đứng lại cho tôi soi đèn!
 
-1. Dừng lại, đáp lời → D3
-2. Quay lại cho bà ấy thấy mặt → D2
-3. Vừa lùi vừa đáp: "Cháu bên C4, bà Sáu ốm!" → M6-33
+1. Dừng lại, đáp: "Cháu bên C4, bà Sáu ốm!" → D3
+2. Quay lại cho bà ấy soi mặt → D2
+3. Vừa lùi vừa đáp: "Cháu bên C4!" → M6-33
 
 #### M6-33 · Ngưỡng cửa
 

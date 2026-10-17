@@ -22,10 +22,10 @@ const BALCONY = 'Ra ban công nhìn sang C5';
 const ADVICE = 'Hỏi bà Sáu cách qua cầu';
 const QUIET = [STORY, ADVICE];
 const FORWARD = 'Bước lên cầu, đi thẳng sang C5';
-const BACKWARD = 'Quay người lại nhìn về phía C4, rồi bước lùi lên cầu';
+const BACKWARD = 'Quay mặt về phía C4, bước lùi lên cầu';
 const TO_N31 = [BACKWARD, 'Lùi tiếp, giữ nhịp'];
-const TO_N32 = [...TO_N31, 'Lùi tiếp, một tay lần theo lan can'];
-const SURVIVE = [...TO_N32, 'Vừa lùi vừa đáp: "Cháu bên C4, bà Sáu ốm!"'];
+const TO_N32 = [...TO_N31, 'Lùi tiếp, tay lần theo lan can'];
+const SURVIVE = [...TO_N32, 'Vừa lùi vừa đáp: "Cháu bên C4!"'];
 
 describe('đường sống', () => {
   test('quay người ở đầu cầu, đi lùi, vừa lùi vừa đáp', () => {
@@ -76,8 +76,8 @@ describe('kết cục chết', () => {
   test.each([
     ['M6-20', [FORWARD, 'Quay đầu nhìn lại']],
     ['M6-30', [BACKWARD, 'Quay người lại, chạy cho nhanh']],
-    ['M6-31', [...TO_N31, 'Quay lại nhìn đường']],
-    ['M6-32', [...TO_N32, 'Quay lại cho bà ấy thấy mặt']],
+    ['M6-31', [...TO_N31, 'Quay lại xem lan can có gãy không']],
+    ['M6-32', [...TO_N32, 'Quay lại cho bà ấy soi mặt']],
   ])('D2 · Quay đầu từ %s', (_from, tail) => {
     expect(playM6([...QUIET, ...tail]).node).toBe('m6_d2');
   });
@@ -85,8 +85,8 @@ describe('kết cục chết', () => {
   test.each([
     ['M6-20', [FORWARD, 'Đứng lại nghe ngóng']],
     ['M6-30', [BACKWARD, 'Đứng lại nhìn cho rõ']],
-    ['M6-31', [...TO_N31, 'Dừng lại cho chắc']],
-    ['M6-32', [...TO_N32, 'Dừng lại, đáp lời']],
+    ['M6-31', [...TO_N31, 'Dừng lại, bám chặt lấy lan can']],
+    ['M6-32', [...TO_N32, 'Dừng lại, đáp: "Cháu bên C4, bà Sáu ốm!"']],
   ])('D3 · Dừng bước từ %s', (_from, tail) => {
     expect(playM6([...QUIET, ...tail]).node).toBe('m6_d3');
   });

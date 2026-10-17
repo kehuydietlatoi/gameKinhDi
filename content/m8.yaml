@@ -84,6 +84,7 @@ nodes:
     lines:
       - {ch: env, sense: nhìn, text: "Trên tường cửa ra vào, một ông mặt trời đỏ đang lặn xuống sau dãy nhà. Bên dưới có chữ sáp: \"chiều\"."}
       - {ch: env, sense: nhìn, text: "Chiếc đồng hồ treo ngay trên bức tranh, kim chỉ 23:59."}
+      - {ch: env, sense: nhìn, text: "Bạn quay lưng vào bức tranh. Đầu kia căn phòng, thẳng trước mặt, là ô cửa sổ bếp tối om."}
     effects: [{clue: c2}]
     next: m8_n03
 
@@ -185,8 +186,8 @@ nodes:
       - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k4}}
     choices:
       - {text: "Vẽ mặt trời lên tường cửa sổ bếp", goto: m8_n31}
-      - {text: "Vẽ mặt trời lên tường cửa ra vào, cạnh ông mặt trời đỏ", goto: m8_n32}
-      - {text: "Vẽ mặt trời lên tường bàn học", goto: m8_n32}
+      - {text: "Vẽ mặt trời lên tường cửa ra vào, cạnh ông mặt trời đỏ", goto: m8_n32, effects: [{flag: ve_cua_ra_vao}]}
+      - {text: "Vẽ mặt trời lên tường bàn học", goto: m8_n32, effects: [{flag: ve_ban_hoc}]}
       - {text: "Vẽ mặt trời đè lên con ma", goto: m8_d1}
 
   - id: m8_n32   # Mặt trời lặn
@@ -197,6 +198,8 @@ nodes:
       - {ch: sound, src: "rất gần", vol: 3, text: "Sột soạt sột soạt — con ma đã ra khỏi tường."}
     choices:
       - {text: "Vẽ lên tường cửa sổ bếp", goto: m8_n31}
+      - {text: "Vẽ lên tường bàn học", goto: m8_d2, if: {flag: ve_cua_ra_vao}}
+      - {text: "Vẽ lên tường cửa ra vào", goto: m8_d2, if: {flag: ve_ban_hoc}}
       - {text: "Vẽ lại một ông mặt trời to hơn ở chỗ cũ", goto: m8_d2}
 
   - id: m8_n31   # Bình minh

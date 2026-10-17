@@ -18,7 +18,7 @@ const MIRROR = ['Soi gương', 'Mở tủ quần áo'];
 const TO_DARK = ['Nằm xuống giường'];
 const LIE_STILL = ['Nằm yên lắng nghe', 'Im lặng', 'Nhắm chặt mắt hết sức', 'Nằm yên'];
 const TO_N40 = [...QUIET, ...TO_DARK, ...LIE_STILL];
-const SURVIVE = [...TO_N40, 'Nằm yên, đếm tiếng gà', 'Ngồi dậy, bước ra khỏi quan tài, rồi mới mở mắt'];
+const SURVIVE = [...TO_N40, 'Nằm yên, đếm tiếng gà', 'Bước ra khỏi quan tài, rồi mới mở mắt'];
 
 const bloodIn = (s: GameState) =>
   view(level, s).lines.flatMap((l) => (l.ch === 'bloodtext' ? l.lines.map((b) => b.segments.map((x) => x.text).join('')) : []));
@@ -50,7 +50,7 @@ describe('đường sống', () => {
     const t = run(level, [
       'Mở tủ quần áo', 'Gõ vách sang phòng 305', 'Xuống phòng sinh hoạt chung',
       'Đưa tay sờ quanh người', 'Im lặng', 'Hét lên: "Buông ra!"', 'Ngồi dậy (vẫn nhắm mắt)', 'Nằm xuống',
-      'Nằm yên, đếm tiếng gà', 'Ngồi dậy, bước ra khỏi quan tài, rồi mới mở mắt',
+      'Nằm yên, đếm tiếng gà', 'Bước ra khỏi quan tài, rồi mới mở mắt',
     ]);
     reached.add(t.state.node);
     expect(t.state).toMatchObject({ node: 'm2_e1', sanity: 1, flags: ['di_xuong', 'ngoi_day'] });
@@ -135,7 +135,7 @@ describe('các kết cục chết khác', () => {
   });
 
   test('D3 · Mở mắt khi còn trong quan tài (vi phạm L2)', () => {
-    const s = playM2([...TO_N40, 'Nằm yên, đếm tiếng gà', 'Mở mắt']);
+    const s = playM2([...TO_N40, 'Nằm yên, đếm tiếng gà', 'Mở mắt, rồi bước ra khỏi quan tài']);
     expect(s).toMatchObject({ node: 'm2_d3', eyes_closed: false });
     expect(view(level, s).lines[0]).toMatchObject({ ch: 'env', sense: 'nhìn' });
   });
@@ -173,7 +173,7 @@ describe('các kết cục chết khác', () => {
   });
 
   test('mất 4 (lên tiếng, M2-20, M2-30, M2-40) thì vẫn sống được, còn 1', () => {
-    const s = playM2([...QUIET, ...TO_DARK, 'Nằm yên lắng nghe', 'Lên tiếng: "Còn tôi."', 'Nhắm chặt mắt hết sức', 'Nằm yên', 'Nằm yên, đếm tiếng gà', 'Ngồi dậy, bước ra khỏi quan tài, rồi mới mở mắt']);
+    const s = playM2([...QUIET, ...TO_DARK, 'Nằm yên lắng nghe', 'Lên tiếng: "Còn tôi."', 'Nhắm chặt mắt hết sức', 'Nằm yên', 'Nằm yên, đếm tiếng gà', 'Bước ra khỏi quan tài, rồi mới mở mắt']);
     expect(s).toMatchObject({ node: 'm2_e1', sanity: 1 });
   });
 });

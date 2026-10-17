@@ -195,9 +195,9 @@ Bàn tay, bút lông và lọ mực ở M5-06 là manh mối c3; để chữ k�
 - `env · ngửi` Tanh mùi sắt.
 - `narration` Cổ họng bạn khô rát. Cơn sốt chưa dứt hẳn.
 
-1. Vốc nước rửa mặt → D3
-2. Khoá vòi, không chạm vào nước → M5-20
-3. Uống một ngụm → D3
+1. Vốc nước rửa mặt cho tỉnh → D3
+2. Khoá vòi lại → M5-20
+3. Uống một ngụm cho đỡ khát → D3
 
 #### M5-20 · Tiếng mẹ
 
@@ -234,9 +234,9 @@ Bàn tay, bút lông và lọ mực ở M5-06 là manh mối c3; để chữ k�
 - `sound · gầm giường · 1` Sột soạt.
 - `npc · giong_gam_giuong` Anh thổi nến đi mà. Em sợ lắm.
 
-1. Thổi nến → D4
+1. Thổi nến cho em bé đỡ sợ → D4
 2. Cúi nhìn xuống gầm giường → M5-32 · sanity −1
-3. Nhìn thẳng vào ngọn nến, không đáp → M5-40
+3. Nhìn ngọn nến, không đáp → M5-40
 
 #### M5-32 · Gầm giường
 

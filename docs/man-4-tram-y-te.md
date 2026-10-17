@@ -266,8 +266,6 @@ Màn 4 cần 1 ảnh mới.
 #### M4-31 · Tên
 
 - `npc · nguoi_ao_blouse` Bác sĩ Thanh. Tôi trực đêm nay.
-- `narration` Bác sĩ Thanh bạn gặp lúc chín giờ là một người phụ nữ.
-- `narration` (nếu clue c1) Bảng phân công chỉ ghi một bác sĩ trực.
 
 1. Dậy đi theo → D3
 2. Rút tay lại, nằm yên → M4-32

@@ -231,8 +231,6 @@ nodes:
     type: scene
     lines:
       - {ch: npc, who: nguoi_ao_blouse, text: "Bác sĩ Thanh. Tôi trực đêm nay."}
-      - {ch: narration, text: "Bác sĩ Thanh bạn gặp lúc chín giờ là một người phụ nữ."}
-      - {ch: narration, if: {clue: c1}, text: "Bảng phân công chỉ ghi một bác sĩ trực."}
     choices:
       - {text: "Dậy đi theo", goto: m4_d3}
       - {text: "Rút tay lại, nằm yên", goto: m4_n32}

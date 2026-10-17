@@ -52,13 +52,12 @@ describe('đường sống', () => {
     });
   });
 
-  test('M4-31: dòng bảng phân công chỉ hiện khi có c1', () => {
-    const line = 'Bảng phân công chỉ ghi một bác sĩ trực.';
-    const has = (choices: string[]) =>
-      run(level, [...choices, ...TO_N20, 'Nằm yên', 'Hỏi: "Anh tên gì?"']).views.find((v) => v.node === 'm4_n31')!
-        .lines.some((l) => 'text' in l && l.text === line);
-    expect(has(QUIET)).toBe(true);
-    expect(has([CHART, NURSE, CUONG])).toBe(false);
+  test('M4-31: chỉ có lời người mặc áo blouse, không có lời dẫn suy luận hộ', () => {
+    for (const choices of [QUIET, [CHART, NURSE, CUONG]]) {
+      const lines = run(level, [...choices, ...TO_N20, 'Nằm yên', 'Hỏi: "Anh tên gì?"']).views.find((v) => v.node === 'm4_n31')!
+        .lines;
+      expect(lines).toEqual([{ ch: 'npc', name: 'Người mặc áo blouse', tone: 'normal', text: 'Bác sĩ Thanh. Tôi trực đêm nay.' }]);
+    }
   });
 
   test('đèn tắt từ M4-20, sáng lại ở M4-40', () => {

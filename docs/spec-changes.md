@@ -524,3 +524,29 @@ Người dùng cho phép chép brief ảnh bổ sung (do Claude viết) vào doc
 | `docs/tong-quan-cot-truyen.md` | Danh sách ảnh: 23 ảnh; bỏ câu "Màn 5 không có ảnh mới" |
 
 YAML và `content/assets.yaml` (5 ảnh placeholder, `alt` do Claude viết từ brief) cập nhật trong cùng thay đổi.
+
+## G48 · Nhãn chấm từ khoá: "chìa khoá của sinh lộ"
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn hình kết quả mọi màn. Khi chơi thử, nhãn "sai" cạnh một cụm hợp lý (ví dụ "Lửa tắt" ở M7, "không được mở mắt" ở M2) đọc như người chơi đã đánh dấu nhầm.
+- **Bổ sung:** `correct` của từ khoá giữ nguyên nghĩa (cụm thuộc sinh lộ). Màn hình kết quả ghi "chìa khoá của sinh lộ" thay cho "đúng", "không phải chìa khoá" thay cho "sai". Chuỗi UI trong `src/ui/strings.ts`; mục 4.7 của đặc tả sửa theo. Không đổi YAML.
+
+## G49 · Chơi lại nhớ từ khoá đã đánh dấu
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** bước đánh dấu của mọi màn khi bấm "Chơi lại".
+- **Bổ sung:** giao diện đánh dấu mở sẵn các cụm đã chọn ở lần đánh dấu trước của cùng màn; người chơi vẫn bỏ chọn, chọn lại hoặc bấm "Bỏ qua". Chỉ nhớ trong phiên đang chơi, không ghi vào bản lưu, nên không đổi `sinhlo.save.v1`. Engine không đổi: lựa chọn vẫn chỉ được ghi khi người chơi xác nhận.
+
+## Sửa trực tiếp `docs/` lần 3 (người dùng cho phép sửa docs, 2026-10-17)
+
+Sau một lượt chơi thử cả 9 màn, người chơi qua mọi màn ngay lần đầu. Người dùng cho phép sửa kịch bản trong `docs/` để giảm những chỗ lộ đáp án. YAML và test cập nhật trong cùng thay đổi.
+
+| File | Chỗ sửa | Lý do |
+| --- | --- | --- |
+| `docs/man-4-tram-y-te.md` | M4-31: bỏ hai dòng `narration` "Bác sĩ Thanh bạn gặp lúc chín giờ là một người phụ nữ." và "(nếu clue c1) Bảng phân công chỉ ghi một bác sĩ trực." | Lời dẫn suy luận hộ người chơi. Manh mối vẫn còn: bác sĩ lúc chín giờ là "bà" và đi guốc gỗ; người mặc áo blouse đi giày da; c1 ghi một bác sĩ trực |
+| `docs/man-9-nguoi-dan-ba-khong-mat.md` | M9-13: bỏ dòng "(nếu flag `biet_ten_hai`) Bạn nhớ dòng tên bị gạch đen trong cuốn sổ cũ." | Như trên; lựa chọn "Bà là bà Hai." vẫn chỉ hiện khi đã biết tên |
+| `docs/man-6-cau-noi.md` | Chữ lựa chọn ở M6-10, M6-31, M6-32 (đích đến không đổi) | Ở cả ba node, lựa chọn đúng là câu dài và cụ thể nhất. Viết lại cho độ dài ngang nhau; lựa chọn chết ở M6-32 giờ cũng đáp lời bác sĩ Thanh, chỉ khác là dừng bước |
+| `docs/man-5-noi-quy.md` | Chữ lựa chọn ở M5-12, M5-31 (đích đến không đổi) | Như trên: thêm lý do cho lựa chọn chết ("cho tỉnh", "cho đỡ khát", "cho em bé đỡ sợ"), rút gọn lựa chọn đúng |
+| `docs/man-2-canh-linh-cuu.md` | M2-50: "Mở mắt" → "Mở mắt, rồi bước ra khỏi quan tài" | Lựa chọn chết sáu chữ cái đứng cạnh một câu dài 47 ký tự; giờ hai lựa chọn chỉ khác thứ tự hai hành động |
+| `docs/man-8-binh-minh-khong-den.md` | M8-05 thêm dòng `env · nhìn` "Bạn quay lưng vào bức tranh. Đầu kia căn phòng, thẳng trước mặt, là ô cửa sổ bếp tối om."; M8-30 hai lựa chọn tường sai bật cờ `ve_cua_ra_vao` / `ve_ban_hoc`; M8-32 không còn chỉ sẵn tường cửa sổ bếp mà cho chọn lại giữa hai tường chưa vẽ; cập nhật Sinh lộ, bảng manh mối c2 và "Kiểm tra nhanh" | Trước đây vẽ sai tường lần đầu thì M8-32 đưa sẵn đáp án, nên manh mối phía đông (c1) không có tác dụng. Giờ có hai đường suy ra phía đông (c1, hoặc c2: mặt trời lặn ở tường cửa ra vào, tường đó đối diện cửa sổ bếp) và đoán sai hai lần là D2 |
+| `docs/dac-ta-kich-ban.md` | Mục 4.7: cách ghi từ khoá trên màn hình kết quả | G48 |
