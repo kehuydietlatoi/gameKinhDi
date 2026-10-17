@@ -1,0 +1,441 @@
+# Màn 1 – Trốn tìm. Nguồn: docs/man-1-tron-tim.md (file đó là đúng khi hai bên khác nhau).
+# Bổ sung đặc tả dùng ở đây: docs/spec-changes.md (G1–G22).
+level: m1
+title: "Trốn tìm"
+start: m1_n01
+init: {sanity: 5, actions_left: 3, time: "23:59"}
+
+bloodtext:
+  - {id: L1, text: "Tất cả những ai đang ở trong phòng này phải chơi trốn tìm."}
+  - {id: L2, text: "Một người làm người đi tìm. Những người còn lại đi trốn.", violable: false}
+  - {id: L3, text: "Người đi tìm đếm đến một trăm rồi mới được mở mắt."}
+  - {id: L4, text: "Kẻ nào bị quỷ tìm thấy sẽ chết.", violable: false}
+  - {id: L5, text: "Trò chơi kết thúc khi gà gáy.", violable: false}
+
+keywords:
+  - {id: k1, line: L1, text: "Tất cả những ai đang ở trong phòng này", correct: false}
+  - {id: k2, line: L2, text: "Một người làm người đi tìm", correct: true}
+  - {id: k3, line: L3, text: "đếm đến một trăm rồi mới được mở mắt", correct: true}
+  - {id: k4, line: L4, text: "bị quỷ tìm thấy", correct: true}
+  - {id: k5, line: L4, text: "sẽ chết", correct: false}
+  - {id: k6, line: L5, text: "khi gà gáy", correct: false}
+
+distortions:
+  - {line: L3, unless_highlighted: k3, text: "Người đi tìm được mở mắt khi có người gọi."}
+  - {line: L4, unless_highlighted: k4, text: "Kẻ nào đi tìm sẽ chết."}
+
+solution: [k4]
+
+npcs:
+  - {id: bac_tam, name: "Bác Tâm"}
+  - {id: co_hang, name: "Cô Hằng"}
+  - {id: anh_khai, name: "Anh Khải"}
+  - {id: be_na, name: "Bé Na"}
+  - {id: chi_dung, name: "Chị Dung"}
+  - {id: ong_lam, name: "Ông Lâm"}
+  - {id: tat_ca, name: "Tất cả", group: true}
+
+clues: [c1, c2, c3, c4, c5, c6]
+
+dossiers:
+  - {id: hs_chay_c4_1986, title: "Vụ cháy nhà C4, 1986"}
+
+nodes:
+  # ---------- Pha 0 – Tỉnh dậy ----------
+
+  - id: m1_n01   # Tỉnh dậy
+    type: scene
+    scene: {bg: phong_sinh_hoat, light: flicker}
+    lines:
+      - {ch: narration, text: "Bạn mở mắt. Lưng tựa vào một chiếc ghế gỗ, gáy mỏi nhừ như đã ngồi đó rất lâu."}
+      - {ch: env, sense: nhìn, text: "Phòng sinh hoạt chung tầng 1. Đèn tuýp chập chờn, tường vôi vàng ố, sàn gạch hoa đỏ. Bảy chiếc ghế xếp thành vòng tròn."}
+      - {ch: env, sense: ngửi, text: "Mùi hương trầm lẫn mùi khói khét."}
+      - {ch: sound, src: "ngoài cửa sổ", vol: 1, text: "Vù… vù… — gió lùa qua những ô cửa chớp không cài then."}
+      - {ch: npc, who: bac_tam, text: "Đủ cả rồi đấy."}
+    next: m1_n02
+
+  - id: m1_n02   # Huyết tự
+    type: scene
+    lines:
+      - {ch: sound, src: "bức tường đối diện", vol: 2, text: "Sột… soạt… sột… — như có ai cào móng tay lên lớp vôi."}
+      - {ch: env, sense: nhìn, text: "Những vệt đỏ sẫm rỉ ra từ trong tường, chảy thành chữ."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4, L5]}
+      - {ch: system, text: "Huyết tự luôn mở lại được bằng nút \"Huyết tự\". Hãy đánh dấu tối đa 3 cụm từ; cụm đã đánh dấu sẽ không bao giờ bị bóp méo."}
+    highlight: true
+    next: m1_n03
+
+  - id: m1_n03   # Cả phòng phản ứng
+    type: scene
+    lines:
+      - {ch: npc, who: co_hang, text: "Lại là trò này…"}
+      - {ch: npc, who: anh_khai, text: "Trốn tìm thôi mà. Chơi xong là được về."}
+      - {ch: npc, who: be_na, tone: whisper, text: "Em sợ…"}
+      - {ch: npc, who: chi_dung, text: "Ai uống chè không? Uống cho ấm bụng."}
+      - {ch: sound, src: "gầm bàn", vol: 1, text: "Cộc. Cộc. Cộc. — ông Lâm gõ ba lần, mắt nhìn bạn không chớp."}
+      - {ch: npc, who: bac_tam, text: "Còn ít thời gian. Cậu muốn xem gì thì xem đi, rồi ta chọn người đi tìm."}
+      - {ch: system, text: "Bạn có 3 lượt hành động trước khi chọn vai."}
+    next: m1_n04
+
+  # ---------- Pha 1 – Quan sát ----------
+
+  - id: m1_n04   # Hub quan sát
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m1_n20
+    scene: {bg: phong_sinh_hoat, light: flicker}
+    choices:
+      - {text: "Xem bảng tin tổ dân phố", goto: m1_n05, effects: [{actions_left: -1}]}
+      - {text: "Nhìn ra cửa sổ kính", goto: m1_n06, effects: [{actions_left: -1}]}
+      - {text: "Nhìn xuống sàn dưới bóng đèn", goto: m1_n07, effects: [{actions_left: -1}]}
+      - {text: "Nói chuyện với cô Hằng", goto: m1_n08, effects: [{actions_left: -1}]}
+      - {text: "Nói chuyện với bé Na", goto: m1_n09, effects: [{actions_left: -1}]}
+      - {text: "Nói chuyện với anh Khải", goto: m1_n10, effects: [{actions_left: -1}]}
+
+  - id: m1_n05   # Bảng tin
+    type: scene
+    scene: {bg: bang_tin_cao_pho, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Bảng tin dán giấy báo họp tổ, lịch trực vệ sinh. Góc dưới có một tờ cáo phó ố vàng."}
+      - {ch: env, sense: nhìn, text: "\"Thành kính báo tin: vụ hoả hoạn nhà C4 đêm rằm tháng Bảy năm Bính Dần (1986)…\" Bên dưới là sáu tấm ảnh thờ."}
+      - {ch: env, sense: nhìn, text: "Sáu khuôn mặt: bác Tâm, cô Hằng, anh Khải, bé Na, chị Dung, ông Lâm."}
+      - {ch: sound, src: "sau lưng", vol: 1, text: "Kẽo kẹt. — một chiếc ghế gỗ khẽ dịch. Không ai nói gì."}
+    effects: [{clue: c1}, {sanity: -1}]
+    next: m1_n04
+
+  - id: m1_n06   # Cửa sổ
+    type: scene
+    scene: {bg: cua_so_kinh, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Kính cửa sổ mờ hơi nước. Mặt bạn phản chiếu trong đó, xanh xao."}
+      - {ch: env, sense: nhìn, text: "Phía sau bóng bạn trong kính là vòng ghế. Sáu chiếc ghế trống."}
+      - {ch: env, sense: nhìn, text: "Bạn quay lại. Sáu người vẫn ngồi đó, nhìn bạn."}
+    effects: [{clue: c2}, {sanity: -1}]
+    next: m1_n04
+
+  - id: m1_n07   # Dưới bóng đèn
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Đèn tuýp giữa trần hắt ánh trắng xuống nền gạch hoa."}
+      - {ch: env, sense: nhìn, text: "Bóng bạn đổ dài dưới chân ghế. Dưới chân những người khác, nền gạch sạch trơn."}
+      - {ch: sound, src: "trên trần", vol: 1, text: "Ù… ù… — tiếng chấn lưu đèn tuýp."}
+    effects: [{clue: c3}]
+    next: m1_n04
+
+  - id: m1_n08   # Cô Hằng
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Cô Hằng lật cuốn sổ tem phiếu, ngón tay đen nhẻm như dính muội."}
+      - {ch: npc, who: co_hang, text: "Cậu lĩnh phiếu gạo tháng Bảy chưa? Mậu dịch bảo tuần sau mới có."}
+      - {ch: npc, who: co_hang, text: "Cậu trẻ, chân nhanh. Đi trốn là hợp nhất đấy."}
+    effects: [{clue: c4}]
+    next: m1_n04
+
+  - id: m1_n09   # Bé Na
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bé Na ôm con búp bê nhựa, một mắt búp bê chảy nhão như nhựa gặp lửa."}
+      - {ch: env, sense: ngửi, text: "Tóc con bé có mùi khói."}
+      - {ch: npc, who: be_na, tone: whisper, text: "Anh trốn với em nhé. Em biết chỗ không ai tìm thấy đâu… cái tủ gỗ dưới gầm cầu thang ấy."}
+    effects: [{clue: c5}, {flag: na_moi_tron}]
+    next: m1_n04
+
+  - id: m1_n10   # Anh Khải
+    type: scene
+    lines:
+      - {ch: npc, who: anh_khai, text: "Để tôi làm người đi tìm. Tôi thuộc khu này như lòng bàn tay."}
+      - {ch: env, sense: nhìn, text: "Anh ta xoa hai bàn tay vào nhau. Da tay sần sùi, cháy sém tới tận cổ tay."}
+      - {ch: npc, who: anh_khai, text: "Cậu cứ đi trốn đi. Tôi tìm nhanh lắm."}
+    effects: [{clue: c6}]
+    next: m1_n04
+
+  # ---------- Pha 2 – Chọn vai ----------
+
+  - id: m1_n20   # Chọn người đi tìm
+    type: scene
+    lines:
+      - {ch: sound, src: "đồng hồ quả lắc", vol: 2, text: "Boong… — một tiếng chuông duy nhất, dù kim vẫn chỉ 23:59."}
+      - {ch: npc, who: bac_tam, text: "Đến giờ rồi. Ai làm người đi tìm?"}
+      - {ch: npc, who: anh_khai, tone: shout, text: "Tôi!"}
+      - {ch: narration, if: {clue: c1}, text: "Sáu khuôn mặt trên tờ cáo phó đang nhìn bạn."}
+    choices:
+      - {text: "\"Tôi sẽ đi tìm.\"", goto: m1_n21}
+      - {text: "\"Để anh Khải đi tìm.\"", goto: m1_n30, effects: [{role: hider}]}
+      - {text: "\"Bốc thăm cho công bằng.\"", goto: m1_n22}
+      - {text: "Nắm tay bé Na: \"Anh trốn với em.\"", goto: m1_n30, if: {flag: na_moi_tron}, effects: [{role: hider}, {spot: tu_go}]}
+      - {text: "\"Tôi không chơi.\"", goto: m1_d1}
+
+  - id: m1_n21   # Nhận vai
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Anh Khải im bặt. Khoé miệng anh ta giật lên một cái rồi duỗi ra."}
+      - {ch: npc, who: anh_khai, text: "Tuỳ cậu."}
+      - {ch: npc, who: bac_tam, text: "Vậy cậu đi tìm. Cả nhà đi trốn."}
+      - {ch: sound, src: "khắp phòng", vol: 2, text: "Kéttt… — sáu chiếc ghế cùng bị đẩy lùi một lúc."}
+    effects: [{role: seeker}]
+    next: m1_n40
+
+  - id: m1_n22   # Bốc thăm
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bác Tâm rút từ túi áo đại cán bảy que diêm, nắm kín trong tay. \"Ai rút que ngắn thì đi tìm.\""}
+      - {ch: env, sense: nhìn, text: "Bạn rút. Que dài. Lần lượt từng người rút. Que ngắn rơi vào tay anh Khải."}
+      - {ch: env, sense: nhìn, text: "Đến lúc đó bạn mới để ý: nắm tay bác Tâm vẫn chưa mở hết."}
+    effects: [{role: hider}]
+    next: m1_n30
+
+  # ---------- Pha 3a – Nhánh trốn (luôn dẫn tới D2) ----------
+
+  - id: m1_n30   # Anh Khải đếm
+    type: scene
+    scene: {bg: phong_sinh_hoat, light: flicker}
+    lines:
+      - {ch: sound, src: "giữa phòng", vol: 2, text: "\"Một… hai… ba…\" — giọng anh Khải đếm, mỗi số trầm hơn một chút; đến \"mười\" thì không còn giống giọng người."}
+      - {ch: narration, text: "Bạn phải trốn."}
+    choices:
+      - {text: "Tủ gỗ dưới gầm cầu thang", goto: m1_n31, if: {has_spot: false}, effects: [{spot: tu_go}]}
+      - {text: "Nhà vệ sinh chung cuối hành lang", goto: m1_n31, if: {has_spot: false}, effects: [{spot: wc}]}
+      - {text: "Sân phơi tầng thượng, giữa những hàng chăn", goto: m1_n31, if: {has_spot: false}, effects: [{spot: san_phoi}]}
+    next: m1_n31   # G12: đã có spot (tu_go) thì đi thẳng
+
+  - id: m1_n31   # Chỗ trốn
+    type: scene
+    scene:
+      - {if: {spot: tu_go}, light: dark}
+      - {if: {spot: wc}, bg: nha_ve_sinh_chung, light: flicker}
+      - {if: {spot: san_phoi}, bg: san_phoi, light: normal}
+    lines:
+      - {ch: env, sense: ngửi, if: {spot: tu_go}, text: "Trong tủ tối om, mùi long não và gỗ mục."}
+      - {ch: env, sense: ngửi, if: {spot: wc}, text: "Mùi khai lẫn nước Javel."}
+      - {ch: sound, src: "bồn rửa", vol: 1, if: {spot: wc}, text: "Tách… tách… — vòi nước nhỏ giọt."}
+      - {ch: env, sense: chạm, if: {spot: san_phoi}, text: "Những tấm chăn bông ẩm sương quệt vào mặt."}
+      - {ch: sound, src: "xa", vol: 1, text: "\"…chín mươi chín… một trăm.\""}
+      - {ch: sound, src: "cầu thang", vol: 2, text: "Lộp cộp. Lộp cộp. — bước chân lên cầu thang."}
+      - {ch: sound, src: "cầu thang", vol: 3, text: "Lộp cộp lộp cộp lộp cộp — không phải một người. Rất nhiều người cùng đi tìm."}
+    effects: [{sanity: -1}]
+    choices:
+      - {text: "Nín thở, giữ im lặng", goto: m1_d2}
+      - {text: "Lao ra chạy", goto: m1_d2}
+
+  # ---------- Pha 3b – Nhánh đi tìm ----------
+
+  - id: m1_n40   # Đếm (1–50)
+    type: scene
+    effects: [{eyes_closed: true}, {sanity: -1}]
+    lines:
+      - {ch: system, text: "Bạn đang nhắm mắt. Chỉ còn nghe được tiếng động và lời nói."}
+      - {ch: narration, text: "Một… hai… ba…"}
+      - {ch: sound, src: "khắp phòng", vol: 2, text: "Loẹt quẹt… loẹt quẹt… — tiếng dép lê tản ra mọi phía."}
+      - {ch: narration, text: "…ba mươi…"}
+      - {ch: sound, src: "cuối hành lang", vol: 1, text: "Kẹttt… — cửa sắt mở ra rồi không đóng lại."}
+      - {ch: narration, text: "…năm mươi…"}
+      - {ch: npc, who: be_na, tone: whisper, text: "Anh ơi, em ở ngay sau lưng anh này. Anh quay lại đi."}
+    choices:
+      - {text: "Mở mắt, quay lại", goto: m1_d3, effects: [{eyes_closed: false}]}
+      - {text: "Tiếp tục đếm", goto: m1_n41}
+
+  - id: m1_n41   # Đếm (51–100)
+    type: scene
+    lines:
+      - {ch: narration, text: "…năm mươi mốt… sáu mươi…"}
+      - {ch: sound, src: "sau gáy", vol: 1, text: "Phù… — một hơi thở lạnh phả vào gáy. Rồi một hơi nữa. Rồi nhiều hơi thở cùng lúc."}
+      - {ch: narration, text: "…tám mươi lăm…"}
+      - {ch: npc, who: bac_tam, tone: shout, text: "Cậu ơi! Có người ngã cầu thang! Mở mắt ra giúp một tay!"}
+      - {ch: bloodtext, lines: [L3], if: {sanity_lte: 2, not_highlighted: k3}}
+    choices:
+      - {text: "Mở mắt", goto: m1_d3, effects: [{eyes_closed: false}]}
+      - {text: "Đếm tiếp đến một trăm", goto: m1_n42}
+
+  - id: m1_n42   # Mở mắt
+    type: scene
+    scene: {bg: phong_sinh_hoat, light: flicker}
+    effects: [{eyes_closed: false}, {time: "00:00"}]
+    lines:
+      - {ch: narration, text: "…chín mươi chín… một trăm."}
+      - {ch: env, sense: nhìn, text: "Phòng sinh hoạt trống trơn. Bảy chiếc ghế giờ đều xoay mặt về phía bạn."}
+      - {ch: sound, src: "trên trần", vol: 2, text: "Ù… tạch… ù… — đèn tuýp chập chờn."}
+      - {ch: system, text: "Khu tập thể có 4 nơi để tìm. Gà gáy khi bạn đã tìm khắp 4 nơi."}
+    next: m1_n50
+
+  - id: m1_n50   # Hub tìm kiếm
+    type: scene
+    hub: true
+    hub_done: {visited_count_gte: 4}
+    hub_exit: m1_n60
+    scene: {bg: phong_sinh_hoat, light: flicker}
+    lines:
+      - {ch: sound, src: "sau lưng", vol: 1, if: {following_lte: 0}, text: "Sau lưng bạn không có ai. Bạn vẫn nghe thấy hai tiếng bước chân."}
+      - {ch: sound, src: "sau lưng", vol: 1, if: {following_gte: 1}, text: "Sau lưng bạn có {following} người. Bạn nghe thấy {following + 2} tiếng bước chân."}
+    choices:
+      - {text: "Hành lang tầng 2", goto: m1_n51, effects: [{time_add: 60}]}
+      - {text: "Nhà vệ sinh chung cuối hành lang", goto: m1_n52, effects: [{time_add: 60}]}
+      - {text: "Gầm cầu thang", goto: m1_n53, effects: [{time_add: 60}]}
+      - {text: "Sân phơi tầng thượng", goto: m1_n54, effects: [{time_add: 60}]}
+
+  - id: m1_n51   # Hành lang tầng 2
+    type: scene
+    scene: {bg: hanh_lang_tang_2, light: flicker}
+    lines:
+      - {ch: env, sense: nhìn, text: "Hành lang dài, hai bên là cửa gỗ sơn xanh. Trước mỗi nhà là một bếp than tổ ong nguội ngắt."}
+      - {ch: env, sense: nhìn, text: "Cô Hằng và chị Dung đứng giữa hành lang. Không hề trốn. Họ đang đợi."}
+      - {ch: npc, who: chi_dung, text: "Tìm thấy bọn chị rồi à. Giỏi quá."}
+      - {ch: npc, who: co_hang, text: "Giờ bọn cô đi theo cậu nhé."}
+    effects: [{found: co_hang}, {found: chi_dung}]
+    next: m1_n50
+
+  - id: m1_n52   # Nhà vệ sinh chung
+    type: scene
+    scene: {bg: nha_ve_sinh_chung, light: flicker}
+    lines:
+      - {ch: sound, src: "buồng trong cùng", vol: 2, text: "Cộc. Cộc. — tiếng gõ từ phía trong cánh cửa buồng."}
+      - {ch: npc, who: be_na, tone: whisper, text: "Anh ơi, vào đây trốn với em đi. Nó đang tới đấy. Nhanh lên."}
+      - {ch: sound, src: "hành lang", vol: 2, text: "Lộp cộp… lộp cộp… — bước chân đang tới gần cửa nhà vệ sinh."}
+    choices:
+      - {text: "Lách vào buồng, đóng cửa lại", goto: m1_d5}
+      - {text: "Mở cửa buồng: \"Tìm thấy em rồi.\"", goto: m1_n52b}
+
+  - id: m1_n52b  # Tìm thấy bé Na
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bé Na ngồi trên bệ, ôm búp bê. Mặt con bé tối sầm lại, rồi cười."}
+      - {ch: npc, who: be_na, text: "Ừ. Anh tìm thấy em rồi."}
+      - {ch: sound, src: "ngoài cửa", vol: 1, text: "Tiếng bước chân dừng lại. Không ai bước vào."}
+    effects: [{found: be_na}]
+    next: m1_n50
+
+  - id: m1_n53   # Gầm cầu thang
+    type: scene
+    scene: {bg: gam_cau_thang, light: flicker}
+    lines:
+      - {ch: env, sense: nhìn, text: "Chiếc tủ gỗ dưới gầm cầu thang khép hờ. Một con mắt nhìn ra qua khe cửa."}
+      - {ch: npc, who: anh_khai, text: "Tìm thấy tôi rồi. Cậu tìm giỏi thật."}
+      - {ch: npc, who: anh_khai, text: "Giờ đổi lượt đi. Cậu trốn, tôi tìm. Công bằng mà."}
+      - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k4}}
+    choices:
+      - {text: "\"Được, đổi lượt.\"", goto: m1_d4}
+      - {text: "\"Huyết tự chỉ cho một người đi tìm. Người đó là tôi.\"", goto: m1_n53b}
+      - {text: "Lặng lẽ quay đi", goto: m1_n53b}
+
+  - id: m1_n53b  # Anh Khải bước ra
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Anh Khải bước ra khỏi tủ."}
+      - {ch: env, sense: ngửi, text: "Mùi khét lan ra theo anh ta."}
+      - {ch: npc, who: anh_khai, text: "Tiếc thật."}
+    effects: [{found: anh_khai}]
+    next: m1_n50
+
+  - id: m1_n54   # Sân phơi tầng thượng
+    type: scene
+    scene: {bg: san_phoi, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Sân phơi lộng gió, dây phơi chằng chịt chăn màn. Bể nước xi măng đóng rêu ở góc."}
+      - {ch: env, sense: nhìn, text: "Bác Tâm ngồi trên thành bể. Khói bay ra từ miệng bác, dù trên tay không có điếu thuốc nào."}
+      - {ch: npc, who: bac_tam, text: "Cậu tìm được tôi rồi. Còn ông Lâm thì sao?"}
+      - {ch: sound, src: "trong bể nước", vol: 1, text: "Cộc. Cộc. Cộc. — tiếng gõ vọng lên từ dưới mặt nước."}
+    effects: [{found: bac_tam}]
+    next: m1_n50
+
+  # ---------- Pha 4 – Trước giờ gà gáy ----------
+
+  - id: m1_n60   # Mất điện
+    type: scene
+    scene: {light: dark}
+    effects: [{time: "04:00"}]
+    lines:
+      - {ch: sound, src: "khắp toà nhà", vol: 3, text: "Phụt. — mọi bóng đèn tắt cùng lúc."}
+      - {ch: env, sense: nhìn, text: "Tối đen."}
+      - {ch: sound, src: "sau lưng", vol: 2, text: "Những tiếng bước chân sau lưng bạn dừng lại. Rồi bắt đầu tản ra."}
+      - {ch: npc, who: bac_tam, tone: whisper, text: "Còn một người chưa tìm thấy đâu, cậu ạ."}
+      - {ch: sound, src: "gầm bàn bên cạnh", vol: 2, text: "Cộc. Cộc. Cộc. — ông Lâm gõ vào gầm chiếc bàn ngay cạnh bạn, như mời bạn chui vào."}
+    choices:
+      - {text: "Chui xuống gầm bàn", goto: m1_d5}
+      - {text: "Đứng yên, nhắm mắt chờ", goto: m1_n61}
+      - {text: "Gọi to: \"Ông Lâm! Tìm thấy ông rồi!\"", goto: m1_n62, effects: [{sanity: -1}]}
+
+  - id: m1_n61   # Đứng yên
+    type: scene
+    effects: [{eyes_closed: true}]
+    lines:
+      - {ch: sound, src: "xung quanh", vol: 3, text: "Lộp cộp lộp cộp — bước chân vây quanh bạn, mỗi lúc một sát."}
+      - {ch: npc, who: co_hang, tone: whisper, text: "Cậu không đi tìm nữa à?"}
+      - {ch: narration, text: "Bạn đứng yên. Bạn không trốn."}
+    next: m1_n63
+
+  - id: m1_n62   # Gọi tên
+    type: scene
+    lines:
+      - {ch: sound, src: "gầm bàn", vol: 2, text: "Cộc… — tiếng gõ dừng lại giữa chừng."}
+      - {ch: env, sense: chạm, text: "Một bàn tay khô, nóng như than nắm lấy cổ tay bạn, rồi buông ra."}
+      - {ch: npc, who: be_na, text: "Hì hì. Anh tìm đủ rồi."}
+    effects: [{found: ong_lam}]
+    next: m1_n63
+
+  - id: m1_n63   # Gà gáy
+    type: scene
+    scene: {bg: phong_sinh_hoat, light: dawn}
+    effects: [{eyes_closed: false}]
+    lines:
+      - {ch: sound, src: "rất xa", vol: 2, text: "Ò… ó… o… — tiếng gà gáy, dù cả khu tập thể chẳng nhà nào nuôi gà."}
+      - {ch: env, sense: nhìn, text: "Đèn bật sáng. Bạn đứng một mình giữa phòng sinh hoạt chung."}
+    next: m1_e1
+
+  # ---------- Kết cục ----------
+
+  - id: m1_e1
+    type: ending
+    result: survive
+    cause: "Sống sót"
+    scene: {bg: bang_tin_cao_pho_7, light: dawn}
+    lines:
+      - {ch: env, sense: nhìn, text: "Trên bảng tin, tờ cáo phó có thêm một khung ảnh thứ bảy, còn trống."}
+    reveal: "Cả sáu người đều là quỷ. Người đi tìm là người duy nhất không thể \"bị tìm thấy\"."
+    unlock: [{dossier: hs_chay_c4_1986, if: {clue: c1}}]
+
+  - id: m1_d1
+    type: ending
+    result: death
+    cause: "Từ chối chơi"
+    lines:
+      - {ch: bloodtext, lines: [L1], style: glow}   # "Dòng L1 đỏ rực lên."
+      - {ch: sound, src: "khắp phòng", vol: 3, text: "Kéttt — sáu người đứng dậy cùng lúc."}
+    reveal: "Vi phạm L1: tất cả phải chơi."
+    violates: [L1]
+    solution: [L1]
+
+  - id: m1_d2
+    type: ending
+    result: death
+    cause: "Bị tìm thấy"
+    lines:
+      - {ch: npc, who: tat_ca, tone: whisper, text: "Tìm thấy rồi.", note: "sáu giọng cùng lúc, sát bên tai"}
+    reveal: "Mọi người khác đều là quỷ, và tất cả cùng đi tìm. Người trốn không có đường sống."
+    consequence_of: [L4]
+
+  - id: m1_d3
+    type: ending
+    result: death
+    cause: "Mở mắt khi đếm"
+    lines:
+      - {ch: env, sense: nhìn, text: "Sáu khuôn mặt cháy sém kề sát mặt bạn."}
+    reveal: "Vi phạm L3."
+    violates: [L3]
+    solution: [k3]
+
+  - id: m1_d4
+    type: ending
+    result: death
+    cause: "Đổi lượt"
+    lines:
+      - {ch: sound, src: "gầm cầu thang", vol: 2, text: "\"Một… hai… ba…\" — giọng anh Khải bắt đầu đếm."}
+    reveal: "Đổi lượt nghĩa là trở thành người trốn, tức là chờ bị quỷ tìm thấy."
+    consequence_of: [L4]
+
+  - id: m1_d5
+    type: ending
+    result: death
+    cause: "Trốn giữa chừng"
+    lines:
+      - {ch: npc, who: tat_ca, tone: whisper, text: "Tìm thấy rồi."}
+    reveal: "Người đi tìm đã tự biến mình thành người trốn."
+    consequence_of: [L4]
