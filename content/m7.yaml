@@ -1,0 +1,266 @@
+# Màn 7 – Giữ lửa. Nguồn: docs/man-7-giu-lua.md (file đó là đúng khi hai bên khác nhau).
+# Bổ sung đặc tả dùng ở đây: docs/spec-changes.md (G1–G44); ánh lò dùng candle (G39).
+level: m7
+title: "Giữ lửa"
+start: m7_n01
+init: {sanity: 5, actions_left: 2, time: "21:00"}
+
+bloodtext:
+  - {id: L1, text: "Đêm nay, sáu người sau đây phải giữ lửa trong bếp tập thể đến sáng: Sáu, Hoa, Thanh, Đức, Tuấn, Hạnh."}
+  - {id: L2, text: "Lửa tắt thì không ai trong bếp thấy được bình minh.", violable: false}
+  - {id: L3, text: "Thứ ngoài ngõ sẽ gọi tên từng người. Người được gọi tên phải đáp \"dạ\"."}
+  - {id: L4, text: "Thứ ngoài ngõ không đụng tới người có tên trong danh sách.", violable: false}
+
+keywords:
+  - {id: k1, line: L1, text: "sáu người sau đây", correct: true}
+  - {id: k2, line: L1, text: "giữ lửa trong bếp tập thể", correct: false}
+  - {id: k3, line: L3, text: "Người được gọi tên phải đáp", correct: true}
+  - {id: k4, line: L4, text: "người có tên trong danh sách", correct: true}
+  - {id: k5, line: L2, text: "Lửa tắt", correct: false}
+  - {id: k6, line: L3, text: "gọi tên từng người", correct: false}
+
+distortions:
+  - {line: L3, unless_highlighted: k3, text: "Thứ ngoài ngõ sẽ gọi tên từng người. Người được gọi tên không được đáp lời."}
+  - {line: L4, unless_highlighted: k4, text: "Thứ ngoài ngõ không đụng tới người ở trong bếp."}
+
+solution: [k1, k3, k4]
+
+npcs:
+  - {id: ba_sau, name: "Bà Sáu"}
+  - {id: ba_hoa, name: "Bà Hoa"}
+  - {id: bac_si_thanh, name: "Bác sĩ Thanh"}
+  - {id: ong_duc, name: "Ông Đức"}
+  - {id: anh_tuan, name: "Anh Tuấn"}
+  - {id: thu_ngoai_ngo, name: "Thứ ngoài ngõ"}
+
+clues: [c1, c2, c3, c4]
+
+nodes:
+  # ---------- Pha 0 – Mất điện ----------
+
+  - id: m7_n01   # Bếp tập thể
+    type: scene
+    scene: {bg: bep_tap_the, light: candle}
+    effects: [{time: "21:00"}]
+    lines:
+      - {ch: narration, text: "Cả khu mất điện từ chập tối. Mọi người kéo nhau xuống bếp tập thể cho ấm."}
+      - {ch: env, sense: nhìn, text: "Lò than chung giữa gian bếp đỏ rực. Hai dãy bếp tổ ong nguội lạnh kê sát tường."}
+      - {ch: sound, src: "ngoài ngõ", vol: 1, text: "Vù… — gió lùa qua khe cửa gỗ."}
+      - {ch: npc, who: ba_sau, text: "Ngồi gần lò vào. Đêm nay đừng ai về phòng."}
+    next: m7_n02
+
+  - id: m7_n02   # Sáu cái tên
+    type: scene
+    lines:
+      - {ch: sound, src: "tường trên lò", vol: 2, text: "Sột… soạt…"}
+      - {ch: env, sense: nhìn, text: "Chữ đỏ rỉ ra trên mảng tường quét vôi phía trên lò than."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4]}
+      - {ch: npc, who: ba_sau, text: "Sáu, Hoa, Thanh, Đức, Tuấn, Hạnh."}
+      - {ch: npc, who: anh_tuan, text: "Đủ sáu người. May quá."}
+      - {ch: npc, who: ba_hoa, text: "Hạnh nào? Hạnh phòng 302 à?"}
+      - {ch: env, sense: nhìn, text: "Không ai trả lời."}
+      - {ch: system, text: "Bạn có 2 lượt hành động."}
+    highlight: true
+    next: m7_n03
+
+  - id: m7_n03   # Hub bếp
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m7_n10
+    choices:
+      - {text: "Đọc biển tên trên các bếp", goto: m7_n04, effects: [{actions_left: -1}]}
+      - {text: "Hỏi bác sĩ Thanh về chị Hạnh", goto: m7_n05, effects: [{actions_left: -1}]}
+      - {text: "Hỏi ông Đức về lò than", goto: m7_n06, effects: [{actions_left: -1}]}
+      - {text: "Đếm người trong bếp", goto: m7_n07, effects: [{actions_left: -1}]}
+
+  - id: m7_n04   # Biển tên
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Mỗi bếp tổ ong có một tấm biển gỗ ghi tên chủ hộ."}
+      - {ch: env, sense: nhìn, text: "Bếp thứ bảy: \"Hạnh – 302\"."}
+      - {ch: env, sense: nhìn, text: "Bếp nhà bạn ở cuối dãy. Tấm biển đã bị ai cạo trắng, không còn một nét chữ."}
+    effects: [{clue: c1}, {sanity: -1}]
+    next: m7_n03
+
+  - id: m7_n05   # Chị Hạnh
+    type: scene
+    lines:
+      - {ch: npc, who: bac_si_thanh, text: "Hạnh à? Chiều nay tôi vừa truyền dịch cho chị ấy ở trạm."}
+      - {ch: npc, who: bac_si_thanh, text: "Đêm nay chị ấy không về được đâu."}
+    effects: [{clue: c2}]
+    next: m7_n03
+
+  - id: m7_n06   # Lò than
+    type: scene
+    lines:
+      - {ch: sound, src: "lò", vol: 1, text: "Lách tách…"}
+      - {ch: npc, who: ong_duc, text: "Lò này tôi xây từ năm bảy chín, chưa tắt bao giờ."}
+      - {ch: npc, who: ong_duc, text: "Thùng than ở góc kia đủ đốt đến sáng. Đừng ai mở cửa ngõ cho gió lùa là được."}
+    effects: [{clue: c3}]
+    next: m7_n03
+
+  - id: m7_n07   # Đếm người
+    type: scene
+    lines:
+      - {ch: narration, text: "Bà Sáu. Bà Hoa. Bác sĩ Thanh. Ông Đức. Anh Tuấn. Và bạn."}
+      - {ch: narration, text: "Sáu."}
+      - {ch: env, sense: nhìn, text: "Trên tường, ánh lò hắt lên sáu cái bóng."}
+    effects: [{clue: c4}]
+    next: m7_n03
+
+  # ---------- Pha 1 – Người thừa ----------
+
+  - id: m7_n10   # Người không tên
+    type: scene
+    effects: [{time: "23:00"}]
+    lines:
+      - {ch: npc, who: anh_tuan, text: "Khoan. Chị Hạnh không có ở đây. Thế cậu 304 là ai trong sáu người?"}
+      - {ch: npc, who: anh_tuan, text: "Chữ máu chỉ nói sáu người có tên. Người không tên thì ra ngoài, kẻo nó vào tìm."}
+      - {ch: sound, src: "ngoài ngõ", vol: 1, text: "Rè… rè… — như tiếng loa phường đang dò sóng."}
+    choices:
+      - {text: "\"Tôi ra ngoài.\"", goto: m7_d2}
+      - {text: "\"Tôi ở lại.\"", goto: m7_n11}
+      - {text: "\"Chị Hạnh đang nằm trạm y tế. Tôi ở lại giữ lửa thay chị ấy.\"", goto: m7_n11, if: {clue: c2}}
+
+  - id: m7_n11   # Ở lại
+    type: scene
+    lines:
+      - {ch: npc, who: ba_sau, text: "Thôi, để cậu ấy ở lại. Ra ngoài giờ này thì chết."}
+      - {ch: npc, who: anh_tuan, text: "Tuỳ bà."}
+    next: m7_n20
+
+  # ---------- Pha 2 – Giữ lửa ----------
+
+  - id: m7_n20   # Lửa yếu
+    type: scene
+    scene: {bg: bep_tap_the, light: dark}
+    effects: [{time: "01:00"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Miệng lò chỉ còn đỏ lờ mờ."}
+      - {ch: npc, who: anh_tuan, text: "Hết than rồi! Phải ra kho ngoài ngõ lấy thêm."}
+    choices:
+      - {text: "Ra kho ngoài ngõ lấy than", goto: m7_d2}
+      - {text: "Xúc than trong thùng ở góc bỏ vào lò", goto: m7_n21, if: {clue: c3}}
+      - {text: "Đập một chiếc ghế gỗ, bỏ vào lò", goto: m7_n21, effects: [{sanity: -1}]}
+      - {text: "Ngồi yên chờ người khác lo", goto: m7_d1}
+
+  - id: m7_n21   # Lửa bùng
+    type: scene
+    scene: {bg: bep_tap_the, light: candle}
+    lines:
+      - {ch: sound, src: "lò", vol: 2, text: "Phừng."}
+      - {ch: env, sense: nhìn, text: "Lửa bùng lên, liếm lên tận miệng lò."}
+      - {ch: npc, who: ong_duc, text: "Đấy. Lò này không tắt được đâu."}
+    next: m7_n30
+
+  # ---------- Pha 3 – Gọi tên ----------
+
+  - id: m7_n30   # Điểm danh
+    type: scene
+    effects: [{time: "03:00"}, {sanity: -1}]
+    lines:
+      - {ch: sound, src: "ngoài ngõ", vol: 2, text: "Rè… — tiếng loa im bặt. Rồi một giọng đều đều vang lên."}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Sáu."}
+      - {ch: npc, who: ba_sau, text: "Dạ."}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Hoa."}
+      - {ch: npc, who: ba_hoa, text: "Dạ."}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Thanh."}
+      - {ch: npc, who: bac_si_thanh, text: "Dạ."}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Đức."}
+      - {ch: npc, who: ong_duc, text: "Dạ."}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Tuấn."}
+      - {ch: npc, who: anh_tuan, text: "Dạ…"}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Hạnh."}
+      - {ch: sound, src: "bếp", vol: 1, text: "Im lặng. Chỉ có tiếng lửa lách tách."}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Hạnh."}
+      - {ch: bloodtext, lines: [L3], if: {sanity_lte: 2, not_highlighted: k3}}
+      - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k4}}
+    choices:
+      - {text: "Đáp: \"Dạ.\"", goto: m7_n31}
+      - {text: "Im lặng", goto: m7_d3}
+      - {text: "Đáp: \"Chị Hạnh không có ở đây. Tôi là người ở phòng 304.\"", goto: m7_d4}
+
+  - id: m7_n31   # Đủ
+    type: scene
+    lines:
+      - {ch: npc, who: thu_ngoai_ngo, text: "Đủ."}
+      - {ch: sound, src: "ngoài ngõ", vol: 1, text: "Rè… rồi tắt hẳn."}
+      - {ch: env, sense: nhìn, text: "Anh Tuấn nhìn bạn trân trối."}
+      - {ch: npc, who: ba_hoa, tone: whisper, text: "Từ giờ đến sáng, cậu là Hạnh."}
+    next: m7_n32
+
+  - id: m7_n32   # Gọi ra ngõ
+    type: scene
+    effects: [{time: "04:30"}]
+    lines:
+      - {ch: sound, src: "ngoài ngõ", vol: 2, text: "Rè…"}
+      - {ch: npc, who: thu_ngoai_ngo, text: "Hạnh. Ra ngõ lấy than."}
+    choices:
+      - {text: "\"Dạ.\" rồi ngồi yên bên lò", goto: m7_n40}
+      - {text: "\"Dạ.\" rồi ra ngõ", goto: m7_d1}
+      - {text: "Im lặng", goto: m7_d3}
+
+  - id: m7_n40   # Sáng
+    type: scene
+    scene: {bg: bep_tap_the, light: dawn}
+    effects: [{time: "05:45"}]
+    lines:
+      - {ch: sound, src: "rất xa", vol: 2, text: "Ò… ó… o…"}
+      - {ch: env, sense: nhìn, text: "Lò than vẫn đỏ. Ánh xám lọt qua khe cửa ngõ."}
+      - {ch: npc, who: bac_si_thanh, text: "Sáng rồi."}
+    next: m7_e1
+
+  # ---------- Kết cục ----------
+
+  - id: m7_e1
+    type: ending
+    result: survive
+    cause: "Giữ được lửa"
+    scene: {bg: bep_tap_the, light: dawn}
+    lines:
+      - {ch: env, sense: nhìn, text: "Trên tấm biển bị cạo trắng ở bếp nhà bạn, ai đó đã viết bằng than một chữ: Hạnh."}
+    reveal: "Huyết tự có sáu cái tên, trong bếp có sáu người, nhưng bạn không phải một trong sáu. Đáp \"dạ\" khi tên Hạnh được gọi, bạn trở thành người có tên trong danh sách."
+    solution: [k1, k3, k4]
+
+  - id: m7_d1
+    type: ending
+    result: death
+    cause: "Bỏ lửa"
+    lines:
+      - {ch: env, sense: nhìn, text: "Lò than tắt. Trong bóng tối, tiếng loa rè vang lên ngay giữa gian bếp."}
+    reveal: "Sáu người có tên phải giữ lửa trong bếp đến sáng. Đã nhận tên Hạnh thì bạn cũng phải ở lại."
+    violates: [L1]
+    consequence_of: [L2]
+    solution: [L1]
+
+  - id: m7_d2
+    type: ending
+    result: death
+    cause: "Ra ngoài khi không có tên"
+    lines:
+      - {ch: sound, src: "ngoài ngõ", vol: 2, text: "Bạn bước ra ngõ. Giọng loa rè gọi một cái tên: tên của bạn."}
+    reveal: "L4 chỉ che chở người có tên trong danh sách. Bạn không có tên."
+    consequence_of: [L4]
+    solution: [k4]
+
+  - id: m7_d3
+    type: ending
+    result: death
+    cause: "Không ai đáp"
+    lines:
+      - {ch: npc, who: thu_ngoai_ngo, text: "Thiếu một."}
+    reveal: "Người được gọi tên phải đáp \"dạ\". Tên Hạnh được gọi mà không ai đáp."
+    violates: [L3]
+    solution: [k3]
+
+  - id: m7_d4
+    type: ending
+    result: death
+    cause: "Xưng tên mình"
+    lines:
+      - {ch: env, sense: chạm, text: "Gió lạnh lùa qua khe cửa, chỉ quấn quanh một mình bạn."}
+    reveal: "Bạn không đáp \"dạ\" khi tên Hạnh được gọi, lại tự nhận mình là người không có tên trong danh sách."
+    violates: [L3]
+    consequence_of: [L4]
+    solution: [k1, k4]

@@ -62,3 +62,9 @@ assets:
     file: bg/cau_noi_c4_c5.png
     alt: "Cầu nối bê tông hẹp nhìn từ đầu cầu phía C4 sang nhà C5 ban đêm, lan can sắt hai bên và cửa đầu cầu C5 hắt ánh vàng."
     placeholder: true
+
+  # Màn 7 (alt do Claude viết từ brief, G21)
+  - id: bep_tap_the
+    file: bg/bep_tap_the.png
+    alt: "Gian bếp tập thể tầng 1 nhìn dọc, lò than lớn xây gạch ở giữa, hai dãy bếp than tổ ong kê sát hai bên tường và cửa gỗ ra ngõ ở cuối gian."
+    placeholder: true
