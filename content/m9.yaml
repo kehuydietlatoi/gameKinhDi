@@ -5,6 +5,17 @@ level: m9
 title: "Người đàn bà không mắt"
 start: m9_n01
 final: true
+# G51: đoạn kết sau E1, trước màn tổng kết. Nguyên văn người dùng duyệt ngày 2026-10-17.
+epilogue:
+  - "Sáng mùng Một tháng Tám. Khu tập thể dậy muộn hơn mọi ngày."
+  - "Bà Sáu quét chiếu nghỉ, vừa quét vừa lẩm bẩm đếm. Trên bàn thờ chung có thêm một bài vị viết tay trên giấy hồng điều: Đỗ Thị Hai."
+  - "\"Mai bà cho khắc gỗ,\" bà Sáu nói. \"Ngày xưa bà ấy nấu cỗ rằm ngon nhất khu.\""
+  - "Bạn thắp một nén hương, cắm vào bát. Rồi thắp thêm một nén nữa, như đã hứa với một đứa trẻ."
+  - "Trên mu bàn tay, vệt sáp vàng vẫn còn mờ mờ."
+  - "Bạn về căn hộ 304. Bức tường cạnh cửa trắng trơn. Bạn đứng nghe rất lâu."
+  - "Không có tiếng cào. Không có tiếng gõ."
+  - "Dưới sân, lũ trẻ đang chơi trốn tìm. \"…chín mươi chín, một trăm!\""
+  - "Lần này, bạn không cần biết ai là người đi tìm."
 init: {sanity: 5, actions_left: 3, time: "22:00"}
 
 # Năm dòng theo thứ tự hiển thị. L4 là máu khô (Huyết tự thật); F1 là dòng giả mực nâu.

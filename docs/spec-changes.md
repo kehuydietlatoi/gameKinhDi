@@ -634,3 +634,9 @@ epilogue:
 | M5 | k6 "cửa sẽ tự mở" | không | có | Đọc đúng thì không bao giờ cần mở cửa, gạt bẫy "bà Sáu" lúc 4:59 |
 | M6 | k4 "không được dừng bước" | có | không | Luật bắt buộc; chìa khoá là k1, k3 |
 | M8 | k3 "làm Na khóc" | có | không | Điều cấm, không chỉ ra sinh lộ; chìa khoá là k2, k4 |
+
+## Sửa trực tiếp `docs/` lần 7: đoạn kết (quyết định C9, 2026-10-17)
+
+| File | Chỗ sửa | Lý do |
+| --- | --- | --- |
+| `docs/man-9-nguoi-dan-ba-khong-mat.md` | Thêm mục "Đoạn kết" (9 đoạn, nguyên văn người dùng gửi, hướng A đã chỉnh) trước "Kiểm tra nhanh" | C9: đoạn kết đặt sau E1, trước màn tổng kết. Dạng văn thường, mỗi đoạn một chuỗi, không mở rộng schema thành dạng có kênh (G51). `content/m9.yaml` thêm `epilogue` cùng nội dung |

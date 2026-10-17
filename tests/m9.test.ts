@@ -1,5 +1,7 @@
 // Màn 9 – Người đàn bà không mắt (màn cuối): đối chiếu kịch bản và mục "Kiểm tra nhanh"
 // của docs/man-9-nguoi-dan-ba-khong-mat.md.
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { bloodtextPanel, endingView, initialState, step, view, type GameState } from '../src/engine/index.ts';
 import { checkLevelContent } from './helpers/content-check.ts';
@@ -92,6 +94,35 @@ describe('E1 · Lửa đã tắt', () => {
       'Khấn sáu tên trên bài vị',
       'Khấn sáu tên, và tên của chính bạn',
     ]);
+  });
+});
+
+describe('đoạn kết (G51)', () => {
+  /** Danh sách đánh số trong mục "## Đoạn kết" của docs màn 9: nguồn sự thật cho câu chữ. */
+  const docEpilogue = () => {
+    const doc = readFileSync(join(import.meta.dirname, '..', 'docs', 'man-9-nguoi-dan-ba-khong-mat.md'), 'utf8');
+    const section = doc.split('\n## Đoạn kết\n')[1]!.split('\n## ')[0]!;
+    return section
+      .split('\n')
+      .filter((l) => /^\d+\. /.test(l))
+      .map((l) => l.replace(/^\d+\. /, '').trimEnd());
+  };
+
+  test('E1 có đoạn kết, đúng nguyên văn docs, 9 đoạn', () => {
+    const t = run(level, [ASK_SAU, INCENSE, INK, LOOK, RUN, SEVEN, HAI]);
+    const e = endingView(level, t.state)!;
+    expect(e.finale).toBe('complete');
+    expect(e.epilogue).toHaveLength(9);
+    expect(e.epilogue).toEqual(docEpilogue());
+    expect(e.epilogue.at(-1)).toBe('Lần này, bạn không cần biết ai là người đi tìm.');
+  });
+
+  test('E2 (kết thúc mở) và kết cục chết không có đoạn kết', () => {
+    const open = run(level, [ASK_SAU, INCENSE, INK, LOOK, RUN, SEVEN, 'Khấn sáu tên trên bài vị']).state;
+    expect(endingView(level, open)!.epilogue).toEqual([]);
+    const dead = run(level, [ASK_SAU, INCENSE, INK, LOOK, 'Mở nắp hũ']).state;
+    expect(dead.phase).toBe('ending');
+    expect(endingView(level, dead)!.epilogue).toEqual([]);
   });
 });
 

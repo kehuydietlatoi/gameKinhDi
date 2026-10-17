@@ -284,6 +284,20 @@ Màn 9 cần 2 ảnh mới. Dùng lại `can_ho_304`, `hanh_lang_tang_2` (hành 
 | D3 · Thiếu hương | M9-20 | `env · chạm` Sáu nén hương tắt cùng lúc. Một bàn tay khô, lạnh đặt lên vai bạn: "Phần của bà đâu?" | `violates: [L3]` | [k3, k4] | Bàn thờ có sáu bài vị, nhưng dòng máu khô nói bảy cái tên. Mọi vong là bảy vong. |
 | D4 · Khấn tên mình | M9-23 | `env · nhìn` Khung ảnh thứ bảy trên tờ cáo phó không còn trống. Đó là ảnh của bạn. | `consequence_of: [L4]` | [k4] | Khấn tên người sống là đưa người ấy vào hàng vong. Vong thứ bảy phải là người đã khuất. |
 
+## Đoạn kết
+
+Hiện sau màn hình kết quả của E1 (bấm "Tiếp"), trước màn tổng kết (G51). Mỗi đoạn là một chuỗi trong `epilogue`, hiện dạng văn thường, không có kênh. E2 (kết thúc mở) không có đoạn kết.
+
+1. Sáng mùng Một tháng Tám. Khu tập thể dậy muộn hơn mọi ngày.
+2. Bà Sáu quét chiếu nghỉ, vừa quét vừa lẩm bẩm đếm. Trên bàn thờ chung có thêm một bài vị viết tay trên giấy hồng điều: Đỗ Thị Hai.
+3. "Mai bà cho khắc gỗ," bà Sáu nói. "Ngày xưa bà ấy nấu cỗ rằm ngon nhất khu."
+4. Bạn thắp một nén hương, cắm vào bát. Rồi thắp thêm một nén nữa, như đã hứa với một đứa trẻ.
+5. Trên mu bàn tay, vệt sáp vàng vẫn còn mờ mờ.
+6. Bạn về căn hộ 304. Bức tường cạnh cửa trắng trơn. Bạn đứng nghe rất lâu.
+7. Không có tiếng cào. Không có tiếng gõ.
+8. Dưới sân, lũ trẻ đang chơi trốn tìm. "…chín mươi chín, một trăm!"
+9. Lần này, bạn không cần biết ai là người đi tìm.
+
 ## Kiểm tra nhanh
 
 - Mức mất tối đa là 3 (c2, M9-10, M9-12). Bản méo ở M9-12 và M9-20 chỉ tới được khi đã chọn c2 và đi qua M9-12.
