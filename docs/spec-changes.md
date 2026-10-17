@@ -257,3 +257,17 @@ assets:
 - **Ngày:** 2026-10-17
 - **Cần cho:** AGENTS 8.5; M1-05, M1-06, E1
 - **Bổ sung:** node không có `scene` kế thừa cảnh của node trước, nên validator lan cảnh theo đồ thị (mọi cạnh `goto`/`next`/`hub_exit`, bỏ qua `if`). Một node scene mà cảnh thực tế có thể dùng ảnh mang `clue` X thì node đó phải có hiệu ứng thêm X. Ending không bị kiểm tra; ending chết không khai báo `scene` thì nền đen.
+
+## V1 · Quy tắc validator bổ sung
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** bắt lỗi gõ nhầm trong mọi màn (AGENTS.md 5.5: không bỏ qua âm thầm)
+- **Bổ sung:** ngoài các mục ở AGENTS.md 8.9 và 11, validator còn báo lỗi khi:
+  - `flag`/`not_flag` trong điều kiện dùng một cờ mà không hiệu ứng `flag` nào bật; `spot` trong điều kiện dùng giá trị mà không hiệu ứng `spot` nào đặt;
+  - `keywords[].text` không có nguyên văn trong dòng của nó; `distortions[].unless_highlighted` thuộc dòng khác; một dòng có hai bản méo;
+  - hai lựa chọn trong cùng node trùng chữ; hai lựa chọn của hub trùng `goto` (G1);
+  - `visited_count_gte` dùng ngoài node hub (G1);
+  - node `highlight: true` không có dòng `bloodtext`; màn có từ khoá mà không node nào `highlight: true`;
+  - `found` trỏ tới NPC nhóm; `on_sanity_zero` không trỏ tới kết cục chết;
+  - tên file màn khác `<level>.yaml`; `file` của ảnh khác `bg/<id>.png`; `clue` của ảnh không được màn nào khai báo; ảnh có điểm ảnh không đục hoàn toàn.
+- Ảnh khai báo mà chưa node nào dùng chỉ là cảnh báo.

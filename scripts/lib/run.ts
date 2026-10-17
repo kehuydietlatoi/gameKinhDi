@@ -1,0 +1,57 @@
+// Chạy toàn bộ kiểm tra cho một thư mục content/ (dùng chung cho CLI và test).
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parseAssets, parseLevel } from '../../src/content/loader.ts';
+import type { Assets, Level } from '../../src/content/types.ts';
+import { validateAssets } from '../../src/content/validate/assets.ts';
+import { validateLevel } from '../../src/content/validate/level.ts';
+import { checkBackground } from './png.ts';
+
+export type Report = { errors: string[]; warnings: string[]; summary: string[] };
+
+export function runValidate(contentDir: string, publicDir: string): Report {
+  const report: Report = { errors: [], warnings: [], summary: [] };
+  if (!existsSync(contentDir)) {
+    report.errors.push(`không có thư mục ${contentDir}`);
+    return report;
+  }
+  const files = readdirSync(contentDir).filter((f) => f.endsWith('.yaml')).sort();
+
+  let assets: Assets | null = null;
+  if (files.includes('assets.yaml')) {
+    const parsed = parseAssets(readFileSync(join(contentDir, 'assets.yaml'), 'utf8'), 'assets.yaml');
+    if (parsed.ok) assets = parsed.value;
+    else report.errors.push(...parsed.errors);
+  } else {
+    report.errors.push('thiếu content/assets.yaml');
+  }
+
+  const levels: Level[] = [];
+  for (const file of files.filter((f) => f !== 'assets.yaml')) {
+    const parsed = parseLevel(readFileSync(join(contentDir, file), 'utf8'), file);
+    if (!parsed.ok) {
+      report.errors.push(...parsed.errors);
+      continue;
+    }
+    if (file !== `${parsed.value.level}.yaml`) {
+      report.errors.push(`${file}: level — tên file phải là ${parsed.value.level}.yaml`);
+    }
+    const errors = validateLevel(parsed.value, assets);
+    report.errors.push(...errors);
+    levels.push(parsed.value);
+    report.summary.push(`${file}: ${errors.length ? `${errors.length} lỗi` : 'OK'} (${parsed.value.nodes.length} node)`);
+  }
+
+  if (assets) {
+    const { errors, warnings } = validateAssets(assets, levels);
+    report.errors.push(...errors);
+    report.warnings.push(...warnings);
+    let placeholders = 0;
+    for (const a of assets.assets) {
+      if (a.placeholder) placeholders++;
+      else report.errors.push(...checkBackground(join(publicDir, a.file!), `assets: ${a.id}`));
+    }
+    report.summary.push(`assets.yaml: ${assets.assets.length} ảnh, ${placeholders} placeholder`);
+  }
+  return report;
+}
