@@ -68,3 +68,9 @@ assets:
     file: bg/bep_tap_the.png
     alt: "Gian bếp tập thể tầng 1 nhìn dọc, lò than lớn xây gạch ở giữa, hai dãy bếp than tổ ong kê sát hai bên tường và cửa gỗ ra ngõ ở cuối gian."
     placeholder: true
+
+  # Màn 8 (alt do Claude viết từ brief, G21)
+  - id: phong_404_1986
+    file: bg/phong_404_1986.png
+    alt: "Phòng một gian năm 1986 nhìn vào góc giữa tường cửa sổ bếp và tường đầu giường, tường kín tranh bút sáp nét trẻ con, bàn học nhỏ và đồng hồ treo tường."
+    placeholder: true

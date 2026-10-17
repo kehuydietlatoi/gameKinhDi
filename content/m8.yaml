@@ -1,0 +1,245 @@
+# Màn 8 – Bình minh không đến. Nguồn: docs/man-8-binh-minh-khong-den.md (file đó là đúng khi hai bên khác nhau).
+# Bổ sung đặc tả dùng ở đây: docs/spec-changes.md (G1–G44); M8-30 dùng hiệu ứng có điều kiện (G40).
+# Giờ trong game đứng ở "23:59" đến M8-31; màn này không dùng time_add.
+level: m8
+title: "Bình minh không đến"
+start: m8_n01
+init: {sanity: 5, actions_left: 3, time: "23:59"}
+
+bloodtext:
+  - {id: L1, text: "Sống sót đến khi mặt trời mọc.", violable: false}
+  - {id: L2, text: "Ở đây, mặt trời chỉ mọc ở phía đông.", violable: false}
+  - {id: L3, text: "Không được làm Na khóc."}
+  - {id: L4, text: "Thứ gì có trên tường thì có thật.", violable: false}
+
+keywords:
+  - {id: k1, line: L1, text: "đến khi mặt trời mọc", correct: false}
+  - {id: k2, line: L2, text: "phía đông", correct: true}
+  - {id: k3, line: L3, text: "làm Na khóc", correct: true}
+  - {id: k4, line: L4, text: "có trên tường thì có thật", correct: true}
+  - {id: k5, line: L1, text: "Sống sót", correct: false}
+  - {id: k6, line: L2, text: "Ở đây", correct: false}
+
+distortions:
+  - {line: L2, unless_highlighted: k2, text: "Ở đây, mặt trời chỉ mọc ở phía tây."}
+  - {line: L4, unless_highlighted: k4, text: "Thứ gì có trên tường thì phải xoá đi."}
+
+solution: [k2, k4]
+
+npcs:
+  - {id: be_na, name: "Bé Na"}
+  - {id: con_ma_den, name: "Con ma đen"}   # không nói; chỉ xuất hiện qua env và sound
+
+clues: [c1, c2, c3, c4, c5]
+
+nodes:
+  # ---------- Pha 0 – Phòng 404 ----------
+
+  - id: m8_n01   # Tỉnh dậy
+    type: scene
+    scene: {bg: phong_404_1986, light: flicker}
+    effects: [{time: "23:59"}]
+    lines:
+      - {ch: narration, text: "Bạn nằm xuống giường ở căn hộ 304 và nhắm mắt."}
+      - {ch: narration, text: "Khi mở mắt ra, bạn đang ngồi trên sàn một căn phòng lạ."}
+      - {ch: env, sense: nhìn, text: "Bốn bức tường kín tranh bút sáp nét trẻ con: dòng sông, thuyền giấy, những ngôi nhà."}
+      - {ch: env, sense: nhìn, text: "Trên tường đầu giường, một con ma đen to tướng vẽ bằng sáp."}
+      - {ch: env, sense: ngửi, text: "Mùi sáp màu và cơm nguội."}
+      - {ch: sound, src: "trên tường", vol: 1, text: "Tích… — đồng hồ kêu một tiếng, nhưng kim không nhích."}
+      - {ch: npc, who: be_na, text: "Anh 304 sang chơi à?"}
+    next: m8_n02
+
+  - id: m8_n02   # Huyết tự
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Chữ đỏ rỉ ra trên tường cạnh bàn học, chảy lem vào một bức tranh."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4]}
+      - {ch: npc, who: be_na, text: "Ai viết bậy lên tường nhà em thế?"}
+      - {ch: system, text: "Bạn có 3 lượt hành động."}
+    highlight: true
+    next: m8_n03
+
+  - id: m8_n03   # Hub phòng 404
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m8_n10
+    choices:
+      - {text: "Xem vở tập vẽ trên bàn học", goto: m8_n04, effects: [{actions_left: -1}]}
+      - {text: "Nhìn tranh trên tường cửa ra vào", goto: m8_n05, effects: [{actions_left: -1}]}
+      - {text: "Nhìn tranh con ma đen", goto: m8_n06, effects: [{actions_left: -1}]}
+      - {text: "Nói chuyện với bé Na", goto: m8_n07, effects: [{actions_left: -1}]}
+      - {text: "Mở hộp bút sáp trên bàn", goto: m8_n08, effects: [{actions_left: -1}]}
+
+  - id: m8_n04   # Vở tập vẽ
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Cuốn vở bìa xanh, trang nào cũng có tranh."}
+      - {ch: env, sense: nhìn, text: "Trang cuối, chữ viết nắn nót bằng bút chì: \"Sáng nào ông mặt trời cũng lên ở cửa sổ bếp nhà em.\""}
+    effects: [{clue: c1}]
+    next: m8_n03
+
+  - id: m8_n05   # Buổi chiều
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Trên tường cửa ra vào, một ông mặt trời đỏ đang lặn xuống sau dãy nhà. Bên dưới có chữ sáp: \"chiều\"."}
+      - {ch: env, sense: nhìn, text: "Chiếc đồng hồ treo ngay trên bức tranh, kim chỉ 23:59."}
+    effects: [{clue: c2}]
+    next: m8_n03
+
+  - id: m8_n06   # Con ma đen
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Con ma đen cao gần chạm trần, nét sáp đè lên nhau dày cộp."}
+      - {ch: env, sense: nhìn, text: "Bạn quay đi rồi nhìn lại. Nó đã đứng gần mép tranh hơn."}
+      - {ch: sound, src: "tường đầu giường", vol: 1, text: "Sột… — tiếng sáp cọ lên vôi."}
+    effects: [{clue: c3}, {sanity: -1}]
+    next: m8_n03
+
+  - id: m8_n07   # Bé Na
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bé Na ngồi bó gối dưới chân tường, tay nắm chặt một cây bút sáp vàng."}
+      - {ch: npc, who: be_na, text: "Em vẽ con ma để nó đứng canh cho em ngủ. Nhưng nó không chịu đứng yên."}
+      - {ch: npc, who: be_na, text: "Bút vàng là bút của em. Ai lấy là em khóc đấy."}
+    effects: [{clue: c4}]
+    next: m8_n03
+
+  - id: m8_n08   # Hộp bút
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Hộp bút sáp mười hai màu, chỉ còn một mẩu bút đen ngắn ngủn."}
+    effects: [{clue: c5}]
+    next: m8_n03
+
+  # ---------- Pha 1 – Con ma bước ra ----------
+
+  - id: m8_n10   # Một chân bước ra
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Con ma đen đã thò một chân ra khỏi bức tranh."}
+      - {ch: sound, src: "tường đầu giường", vol: 2, text: "Sột… soạt… — tiếng sáp cọ lên vôi, rồi lên sàn gạch."}
+      - {ch: npc, who: be_na, tone: whisper, text: "Nó lại đi rồi."}
+    choices:
+      - {text: "Lấy giẻ xoá tranh con ma", goto: m8_n11}
+      - {text: "Dùng mẩu bút đen vẽ thêm song sắt nhốt con ma", goto: m8_n12}
+      - {text: "Hỏi Na mượn bút vàng", goto: m8_n20}
+      - {text: "Giật cây bút vàng trong tay Na", goto: m8_d1}
+
+  - id: m8_n11   # Xoá tranh
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bạn chà giẻ lên nét sáp đen."}
+      - {ch: npc, who: be_na, tone: shout, text: "Đừng! Đấy là con ma của em!"}
+    next: m8_d1
+
+  - id: m8_n12   # Song sắt
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bạn vẽ những vạch đen thẳng đứng quanh con ma. Song sắt hiện ra thật, lạnh và cứng."}
+      - {ch: env, sense: nhìn, text: "Con ma đứng lại sau song sắt."}
+      - {ch: sound, src: "tường đầu giường", vol: 1, text: "Rắc. — một thanh sắt cong đi."}
+    effects: [{flag: long_sat}]
+    next: m8_n20
+
+  # ---------- Pha 2 – Cây bút vàng ----------
+
+  - id: m8_n20   # Mượn bút
+    type: scene
+    lines:
+      - {ch: npc, who: be_na, text: "Anh mượn làm gì?"}
+    choices:
+      - {text: "\"Để vẽ ông mặt trời, cho trời sáng.\"", goto: m8_n21}
+      - {text: "\"Để vẽ đè lên con ma.\"", goto: m8_n22}
+      - {text: "\"Đưa đây!\"", goto: m8_d1}
+
+  - id: m8_n21   # Na cho mượn
+    type: scene
+    lines:
+      - {ch: npc, who: be_na, text: "Trời sáng thì em phải đi rồi…"}
+      - {ch: env, sense: nhìn, text: "Na nhìn bạn rất lâu."}
+      - {ch: npc, who: be_na, text: "Thôi được. Nhưng anh vẽ cho đẹp nhé."}
+      - {ch: env, sense: chạm, text: "Cây bút sáp vàng ấm trong tay bạn."}
+    next: m8_n30
+
+  - id: m8_n22   # Na không cho
+    type: scene
+    lines:
+      - {ch: npc, who: be_na, text: "Không! Con ma đứng canh cho em mà!"}
+      - {ch: env, sense: nhìn, text: "Mắt Na ngân ngấn nước."}
+    choices:
+      - {text: "\"Thôi, anh xin lỗi. Anh mượn để vẽ ông mặt trời.\"", goto: m8_n21}
+      - {text: "Giật lấy bút", goto: m8_d1}
+
+  # ---------- Pha 3 – Vẽ ----------
+
+  - id: m8_n30   # Chọn tường
+    type: scene
+    effects: [{sanity: -1, if: {not_flag: long_sat}}]   # G40
+    lines:
+      - {ch: sound, src: "sau lưng", vol: 2, if: {not_flag: long_sat}, text: "Sột… soạt… — tiếng sáp cọ trên sàn, ngay sau lưng bạn."}
+      - {ch: sound, src: "tường đầu giường", vol: 1, if: {flag: long_sat}, text: "Rắc… rắc… — song sắt đang cong dần."}
+      - {ch: narration, text: "Bạn đứng giữa phòng, cây bút vàng trong tay."}
+      - {ch: bloodtext, lines: [L2], if: {sanity_lte: 2, not_highlighted: k2}}
+      - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k4}}
+    choices:
+      - {text: "Vẽ mặt trời lên tường cửa sổ bếp", goto: m8_n31}
+      - {text: "Vẽ mặt trời lên tường cửa ra vào, cạnh ông mặt trời đỏ", goto: m8_n32}
+      - {text: "Vẽ mặt trời lên tường bàn học", goto: m8_n32}
+      - {text: "Vẽ mặt trời đè lên con ma", goto: m8_d1}
+
+  - id: m8_n32   # Mặt trời lặn
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Ông mặt trời vàng vừa vẽ xong từ từ chìm xuống mép tranh, như mặt trời lặn."}
+      - {ch: sound, src: "rất gần", vol: 3, text: "Sột soạt sột soạt — con ma đã ra khỏi tường."}
+    choices:
+      - {text: "Vẽ lên tường cửa sổ bếp", goto: m8_n31}
+      - {text: "Vẽ lại một ông mặt trời to hơn ở chỗ cũ", goto: m8_d2}
+
+  - id: m8_n31   # Bình minh
+    type: scene
+    scene: {bg: phong_404_1986, light: dawn}
+    effects: [{time: "05:30"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Ông mặt trời sáp vàng trên tường cửa sổ bếp bắt đầu toả sáng."}
+      - {ch: env, sense: nhìn, text: "Ánh nắng thật tràn qua cửa sổ."}
+      - {ch: sound, src: "trên tường", vol: 2, text: "Tích tắc tích tắc… — kim đồng hồ quay vùn vụt."}
+      - {ch: env, sense: nhìn, text: "Con ma đen đứng yên trong tranh, chỉ còn là những nét sáp."}
+      - {ch: npc, who: be_na, text: "Sáng rồi. Em đi đây."}
+      - {ch: npc, who: be_na, text: "Anh nhớ thắp hương cho em nhé."}
+    next: m8_e1
+
+  # ---------- Kết cục ----------
+
+  - id: m8_e1
+    type: ending
+    result: survive
+    cause: "Mặt trời mọc"
+    scene: {bg: can_ho_304, light: dawn}
+    lines:
+      - {ch: narration, text: "Bạn tỉnh dậy trong căn hộ 304. Trên mu bàn tay còn dính một vệt sáp vàng."}
+    reveal: "Đêm không hết vì trên tường chỉ có mặt trời lặn. Thứ gì có trên tường thì có thật, nên vẽ mặt trời mọc ở phía đông, tức tường cửa sổ bếp, thì trời sáng. Cây bút phải được Na cho mượn."
+    solution: [k2, k4]
+
+  - id: m8_d1
+    type: ending
+    result: death
+    cause: "Na khóc"
+    lines:
+      - {ch: sound, src: "khắp phòng", vol: 3, text: "Na khóc. Tiếng khóc to dần, và mọi bức tranh trên tường bắt đầu chảy nhoè như sáp gặp lửa."}
+    reveal: "Con ma là của Na, cây bút cũng là của Na. Không được làm Na khóc."
+    violates: [L3]
+    solution: [k3]
+
+  - id: m8_d2
+    type: ending
+    result: death
+    cause: "Con ma tới"
+    lines:
+      - {ch: env, sense: chạm, text: "Nét sáp đen lan ra khỏi tường, phủ lên chân bạn, rồi lên ngực."}
+    reveal: "Mặt trời chỉ mọc ở phía đông, và phía đông là tường cửa sổ bếp. Vẽ ở chỗ khác chỉ thêm một mặt trời lặn."
+    consequence_of: [L4]
+    solution: [k2]
