@@ -1,0 +1,250 @@
+# Màn 6 – Cầu nối. Nguồn: docs/man-6-cau-noi.md (file đó là đúng khi hai bên khác nhau).
+# Bổ sung đặc tả dùng ở đây: docs/spec-changes.md (G1–G44).
+level: m6
+title: "Cầu nối"
+start: m6_n01
+init: {sanity: 5, actions_left: 2, time: "23:00"}
+
+bloodtext:
+  - {id: L1, text: "Đêm nay, phải sang được nhà C5 trước khi gà gáy."}
+  - {id: L2, text: "Trên cầu nối, không được quay đầu lại."}
+  - {id: L3, text: "Trên cầu nối, không được dừng bước."}
+  - {id: L4, text: "Thứ ở trên cầu sẽ bắt kẻ nào quay lưng về phía nó.", violable: false}
+
+keywords:
+  - {id: k1, line: L2, text: "Trên cầu nối", correct: true}
+  - {id: k2, line: L2, text: "không được quay đầu lại", correct: false}
+  - {id: k3, line: L4, text: "quay lưng về phía nó", correct: true}
+  - {id: k4, line: L3, text: "không được dừng bước", correct: true}
+  - {id: k5, line: L1, text: "trước khi gà gáy", correct: false}
+  - {id: k6, line: L1, text: "nhà C5", correct: false}
+
+distortions:
+  - {line: L4, unless_highlighted: k3, text: "Thứ ở trên cầu sẽ bắt kẻ nào nhìn thẳng vào nó."}
+  - {line: L3, unless_highlighted: k4, text: "Trên cầu nối, khi bị gọi tên thì phải dừng bước."}
+
+solution: [k1, k3]
+
+npcs:
+  - {id: ba_sau, name: "Bà Sáu"}
+  - {id: bac_si_thanh, name: "Bác sĩ Thanh"}
+  - {id: ke_tren_cau, name: "Một giọng quen"}
+
+clues: [c1, c2, c3, c4]
+
+nodes:
+  # ---------- Pha 0 – Bà Sáu ốm ----------
+
+  - id: m6_n01   # Phòng 305 (dùng lại can_ho_304)
+    type: scene
+    scene: {bg: can_ho_304, light: normal}
+    effects: [{time: "23:00"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Bà Sáu nằm co trên giường, trán đắp khăn ướt."}
+      - {ch: env, sense: chạm, text: "Tay bà nóng như than."}
+      - {ch: npc, who: ba_sau, text: "Cậu sang C5 gọi giúp bà cô Thanh… Cửa dưới khoá rồi. Đi cầu nối tầng ba ấy."}
+      - {ch: sound, src: "bức tường", vol: 2, text: "Sột… soạt…"}
+    next: m6_n02
+
+  - id: m6_n02   # Huyết tự
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Chữ đỏ rỉ ra trên bức tường phòng bà Sáu."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4]}
+      - {ch: system, text: "Bạn có 2 lượt hành động trước khi phải đi."}
+    highlight: true
+    next: m6_n03
+
+  - id: m6_n03   # Hub phòng 305
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m6_n10
+    scene: {bg: can_ho_304, light: normal}   # trở lại phòng sau M6-05, M6-06
+    choices:
+      - {text: "Hỏi bà Sáu chuyện cây cầu", goto: m6_n04, effects: [{actions_left: -1}]}
+      - {text: "Ra nhìn cầu nối từ đầu cầu C4", goto: m6_n05, effects: [{actions_left: -1}]}
+      - {text: "Ra ban công nhìn sang C5", goto: m6_n06, effects: [{actions_left: -1}]}
+      - {text: "Hỏi bà Sáu cách qua cầu", goto: m6_n07, effects: [{actions_left: -1}]}
+
+  - id: m6_n04   # Chuyện cây cầu
+    type: scene
+    lines:
+      - {ch: npc, who: ba_sau, text: "Đêm cháy năm tám sáu, có thằng bé chạy qua cầu sang C5 gọi cứu hoả."}
+      - {ch: npc, who: ba_sau, text: "Chạy được nửa cầu thì nó ngoái lại nhìn nhà mình đang cháy. Rồi ngã."}
+      - {ch: npc, who: ba_sau, text: "Từ đấy cầu có nó. Nó đi từ phía nhà mình sang."}
+    effects: [{clue: c1}]
+    next: m6_n03
+
+  - id: m6_n05   # Đầu cầu
+    type: scene
+    scene: {bg: cau_noi_c4_c5, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Cầu nối hẹp, lan can sắt hai bên, mặt bê tông ướt loang loáng."}
+      - {ch: env, sense: nhìn, text: "Trên mặt cầu có một hàng dấu chân ướt. Mũi chân hướng về phía C5. Hàng dấu chân bắt đầu ngay chỗ bạn đang đứng."}
+      - {ch: sound, src: "sau lưng", vol: 1, text: "Tách… — một giọt nước rơi trong hành lang C4."}
+    effects: [{clue: c2}, {sanity: -1}]
+    next: m6_n03
+
+  - id: m6_n06   # Ban công
+    type: scene
+    scene: {bg: cau_noi_c4_c5, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Bên kia khoảng trống, phòng 312 nhà C5 còn sáng đèn."}
+      - {ch: env, sense: nhìn, text: "Cửa đầu cầu phía C5 mở sẵn, hắt ra một vệt sáng vàng."}
+      - {ch: narration, text: "Cây cầu dài chừng bốn mươi bước."}
+    effects: [{clue: c3}]
+    next: m6_n03
+
+  - id: m6_n07   # Lời dặn
+    type: scene
+    scene: {bg: can_ho_304, light: normal}
+    lines:
+      - {ch: npc, who: ba_sau, text: "Người xưa dặn: qua cầu đêm thì đừng để lưng cho nó."}
+      - {ch: npc, who: ba_sau, text: "Mà cũng đừng ngoái lại. Ngoái lại là nó biết mặt."}
+    effects: [{clue: c4}]
+    next: m6_n03
+
+  # ---------- Pha 1 – Qua cầu ----------
+
+  - id: m6_n10   # Đầu cầu
+    type: scene
+    scene: {bg: cau_noi_c4_c5, light: flicker}
+    effects: [{time: "23:45"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Cửa sắt đầu cầu C4 mở. Bên kia là vệt sáng vàng của cửa C5."}
+      - {ch: sound, src: "hành lang C4", vol: 1, text: "Tách… tách… — tiếng nước nhỏ giọt sau lưng bạn."}
+      - {ch: narration, text: "Bạn đứng ở ngưỡng cầu, mặt hướng về phía C5."}
+    choices:
+      - {text: "Bước lên cầu, đi thẳng sang C5", goto: m6_n20}
+      - {text: "Quay người lại nhìn về phía C4, rồi bước lùi lên cầu", goto: m6_n30}
+      - {text: "Không đi nữa, quay về với bà Sáu", goto: m6_n11}
+
+  - id: m6_n11   # Ở lại
+    type: scene
+    scene: {bg: can_ho_304, light: dark}
+    lines:
+      - {ch: npc, who: ba_sau, text: "Không đi à…"}
+      - {ch: sound, src: "đồng hồ", vol: 1, text: "Tích tắc… tích tắc…"}
+      - {ch: sound, src: "rất xa", vol: 2, text: "Ò… ó… o…"}
+    next: m6_d1
+
+  - id: m6_n20   # Đi tiến
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: narration, text: "Bạn bước lên cầu."}
+      - {ch: sound, src: "sau lưng", vol: 2, text: "Tách. — một tiếng nước rơi, đúng nhịp bước chân bạn."}
+      - {ch: sound, src: "sau lưng", vol: 2, text: "Tách. Tách. — mỗi bước bạn đi, phía sau lại có một bước."}
+      - {ch: env, sense: chạm, text: "Gáy bạn lạnh dần."}
+    choices:
+      - {text: "Quay đầu nhìn lại", goto: m6_d2}
+      - {text: "Đứng lại nghe ngóng", goto: m6_d3}
+      - {text: "Đi tiếp", goto: m6_n21}
+      - {text: "Chạy thật nhanh", goto: m6_n21}
+
+  - id: m6_n21   # Bàn tay ướt
+    type: scene
+    lines:
+      - {ch: sound, src: "sát sau lưng", vol: 3, text: "Tách tách tách — tiếng nước dồn dập, gần như sát gót."}
+      - {ch: env, sense: chạm, text: "Mấy ngón tay ướt đặt lên vai bạn."}
+    next: m6_d4
+
+  - id: m6_n30   # Đi lùi
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: narration, text: "Bạn quay mặt về phía hành lang C4, rồi lùi một bước lên cầu."}
+      - {ch: env, sense: nhìn, text: "Ở cuối hành lang C4, một bóng người ướt sũng bước ra khỏi bóng tối."}
+      - {ch: sound, src: "đầu cầu C4", vol: 2, text: "Tách. — nó bước một bước, đúng lúc bạn bước."}
+      - {ch: system, text: "Bạn không được dừng bước."}
+    choices:
+      - {text: "Lùi tiếp, giữ nhịp", goto: m6_n31}
+      - {text: "Đứng lại nhìn cho rõ", goto: m6_d3}
+      - {text: "Quay người lại, chạy cho nhanh", goto: m6_d2}
+
+  - id: m6_n31   # Giữa cầu
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Nó đã gần hơn. Tóc bết nước, áo sơ mi trắng cháy sém một bên."}
+      - {ch: env, sense: nhìn, text: "Mặt nó đổi. Giờ là mặt mẹ bạn."}
+      - {ch: npc, who: ke_tren_cau, note: "giọng mẹ", text: "Con ơi, nhìn đường kìa. Sau lưng con lan can gãy đấy. Quay lại mà nhìn."}
+      - {ch: bloodtext, lines: [L3], if: {sanity_lte: 2, not_highlighted: k4}}
+      - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k3}}
+    choices:
+      - {text: "Quay lại nhìn đường", goto: m6_d2}
+      - {text: "Dừng lại cho chắc", goto: m6_d3}
+      - {text: "Lùi tiếp, một tay lần theo lan can", goto: m6_n32}
+
+  - id: m6_n32   # Gần tới
+    type: scene
+    lines:
+      - {ch: env, sense: chạm, text: "Lan can sắt dưới tay bạn lạnh và nguyên vẹn."}
+      - {ch: sound, src: "sau lưng, phía C5", vol: 2, text: "Cộp. Cộp. — tiếng guốc gỗ."}
+      - {ch: npc, who: bac_si_thanh, text: "Ai đấy? Đứng lại cho tôi soi đèn!"}
+    choices:
+      - {text: "Dừng lại, đáp lời", goto: m6_d3}
+      - {text: "Quay lại cho bà ấy thấy mặt", goto: m6_d2}
+      - {text: "Vừa lùi vừa đáp: \"Cháu bên C4, bà Sáu ốm!\"", goto: m6_n33}
+
+  - id: m6_n33   # Ngưỡng cửa
+    type: scene
+    lines:
+      - {ch: env, sense: chạm, text: "Lưng bạn chạm vào khung cửa C5. Bạn lùi qua ngưỡng cửa."}
+      - {ch: sound, src: "đầu cầu C5", vol: 1, text: "Tách. — tiếng nước dừng lại ngay mép cầu."}
+      - {ch: env, sense: nhìn, text: "Nó đứng ở mép cầu, không bước qua được. Mặt nó trở lại là mặt một chàng trai trẻ, ướt sũng."}
+      - {ch: npc, who: bac_si_thanh, text: "Cậu đi lùi sang đây à?"}
+    next: m6_e1
+
+  # ---------- Kết cục ----------
+
+  - id: m6_e1
+    type: ending
+    result: survive
+    cause: "Sang được C5"
+    scene: {bg: cau_noi_c4_c5, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Trên mặt cầu có hai hàng dấu chân ướt: một hàng của bạn, lùi; một hàng của nó, tiến. Cả hai dừng ở cùng một chỗ."}
+    reveal: "L2 chỉ cấm quay đầu khi đã ở trên cầu. Quay mặt về phía C4 trước khi bước lên, rồi đi lùi: bạn không quay lưng về phía nó, cũng không phải quay đầu."
+    solution: [k1, k3]
+
+  - id: m6_d1
+    type: ending
+    result: death
+    cause: "Không đi"
+    lines:
+      - {ch: env, sense: chạm, text: "Bàn tay bà Sáu trong tay bạn lạnh dần. Rồi tay bạn cũng lạnh."}
+    reveal: "Phải sang được C5 trước khi gà gáy."
+    violates: [L1]
+    solution: [L1]
+
+  - id: m6_d2
+    type: ending
+    result: death
+    cause: "Quay đầu"
+    lines:
+      - {ch: env, sense: nhìn, text: "Bạn quay lại. Nó ở sát mặt bạn, và nó cũng đang ngoái nhìn về phía sau."}
+    reveal: "Trên cầu nối, không được quay đầu lại. Phải quay người trước khi bước lên cầu."
+    violates: [L2]
+    solution: [k1]
+
+  - id: m6_d3
+    type: ending
+    result: death
+    cause: "Dừng bước"
+    lines:
+      - {ch: sound, src: "trên gáy", vol: 2, text: "Tách. — một giọt nước rơi lên gáy bạn. Rồi một bàn tay ướt."}
+    reveal: "Trên cầu nối, không được dừng bước, kể cả khi có người gọi."
+    violates: [L3]
+    solution: [k4]
+
+  - id: m6_d4
+    type: ending
+    result: death
+    cause: "Quay lưng"
+    lines:
+      - {ch: env, sense: chạm, text: "Mấy ngón tay ướt siết lấy vai, kéo bạn ngược về phía C4."}
+    reveal: "Nó đi từ phía C4. Đi tiến sang C5 là quay lưng về phía nó."
+    consequence_of: [L4]
+    solution: [k3]

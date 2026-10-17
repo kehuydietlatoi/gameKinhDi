@@ -56,3 +56,9 @@ assets:
     file: bg/phong_luu_benh.png
     alt: "Phòng lưu bệnh trạm y tế nhìn từ giường về phía bức tường đối diện, ba bình phong vải trắng, quạt trần và tủ thuốc cửa kính."
     placeholder: true
+
+  # Màn 6 (alt do Claude viết từ brief, G21)
+  - id: cau_noi_c4_c5
+    file: bg/cau_noi_c4_c5.png
+    alt: "Cầu nối bê tông hẹp nhìn từ đầu cầu phía C4 sang nhà C5 ban đêm, lan can sắt hai bên và cửa đầu cầu C5 hắt ánh vàng."
+    placeholder: true
