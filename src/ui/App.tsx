@@ -39,12 +39,13 @@ export function App() {
       </main>
     );
   }
-  return <Game level={content.level} assets={content.assets} />;
+  return <Game levels={content.levels} assets={content.assets} />;
 }
 
-function startState(level: Level, saved: GameState | null): GameState {
-  const state = usableState(saved, level);
-  if (state) {
+function startState(levels: Level[], saved: GameState | null): GameState {
+  const level = levels.find((l) => l.level === saved?.level);
+  const state = level ? usableState(saved, level) : null;
+  if (level && state) {
     try {
       view(level, state);
       return state;
@@ -52,17 +53,20 @@ function startState(level: Level, saved: GameState | null): GameState {
       // Bản lưu không còn khớp nội dung: bắt đầu lại.
     }
   }
-  return initialState(level);
+  return initialState(levels[0]!);
 }
 
-function Game({ level, assets }: { level: Level; assets: Map<string, Asset> }) {
+function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> }) {
   const reducedMotion = useReducedMotion();
   const [game, setGame] = useState(() => {
     const save = loadSave();
-    return { state: startState(level, save.state), settings: save.settings, entry: 0 };
+    return { state: startState(levels, save.state), settings: save.settings, entry: 0 };
   });
   const [panelOpen, setPanelOpen] = useState(false);
   const { state, settings } = game;
+  const levelOf = useCallback((s: GameState) => levels.find((l) => l.level === s.level)!, [levels]);
+  const level = levelOf(state);
+  const nextLevel = levels[levels.indexOf(level) + 1];
 
   useEffect(() => {
     writeSave({ version: 1, state, settings });
@@ -72,11 +76,11 @@ function Game({ level, assets }: { level: Level; assets: Map<string, Asset> }) {
     (action: Action) =>
       setGame((g) => ({
         ...g,
-        state: step(level, g.state, action),
+        state: step(levelOf(g.state), g.state, action),
         // Đánh dấu từ khoá không đổi node nên không gõ lại chữ.
         entry: action.type === 'highlight' ? g.entry : g.entry + 1,
       })),
-    [level],
+    [levelOf],
   );
   const setSettings = (s: Settings) => setGame((g) => ({ ...g, settings: s }));
   const closePanel = useCallback(() => setPanelOpen(false), []);
@@ -85,6 +89,15 @@ function Game({ level, assets }: { level: Level; assets: Map<string, Asset> }) {
   const ending = endingView(level, state);
   const msPerChar = reducedMotion ? 0 : MS_PER_CHAR[settings.speed];
   const replay = () => dispatch({ type: 'restart' });
+  // G33: sang màn kế, mang theo hồ sơ đã mở khoá; Tỉnh táo về init của màn mới (G23).
+  const goNext = nextLevel
+    ? () =>
+        setGame((g) => ({
+          ...g,
+          state: initialState(nextLevel, { unlocked: g.state.unlocked }),
+          entry: g.entry + 1,
+        }))
+    : undefined;
 
   let footer: ReactNode;
   if (v.phase === 'highlight') {
@@ -94,7 +107,7 @@ function Game({ level, assets }: { level: Level; assets: Map<string, Asset> }) {
       ending.result === 'death' ? (
         <DeathScreen ending={ending} onReplay={replay} />
       ) : (
-        <ResultScreen ending={ending} onReplay={replay} />
+        <ResultScreen ending={ending} onReplay={replay} onNext={goNext} />
       );
   } else {
     footer = (

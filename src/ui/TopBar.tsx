@@ -4,7 +4,8 @@ import type { Settings, Speed } from './save.ts';
 import { strings } from './strings.ts';
 
 type Props = {
-  time: string;
+  /** null khi nhắm mắt (G24). */
+  time: string | null;
   sanity: number;
   bloodtextAvailable: boolean;
   onOpenBloodtext: () => void;
@@ -28,9 +29,11 @@ export function TopBar(props: Props) {
   const [open, setOpen] = useState(false);
   return (
     <header className="topbar">
-      <span className="time" aria-label={strings.timeLabel(props.time)}>
-        {props.time}
-      </span>
+      {props.time !== null && (
+        <span className="time" aria-label={strings.timeLabel(props.time)}>
+          {props.time}
+        </span>
+      )}
       <SanityBar value={props.sanity} />
       <button
         type="button"

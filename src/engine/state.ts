@@ -34,8 +34,6 @@ export type GameState = {
   /** Nút "Huyết tự" bị khoá cho tới khi dòng bloodtext đầu tiên xuất hiện (G14). */
   bloodtextSeen: boolean;
 
-  /** Tỉnh táo khi vào màn, dùng khi Chơi lại. */
-  entrySanity: number;
   /** Số lần chết trong màn này, giữ qua Chơi lại (xoay vòng biến thể). */
   deaths: number;
   /** Hồ sơ đã mở khoá, giữ qua các màn (G18). */

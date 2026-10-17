@@ -26,6 +26,7 @@ const evaluators: Evaluators = {
   actions_left_lte: (v, { state }) => state.actions_left <= v,
   following_lte: (v, { state }) => following(state) <= v,
   following_gte: (v, { state }) => following(state) >= v,
+  has_dossier: (v, { state }) => state.unlocked.includes(v), // G27
 };
 
 /** Không có `if` là đúng; nhiều khoá là AND (G10). */

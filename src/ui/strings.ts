@@ -3,6 +3,7 @@ export const strings = {
   gameTitle: 'Sinh lộ',
   continue: 'Tiếp',
   replay: 'Chơi lại',
+  nextLevel: 'Màn tiếp theo',
   sanity: 'Tỉnh táo',
   bloodtext: 'Huyết tự',
   bloodtextLocked: 'Huyết tự chưa xuất hiện',

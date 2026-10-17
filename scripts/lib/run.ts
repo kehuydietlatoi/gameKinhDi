@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { parseAssets, parseLevel } from '../../src/content/loader.ts';
 import type { Assets, Level } from '../../src/content/types.ts';
 import { validateAssets } from '../../src/content/validate/assets.ts';
-import { validateLevel } from '../../src/content/validate/level.ts';
+import { levelWarnings, validateLevel } from '../../src/content/validate/level.ts';
 import { checkBackground } from './png.ts';
 
 export type Report = { errors: string[]; warnings: string[]; summary: string[] };
@@ -26,7 +26,7 @@ export function runValidate(contentDir: string, publicDir: string): Report {
     report.errors.push('thiếu content/assets.yaml');
   }
 
-  const levels: Level[] = [];
+  const parsedLevels: { file: string; level: Level }[] = [];
   for (const file of files.filter((f) => f !== 'assets.yaml')) {
     const parsed = parseLevel(readFileSync(join(contentDir, file), 'utf8'), file);
     if (!parsed.ok) {
@@ -36,10 +36,17 @@ export function runValidate(contentDir: string, publicDir: string): Report {
     if (file !== `${parsed.value.level}.yaml`) {
       report.errors.push(`${file}: level — tên file phải là ${parsed.value.level}.yaml`);
     }
-    const errors = validateLevel(parsed.value, assets);
+    parsedLevels.push({ file, level: parsed.value });
+  }
+  const levels = parsedLevels.map((p) => p.level);
+
+  // Hồ sơ của mọi màn, để has_dossier tham chiếu được hồ sơ ở màn trước (G27).
+  const dossiers = new Set(levels.flatMap((l) => l.dossiers.map((d) => d.id)));
+  for (const { file, level } of parsedLevels) {
+    const errors = validateLevel(level, assets, dossiers);
     report.errors.push(...errors);
-    levels.push(parsed.value);
-    report.summary.push(`${file}: ${errors.length ? `${errors.length} lỗi` : 'OK'} (${parsed.value.nodes.length} node)`);
+    report.warnings.push(...levelWarnings(level));
+    report.summary.push(`${file}: ${errors.length ? `${errors.length} lỗi` : 'OK'} (${level.nodes.length} node)`);
   }
 
   if (assets) {

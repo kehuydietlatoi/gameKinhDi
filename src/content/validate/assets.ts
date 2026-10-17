@@ -5,7 +5,7 @@ export function validateAssets(assets: Assets, levels: Level[]): { errors: strin
   const errors: string[] = [];
   const warnings: string[] = [];
   const seen = new Set<string>();
-  const clues = new Set(levels.flatMap((l) => l.clues));
+  const cluesOf = new Map(levels.map((l) => [l.level, new Set(l.clues)]));
   const used = new Set(
     levels.flatMap((l) =>
       l.nodes.flatMap((n) => {
@@ -21,7 +21,11 @@ export function validateAssets(assets: Assets, levels: Level[]): { errors: strin
     if (seen.has(a.id)) errors.push(`${where} — id bị trùng`);
     seen.add(a.id);
     if (a.file && a.file !== `bg/${a.id}.png`) errors.push(`${where}.file — phải là bg/${a.id}.png`);
-    if (a.clue && !clues.has(a.clue)) errors.push(`${where}.clue — manh mối ${a.clue} không được màn nào khai báo`);
+    if (a.clue && a.level) {
+      const clues = cluesOf.get(a.level);
+      if (!clues) errors.push(`${where}.level — không có màn ${a.level}`);
+      else if (!clues.has(a.clue)) errors.push(`${where}.clue — màn ${a.level} không khai báo manh mối ${a.clue}`);
+    }
     if (!used.has(a.id)) warnings.push(`${where} — chưa node nào dùng ảnh này`);
   }
   return { errors, warnings };

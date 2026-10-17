@@ -164,14 +164,14 @@ describe('validateLevel', () => {
 describe('validateAssets', () => {
   test('file sai tên và clue không ai khai báo', () => {
     const bad = parseAssets(
-      'assets:\n  - {id: nen_c, file: bg/khac.png, alt: "C.", clue: c9}\n',
+      'assets:\n  - {id: nen_c, file: bg/khac.png, alt: "C.", clue: c9, level: m9}\n',
       'assets.yaml',
     );
     if (!bad.ok) throw new Error(bad.errors.join('\n'));
     const { errors, warnings } = validateAssets(bad.value, [loadFixtureLevel()]);
     expect(errors).toEqual([
       'assets: assets[0] (nen_c).file — phải là bg/nen_c.png',
-      'assets: assets[0] (nen_c).clue — manh mối c9 không được màn nào khai báo',
+      'assets: assets[0] (nen_c).clue — màn m9 không khai báo manh mối c9',
     ]);
     expect(warnings).toEqual(['assets: assets[0] (nen_c) — chưa node nào dùng ảnh này']);
   });

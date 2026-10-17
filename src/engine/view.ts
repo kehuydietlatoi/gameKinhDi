@@ -22,7 +22,8 @@ export type View = {
   exit: Exit;
   scene: { bg: string | null; light: Light };
   sanity: number;
-  time: string;
+  /** null khi nhắm mắt: không nhìn được đồng hồ (G24). */
+  time: string | null;
   eyesClosed: boolean;
   notices: GameState['notices'];
   bloodtextAvailable: boolean;
@@ -68,7 +69,7 @@ export function view(level: Level, state: GameState): View {
         : exit,
     scene: displayedScene(state),
     sanity: state.sanity,
-    time: state.time,
+    time: state.eyes_closed ? null : state.time,
     eyesClosed: state.eyes_closed,
     notices: state.notices,
     bloodtextAvailable: state.bloodtextSeen,

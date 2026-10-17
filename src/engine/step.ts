@@ -24,19 +24,19 @@ export function nodeById(level: Level, id: string): Node {
   return node;
 }
 
-export type InitOptions = { sanity?: number; deaths?: number; unlocked?: string[] };
+/** Tỉnh táo luôn lấy từ `init` của màn (G23); chỉ số lần chết và hồ sơ được mang theo. */
+export type InitOptions = { deaths?: number; unlocked?: string[] };
 
 export function initialState(level: Level, opts: InitOptions = {}): GameState {
   const npc: Record<string, NpcState> = {};
   for (const n of level.npcs) if (!n.group) npc[n.id] = { alive: true, found: false, following: false };
-  const sanity = opts.sanity ?? level.init.sanity;
   const base: GameState = {
     level: level.level,
     node: level.start,
     phase: 'scene',
     lines: [],
     notices: [],
-    sanity,
+    sanity: level.init.sanity,
     flags: [],
     clues: [],
     actions_left: level.init.actions_left,
@@ -50,7 +50,6 @@ export function initialState(level: Level, opts: InitOptions = {}): GameState {
     spot: '',
     scene: { bg: null, light: 'normal' },
     bloodtextSeen: false,
-    entrySanity: sanity,
     deaths: opts.deaths ?? 0,
     unlocked: opts.unlocked ?? [],
   };
@@ -61,6 +60,8 @@ export function initialState(level: Level, opts: InitOptions = {}): GameState {
 function enter(level: Level, state: GameState, id: string): GameState {
   const node = nodeById(level, id);
   let s: GameState = { ...state, node: id, scene: resolveScene(node.scene, level, state) };
+  // G26: ghi lại lần vào on_sanity_zero để chỉ chuyển hướng một lần.
+  if (id === level.on_sanity_zero) s = { ...s, visited: addUnique(s.visited, id) };
 
   if (node.type === 'ending') return enterEnding(level, s, node);
 
@@ -99,7 +100,8 @@ function enterEnding(level: Level, state: GameState, node: EndingNode): GameStat
 export function exits(level: Level, state: GameState): Exit {
   if (state.phase !== 'scene') return { kind: 'none' };
   const node = nodeById(level, state.node) as SceneNode;
-  if (state.sanity === 0 && level.on_sanity_zero) return { kind: 'continue', to: level.on_sanity_zero };
+  const zero = level.on_sanity_zero;
+  if (state.sanity === 0 && zero && !state.visited.includes(zero)) return { kind: 'continue', to: zero };
   if (node.hub && check(node.hub_done, level, state)) return { kind: 'continue', to: node.hub_exit! };
   const choices = (node.choices ?? []).flatMap((c, index) =>
     check(c.if, level, state) && !(node.hub && state.visited.includes(c.goto)) ? [{ index, text: c.text }] : [],
@@ -112,7 +114,7 @@ export function exits(level: Level, state: GameState): Exit {
 export function step(level: Level, state: GameState, action: Action): GameState {
   switch (action.type) {
     case 'restart':
-      return initialState(level, { sanity: state.entrySanity, deaths: state.deaths, unlocked: state.unlocked });
+      return initialState(level, { deaths: state.deaths, unlocked: state.unlocked });
 
     case 'highlight': {
       if (state.phase !== 'highlight') throw new EngineError('Không ở bước đánh dấu từ khoá');

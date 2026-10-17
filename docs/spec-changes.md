@@ -266,9 +266,118 @@ assets:
 - **Bổ sung:** ngoài các mục ở AGENTS.md 8.9 và 11, validator còn báo lỗi khi:
   - `flag`/`not_flag` trong điều kiện dùng một cờ mà không hiệu ứng `flag` nào bật; `spot` trong điều kiện dùng giá trị mà không hiệu ứng `spot` nào đặt;
   - `keywords[].text` không có nguyên văn trong dòng của nó; `distortions[].unless_highlighted` thuộc dòng khác; một dòng có hai bản méo;
-  - hai lựa chọn trong cùng node trùng chữ; hai lựa chọn của hub trùng `goto` (G1);
+  - hai lựa chọn của hub trùng `goto` (G1); (quy tắc "hai lựa chọn trùng chữ" ban đầu đã đổi thành cảnh báo, xem G31);
   - `visited_count_gte` dùng ngoài node hub (G1);
   - node `highlight: true` không có dòng `bloodtext`; màn có từ khoá mà không node nào `highlight: true`;
   - `found` trỏ tới NPC nhóm; `on_sanity_zero` không trỏ tới kết cục chết;
   - tên file màn khác `<level>.yaml`; `file` của ảnh khác `bg/<id>.png`; `clue` của ảnh không được màn nào khai báo; ảnh có điểm ảnh không đục hoàn toàn.
 - Ảnh khai báo mà chưa node nào dùng chỉ là cảnh báo.
+
+## G23 · Tỉnh táo về `init` ở đầu mỗi màn
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 2 ("Yêu cầu với engine" mục 1); mọi màn sau
+- **Bổ sung:** thay quy tắc "khi sang màn mới chỉ giữ lại `sanity`" ở mục 2 của đặc tả. Mỗi màn bắt đầu với `sanity` lấy từ `init` của màn đó; Chơi lại cũng vậy. Khi sang màn mới chỉ mang theo hồ sơ đã mở khoá (G18). `GameState` bỏ trường `entrySanity`; bản lưu `sinhlo.save.v1` cũ vẫn đọc được (trường thừa bị bỏ qua) nên không tăng phiên bản.
+
+```yaml
+init: {sanity: 5, actions_left: 2, time: "22:00"}   # m2: luôn bắt đầu ở 5
+```
+
+## G24 · Ẩn giờ khi nhắm mắt
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 2 (mục 2), cũng áp dụng cho M1-40, M1-41, M1-61
+- **Bổ sung:** khi `eyes_closed` là true, thanh trên cùng không hiện giờ. State vẫn giữ và cập nhật `time`. Không cần khai báo gì trong YAML.
+
+## G25 · Hai NPC khác `id` được cùng tên hiển thị
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 2 (mục 3): `anh_phong` và `phong_gia` đều là "Anh Phong"
+- **Bổ sung:** chỉ `id` NPC phải duy nhất; `name` được trùng. Người chơi phân biệt qua chữ của dòng thoại.
+
+```yaml
+npcs:
+  - {id: anh_phong, name: "Anh Phong"}
+  - {id: phong_gia, name: "Anh Phong"}
+```
+
+## G26 · `on_sanity_zero` trỏ tới node thường
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 2 (mục 4): `on_sanity_zero: m2_n90`, M2-90 → D4
+- **Bổ sung:** `on_sanity_zero` trỏ tới node bất kỳ trừ `start`. Như G13: khi `sanity` = 0, node hiện tại vẫn hiện hết dòng rồi chỉ còn nút "Tiếp" tới `on_sanity_zero`. Engine ghi `on_sanity_zero` vào `visited` khi vào, và chỉ chuyển hướng khi node đó chưa có trong `visited`; vì vậy từ M2-90 trở đi game đi theo `next`/lựa chọn bình thường dù `sanity` vẫn là 0. Validator coi `on_sanity_zero` tới được từ mọi node, nên nếu node đó không khai báo `scene` thì nó không được kế thừa ảnh có clue (G22).
+
+```yaml
+on_sanity_zero: m2_n90
+nodes:
+  - id: m2_n90
+    type: scene
+    effects: [{eyes_closed: false}]
+    next: m2_d4
+```
+
+## G27 · Điều kiện `has_dossier`
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M3-12 (màn 3 mục 1)
+- **Bổ sung:** điều kiện mới `has_dossier: <id hồ sơ>`, đúng khi hồ sơ đó đã mở khoá, kể cả ở màn trước. Validator chấp nhận id hồ sơ khai báo ở bất kỳ màn nào.
+
+```yaml
+- {ch: narration, if: {has_dossier: hs_chay_c4_1986}, text: "Những cái tên này bạn đã từng gặp. Trên một tờ cáo phó."}
+```
+
+## G28 · Một màn có nhiều kết cục sống
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 3 (mục 2): E1 và E2
+- **Bổ sung:** không đổi schema (đã cho phép). Màn hình hoàn thành màn lấy tiêu đề là `cause` của kết cục đạt được (ví dụ "Không ai chết" hay "Có người chết thay"), và hiện Huyết tự với cụm `solution` của kết cục đó, giống màn hình chết.
+
+## G29 · Kết cục sống được có `consequence_of`
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M3 E2 (màn 3 mục 3)
+- **Bổ sung:** ending `result: survive` được khai báo `consequence_of`; vẫn không được có `violates`.
+
+```yaml
+- {id: m3_e2, type: ending, result: survive, cause: "Có người chết thay", consequence_of: [L4], solution: [k1, k4], reveal: "…"}
+```
+
+## G30 · NPC chỉ được nhắc tên
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M3-33 (màn 3 mục 4): `bac_tam`, `be_na` mỗi người một câu
+- **Bổ sung:** không cần cơ chế mới. Mỗi màn tự khai báo trong `npcs` mọi NPC mà dòng `npc` tham chiếu, dùng lại `id` của màn trước. Trạng thái `found`/`following` của họ không được dùng.
+
+```yaml
+npcs:
+  - {id: bac_tam, name: "Bác Tâm"}
+  - {id: be_na, name: "Bé Na"}
+```
+
+## G31 · Nhiều lựa chọn cùng chữ, điều kiện loại trừ nhau
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M3-31, M3-33, M3-40 (màn 3 mục 5)
+- **Bổ sung:** hai lựa chọn trong một node được trùng chữ. Validator chỉ **cảnh báo** (không chặn) khi hai lựa chọn cùng chữ có thể cùng hiện. Hai điều kiện được coi là loại trừ nhau khi: một bên `flag: x`, bên kia `not_flag: x`; hoặc `spot` khác nhau; hoặc `has_spot` ngược nhau (hay `has_spot: false` với `spot`); hoặc `role` khác nhau. Trường hợp khác coi như có thể cùng hiện. Quy tắc V1 "hai lựa chọn trùng chữ là lỗi" bỏ.
+
+```yaml
+choices:
+  - {text: "Đặt hình nhân ở ngưỡng cửa rồi buông tay", goto: m3_n32, if: {flag: khong_ten}}
+  - {text: "Đặt hình nhân ở ngưỡng cửa rồi buông tay", goto: m3_n33, if: {not_flag: khong_ten}}
+```
+
+## G32 · Ảnh có `clue` ghi màn sở hữu manh mối
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** `ban_tho_chieu_nghi` (`c1` của màn 3) trong khi `bang_tin_cao_pho` mang `c1` của màn 1; id manh mối chỉ duy nhất trong một màn còn `assets.yaml` dùng chung
+- **Bổ sung:** ảnh có `clue` bắt buộc có `level`. Trong màn đó, quy tắc G22 áp như cũ; ở màn khác, ảnh ấy chỉ được dùng ở ending. Validator kiểm tra màn `level` tồn tại và có khai báo manh mối đó. Ba ảnh có clue của màn 1 đã thêm `level: m1`.
+
+```yaml
+- {id: ban_tho_chieu_nghi, file: bg/ban_tho_chieu_nghi.png, alt: "…", clue: c1, level: m3}
+```
+
+## G33 · Chuyển sang màn tiếp theo
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M3-12 (`has_dossier` cần hồ sơ mở khoá ở màn 1 trong cùng lượt chơi); mục 4.7 của đặc tả nói "rồi về hub" nhưng hub căn hộ chưa có
+- **Bổ sung:** cho tới khi có hub, màn hình hoàn thành màn có nút "Màn tiếp theo" (khi còn màn) bên cạnh "Chơi lại". Thứ tự màn theo số trong `level` (m1, m2, m3, …); UI nạp mọi `content/m*.yaml`. Sang màn mới: `initialState` của màn đó, mang theo hồ sơ đã mở khoá (G18), số lần chết về 0, Tỉnh táo theo G23. Bản lưu ghi `state.level` nên tải lại trang vẫn ở đúng màn.

@@ -46,6 +46,7 @@ export const conditionShape = {
   actions_left_lte: z.int(), // G2
   following_lte: z.int(), // G2
   following_gte: z.int(), // G2
+  has_dossier: DossierId, // G27: hồ sơ đã mở khoá, kể cả ở màn trước
 };
 
 export const Condition = z
@@ -197,12 +198,9 @@ export const EndingNode = z
         message: 'kết cục chết phải có `violates` hoặc `consequence_of`',
       });
     }
-    if (n.result === 'survive' && (n.violates || n.consequence_of)) {
-      ctx.addIssue({
-        code: 'custom',
-        path: [],
-        message: 'kết cục sống không có `violates` hay `consequence_of`',
-      });
+    // G29: kết cục sống được có consequence_of (có người chết thay), không có violates.
+    if (n.result === 'survive' && n.violates) {
+      ctx.addIssue({ code: 'custom', path: ['violates'], message: 'kết cục sống không có `violates`' });
     }
   });
 
@@ -241,7 +239,7 @@ export const Level = z.strictObject({
   level: LevelId,
   title: z.string().min(1),
   start: SceneNodeId,
-  on_sanity_zero: z.union([SurviveId, DeathId]).optional(), // G19
+  on_sanity_zero: NodeId.optional(), // G19, G26: node bất kỳ
   init: z.strictObject({
     sanity: z.int().min(0).max(5),
     actions_left: z.int().min(0),
@@ -265,9 +263,16 @@ export const Asset = z
     file: z.string().regex(/^bg\/[a-z0-9_]+\.png$/, 'file phải có dạng bg/<id>.png').optional(),
     alt: z.string().min(1),
     clue: ClueId.optional(),
+    level: LevelId.optional(), // G32: màn sở hữu manh mối `clue`
     placeholder: z.literal(true).optional(),
   })
   .superRefine((a, ctx) => {
+    if (a.clue && !a.level) {
+      ctx.addIssue({ code: 'custom', path: ['level'], message: 'ảnh có `clue` phải ghi `level` của màn sở hữu manh mối (G32)' });
+    }
+    if (a.level && !a.clue) {
+      ctx.addIssue({ code: 'custom', path: ['level'], message: '`level` chỉ dùng cùng `clue` (G32)' });
+    }
     if (!a.placeholder && !a.file) {
       ctx.addIssue({ code: 'custom', path: ['file'], message: 'ảnh không phải placeholder phải có `file` (G21)' });
     }

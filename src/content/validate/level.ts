@@ -1,11 +1,15 @@
 // Kiểm tra một màn đã qua schema: tham chiếu, khai báo, đồ thị, chữ.
 // AGENTS.md mục 6 và 11; docs/spec-changes.md G1–G22.
 import { invalidPlaceholders } from '../../engine/interpolate.ts';
-import type { Assets, Level, Node } from '../types.ts';
+import type { Assets, Condition, Level, Node } from '../types.ts';
 import { checkSceneClues } from './scenes.ts';
 import { conditions, effects, lines, successors } from './walk.ts';
 
-export function validateLevel(level: Level, assets: Assets | null): string[] {
+/**
+ * `knownDossiers`: id hồ sơ khai báo ở mọi màn, để `has_dossier` tham chiếu được hồ sơ
+ * của màn trước (G27).
+ */
+export function validateLevel(level: Level, assets: Assets | null, knownDossiers: Set<string> = new Set()): string[] {
   const errors: string[] = [];
   const err = (where: string, msg: string) => errors.push(`${level.level}: ${where} — ${msg}`);
 
@@ -31,6 +35,7 @@ export function validateLevel(level: Level, assets: Assets | null): string[] {
   const groupNpcs = new Set(level.npcs.filter((n) => n.group).map((n) => n.id));
   const clueIds = unique('clues', level.clues);
   const dossierIds = unique('dossiers', level.dossiers.map((d) => d.id));
+  const anyDossier = new Set([...dossierIds, ...knownDossiers]);
   const assetIds = new Set(assets?.assets.map((a) => a.id) ?? []);
 
   const need = (set: Set<string>, kind: string, id: string, where: string) => {
@@ -70,13 +75,11 @@ export function validateLevel(level: Level, assets: Assets | null): string[] {
   if (level.on_sanity_zero) {
     const n = nodes.get(level.on_sanity_zero);
     if (!n) err('on_sanity_zero', `node \`${level.on_sanity_zero}\` không tồn tại`);
-    else if (n.type !== 'ending' || n.result !== 'death') err('on_sanity_zero', 'phải trỏ tới một kết cục chết');
+    else if (n.id === level.start) err('on_sanity_zero', 'không được trỏ về `start`');
   }
   for (const n of level.nodes) {
     for (const s of successors(n)) needNode(s.to, `${n.id}.${s.where}`);
     if (n.type === 'scene') {
-      const texts = (n.choices ?? []).map((c) => c.text);
-      if (new Set(texts).size !== texts.length) err(`${n.id}.choices`, 'hai lựa chọn trùng chữ');
       if (n.hub) {
         const gotos = n.choices!.map((c) => c.goto);
         if (new Set(gotos).size !== gotos.length) err(`${n.id}.choices`, 'lựa chọn của hub phải có `goto` khác nhau (G1)');
@@ -123,6 +126,7 @@ export function validateLevel(level: Level, assets: Assets | null): string[] {
     if (value.clue !== undefined) need(clueIds, 'manh mối', value.clue, where);
     if (value.not_highlighted !== undefined) need(keywordIds, 'từ khoá', value.not_highlighted, where);
     if (value.not_visited !== undefined) needNode(value.not_visited, where);
+    if (value.has_dossier !== undefined) need(anyDossier, 'hồ sơ', value.has_dossier, where);
     for (const f of [value.flag, value.not_flag]) {
       if (f !== undefined && !flagsSet.has(f)) err(where, `cờ \`${f}\` không được hiệu ứng nào bật`);
     }
@@ -196,4 +200,38 @@ export function validateLevel(level: Level, assets: Assets | null): string[] {
   }
 
   return errors;
+}
+
+/**
+ * Hai điều kiện chắc chắn không cùng đúng: cờ bật/tắt, chỗ trốn khác nhau, vai khác nhau.
+ * Chỉ nhận ra những cặp đơn giản; không nhận ra thì coi như có thể cùng đúng.
+ */
+export function exclusive(a: Condition | undefined, b: Condition | undefined): boolean {
+  if (!a || !b) return false;
+  const flips = (x: Condition, y: Condition) =>
+    (x.flag !== undefined && x.flag === y.not_flag) || (x.has_spot === false && y.spot !== undefined);
+  if (flips(a, b) || flips(b, a)) return true;
+  if (a.spot !== undefined && b.spot !== undefined && a.spot !== b.spot) return true;
+  if (a.has_spot !== undefined && b.has_spot !== undefined && a.has_spot !== b.has_spot) return true;
+  if (a.role !== undefined && b.role !== undefined && a.role !== b.role) return true;
+  return false;
+}
+
+/** Cảnh báo, không chặn: hai lựa chọn cùng chữ có thể cùng hiện (G31). */
+export function levelWarnings(level: Level): string[] {
+  const warnings: string[] = [];
+  for (const n of level.nodes) {
+    if (n.type !== 'scene') continue;
+    const choices = n.choices ?? [];
+    choices.forEach((a, i) => {
+      choices.slice(i + 1).forEach((b, k) => {
+        if (a.text === b.text && !exclusive(a.if, b.if)) {
+          warnings.push(
+            `${level.level}: ${n.id}.choices[${i}] và [${i + 1 + k}] — hai lựa chọn cùng chữ "${a.text}" có thể cùng hiện (G31)`,
+          );
+        }
+      });
+    });
+  }
+  return warnings;
 }
