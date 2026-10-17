@@ -55,13 +55,11 @@ assets:
   - id: phong_luu_benh
     file: bg/phong_luu_benh.png
     alt: "Phòng lưu bệnh trạm y tế nhìn từ giường về phía bức tường đối diện, ba bình phong vải trắng, quạt trần và tủ thuốc cửa kính."
-    placeholder: true
 
   # Màn 6 (alt do Claude viết từ brief, G21)
   - id: cau_noi_c4_c5
     file: bg/cau_noi_c4_c5.png
     alt: "Cầu nối bê tông hẹp nhìn từ đầu cầu phía C4 sang nhà C5 ban đêm, lan can sắt hai bên và cửa đầu cầu C5 hắt ánh vàng."
-    placeholder: true
 
   # Màn 7 (alt do Claude viết từ brief, G21)
   - id: bep_tap_the
@@ -78,8 +76,7 @@ assets:
   # Màn 9 (alt do Claude viết từ brief, G21)
   - id: bang_tin_cao_pho_7_day
     file: bg/bang_tin_cao_pho_7_day.png
-    alt: "Cận cảnh bảng tin tổ dân phố bằng gỗ, giấy báo họp tổ và lịch trực vệ sinh ghim lộn xộn."
-    placeholder: true
+    alt: "Cận cảnh bảng tin tổ dân phố bằng gỗ, tờ cáo phó ố vàng có đủ bảy khung ảnh thờ; khung thứ bảy là một bà cụ tóc búi, đôi mắt hiền."
 
   # Ảnh bổ sung (brief thêm vào docs ngày 2026-10-17; alt do Claude viết từ brief, G21)
   - id: cau_thang_chieu_nghi
@@ -89,11 +86,9 @@ assets:
   - id: hanh_lang_lo_khoa
     file: bg/hanh_lang_lo_khoa.png
     alt: "Hành lang tối nhìn qua lỗ khoá, trên các cánh cửa có những mảng chữ đỏ."
-    placeholder: true
   - id: cau_noi_nhin_ve_c4
     file: bg/cau_noi_nhin_ve_c4.png
     alt: "Cầu nối bê tông ướt nhìn từ trên cầu về phía nhà C4, cửa sắt đầu cầu mở vào một hành lang tối om."
-    placeholder: true
   - id: phong_404_1986_mat_troi
     file: bg/phong_404_1986_mat_troi.png
     alt: "Góc phòng năm 1986, trên tường cửa sổ bếp có một ông mặt trời bút sáp vàng mới vẽ."
@@ -101,4 +96,3 @@ assets:
   - id: tiem_vang_ma_ngoai
     file: bg/tiem_vang_ma_ngoai.png
     alt: "Mặt tiền tiệm vàng mã ở tầng trệt ban đêm, cửa xếp sắt kéo kín và bậc thềm xi măng trước cửa."
-    placeholder: true
