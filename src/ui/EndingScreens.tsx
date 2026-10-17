@@ -6,10 +6,18 @@ import { strings } from './strings.ts';
 export function DeathScreen({ ending, onReplay }: { ending: EndingView; onReplay: () => void }) {
   return (
     <section className="ending death">
-      <h2>
-        {strings.death} · {ending.cause}
-      </h2>
-      <BloodLines lines={ending.solution} />
+      <p className="death-title">{strings.death}</p>
+      <h2>{ending.cause}</h2>
+      {ending.misread.length > 0 && (
+        <>
+          <h3>{strings.misreadTitle}</h3>
+          <div className="misread">
+            <BloodLines lines={ending.misread} labels={ending.labels} />
+          </div>
+          <h3>{strings.trueBloodtextTitle}</h3>
+        </>
+      )}
+      <BloodLines lines={ending.solution} labels={ending.labels} violated={ending.violates} />
       <p className="reveal">
         <span className="ch-prefix">{strings.reveal} · </span>
         {ending.reveal}
@@ -38,7 +46,7 @@ export function ResultScreen({ ending, onReplay, onNext, onRestartGame }: Result
       {ending.finale === 'complete' && <p className="finale">{strings.gameComplete}</p>}
       {ending.finale === 'open' && <p className="finale">{strings.openEnding}</p>}
       <h2>{ending.cause}</h2>
-      <BloodLines lines={ending.solution} />
+      <BloodLines lines={ending.solution} labels={ending.labels} />
       <p className="reveal">
         <span className="ch-prefix">{strings.reveal} · </span>
         {ending.reveal}

@@ -60,7 +60,13 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
   const reducedMotion = useReducedMotion();
   const [game, setGame] = useState(() => {
     const save = loadSave();
-    return { state: startState(levels, save.state), settings: save.settings, entry: 0 };
+    return {
+      state: startState(levels, save.state),
+      settings: save.settings,
+      entry: 0,
+      // G49: từ khoá đánh dấu lần trước, để Chơi lại không phải chọn lại từ đầu.
+      lastMarks: null as { level: string; ids: string[] } | null,
+    };
   });
   const [panelOpen, setPanelOpen] = useState(false);
   const { state, settings } = game;
@@ -77,6 +83,7 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
       setGame((g) => ({
         ...g,
         state: step(levelOf(g.state), g.state, action),
+        lastMarks: action.type === 'highlight' ? { level: g.state.level, ids: action.ids } : g.lastMarks,
         // Đánh dấu từ khoá không đổi node nên không gõ lại chữ.
         entry: action.type === 'highlight' ? g.entry : g.entry + 1,
       })),
@@ -108,7 +115,13 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
 
   let footer: ReactNode;
   if (v.phase === 'highlight') {
-    footer = <HighlightPanel options={highlightOptions(level)} onDone={(ids) => dispatch({ type: 'highlight', ids })} />;
+    footer = (
+      <HighlightPanel
+        options={highlightOptions(level)}
+        initial={game.lastMarks?.level === level.level ? game.lastMarks.ids : []}
+        onDone={(ids) => dispatch({ type: 'highlight', ids })}
+      />
+    );
   } else if (ending) {
     footer =
       ending.result === 'death' ? (
@@ -124,6 +137,7 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
             {strings.sanityNotice(n.delta)}
           </p>
         ))}
+        {v.actionsLeft !== null && <p className="ch ch-system actions-left">{strings.actionsLeft(v.actionsLeft)}</p>}
         <nav className="exits">
           {v.exit.kind === 'choices' &&
             v.exit.choices.map((c) => (

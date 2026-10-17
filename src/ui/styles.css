@@ -476,3 +476,75 @@ select {
   font-size: 1.1rem;
   margin: 0.5em 0;
 }
+
+/* ---------- Màn hình kết thúc (G47) ---------- */
+
+/* Nhãn dòng để phần hé lộ nhắc "L2", "L4" đọc được. */
+.line-label {
+  display: inline-block;
+  min-width: 2.2em;
+  margin-right: 0.4em;
+  color: var(--c-muted);
+  font-size: 0.75em;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+.blood-line.violated {
+  margin-left: -10px;
+  padding-left: 8px;
+  border-left: 2px solid var(--c-blood);
+}
+
+.violated-tag {
+  margin-left: 0.5em;
+  padding: 0 0.35em;
+  border: 1px solid var(--c-blood);
+  font-size: 0.7em;
+  font-weight: 400;
+  font-style: normal;
+  vertical-align: middle;
+}
+
+.death-title {
+  margin: 0.25em 0 0;
+  color: var(--c-blood);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.ending.death h2 {
+  margin-top: 0.15em;
+  color: var(--c-muted);
+  font-weight: 400;
+}
+
+.ending h3 {
+  font-size: 0.9rem;
+  margin: 1em 0 0.4em;
+}
+
+/* Bản méo người chơi đã đọc: gạch đi (không làm nhạt màu, giữ tương phản 4.5:1). */
+.misread .blood-line {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* Hiện dần, một lần, không chớp (AGENTS.md mục 9). */
+.ending.death {
+  animation: death-in 1.2s ease-out;
+}
+
+@keyframes death-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ending.death {
+    animation: none;
+  }
+}

@@ -16,9 +16,8 @@ export function SceneLayer({ scene, assets }: Props) {
   let picture = null;
   if (scene.light !== 'dark' && asset) {
     picture = asset.placeholder ? (
-      <div className="bg-placeholder" role="img" aria-label={asset.alt}>
-        <span>{asset.id}</span>
-      </div>
+      // Chưa có ảnh thật: chỉ để nền trống, không in id ra cho người chơi thấy.
+      <div className="bg-placeholder" role="img" aria-label={asset.alt} />
     ) : (
       <img className="bg-image" src={`${import.meta.env.BASE_URL}${asset.file}`} alt={asset.alt} width={size.width} height={size.height} />
     );

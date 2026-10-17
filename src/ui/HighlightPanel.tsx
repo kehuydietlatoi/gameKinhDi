@@ -23,8 +23,15 @@ function pieces(o: Option) {
   return out;
 }
 
-export function HighlightPanel({ options, onDone }: { options: Option[]; onDone: (ids: string[]) => void }) {
-  const [selected, setSelected] = useState<string[]>([]);
+type Props = {
+  options: Option[];
+  /** Cụm đã đánh dấu ở lần chơi trước của cùng màn (G49); người chơi vẫn đổi được. */
+  initial?: string[];
+  onDone: (ids: string[]) => void;
+};
+
+export function HighlightPanel({ options, initial = [], onDone }: Props) {
+  const [selected, setSelected] = useState<string[]>(initial.slice(0, MAX_HIGHLIGHTS));
   const toggle = (id: string) =>
     setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length < MAX_HIGHLIGHTS ? [...s, id] : s));
 
