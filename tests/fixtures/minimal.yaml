@@ -1,0 +1,129 @@
+# Màn giả dùng cho test schema, validator và engine. Không phải nội dung game.
+level: m9
+title: "Màn thử"
+start: m9_n01
+init: {sanity: 3, actions_left: 2, time: "22:00"}
+bloodtext:
+  - {id: L1, text: "Dòng một phải được tuân thủ."}
+  - {id: L2, text: "Dòng hai là hệ quả.", violable: false}
+keywords:
+  - {id: k1, line: L1, text: "phải được tuân thủ", correct: true}
+  - {id: k2, line: L2, text: "hệ quả", correct: false}
+distortions:
+  - {line: L1, unless_highlighted: k1, text: "Dòng một có thể bỏ qua."}
+solution: [k1]
+npcs:
+  - {id: npc_a, name: "Người A"}
+  - {id: npc_b, name: "Người B"}
+  - {id: tat_ca, name: "Tất cả", group: true}
+clues: [c1, c2]
+dossiers:
+  - {id: hs_thu, title: "Hồ sơ thử"}
+nodes:
+  - id: m9_n01
+    type: scene
+    scene: {bg: nen_a, light: flicker}
+    lines:
+      - {ch: narration, text: "Mở đầu."}
+      - {ch: env, sense: nhìn, text: "Thấy gì đó."}
+      - {ch: env, sense: ngửi, text: "Ngửi gì đó."}
+      - {ch: sound, src: "góc phòng", vol: 1, text: "Cộc."}
+      - {ch: npc, who: npc_a, text: "Chào."}
+      - {ch: npc, who: npc_b, tone: whisper, text: "Suỵt.", note: "rất khẽ"}
+      - {ch: bloodtext, lines: [L1, L2]}
+      - {ch: system, text: "Thông báo."}
+    highlight: true
+    next: m9_n02
+  - id: m9_n02
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m9_n05
+    scene: {bg: nen_a, light: flicker}
+    lines:
+      - {ch: sound, src: "sau lưng", vol: 1, if: {following_lte: 0}, text: "Không ai."}
+      - {ch: sound, src: "sau lưng", vol: 1, if: {following_gte: 1}, text: "Có {following} người, {following + 2} tiếng."}
+    choices:
+      - {text: "Đi A", goto: m9_n03, effects: [{actions_left: -1}, {time_add: 60}]}
+      - {text: "Đi B", goto: m9_n04, effects: [{actions_left: -1}]}
+      - {text: "Đi C", goto: m9_n03b, effects: [{actions_left: -1}], if: {flag: co_c}}
+  - id: m9_n03
+    type: scene
+    scene: {bg: nen_b, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Manh mối."}
+    effects: [{clue: c1}, {sanity: -1}, {found: npc_a}]
+    next: m9_n02
+  - id: m9_n03b
+    type: scene
+    lines:
+      - {ch: narration, text: "Nhánh C."}
+    next: m9_n02
+  - id: m9_n04
+    type: scene
+    effects: [{flag: co_c}, {found: npc_b}]
+    lines:
+      - {ch: narration, text: "Nhánh B."}
+    next: m9_n02
+  - id: m9_n05
+    type: scene
+    lines:
+      - {ch: narration, text: "Chọn."}
+      - {ch: bloodtext, lines: [L1], if: {sanity_lte: 2, not_highlighted: k1}}
+      - {ch: narration, text: "Có manh mối.", if: {clue: c1}}
+    choices:
+      - {text: "Trốn", goto: m9_n06, effects: [{role: hider}, {spot: tu}], if: {has_spot: false}}
+      - {text: "\"Tìm.\"", goto: m9_n07, effects: [{role: seeker}]}
+      - {text: "Từ chối", goto: m9_d1}
+    next: m9_n07
+  - id: m9_n06
+    type: scene
+    scene:
+      - {if: {spot: tu}, light: dark}
+      - {bg: nen_a, light: normal}
+    lines:
+      - {ch: env, sense: chạm, text: "Tối.", if: {spot: tu}}
+    choices:
+      - {text: "Nín thở", goto: m9_d2}
+  - id: m9_n07
+    type: scene
+    effects: [{eyes_closed: true}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Không được thấy dòng này."}
+      - {ch: narration, text: "Đếm."}
+    choices:
+      - {text: "Mở mắt", goto: m9_d1, effects: [{eyes_closed: false}]}
+      - {text: "Đếm tiếp", goto: m9_n08}
+  - id: m9_n08
+    type: scene
+    effects: [{eyes_closed: false}, {time: "04:00"}]
+    scene: {bg: nen_a, light: dawn}
+    lines:
+      - {ch: narration, text: "Sáng."}
+    next: m9_e1
+  - id: m9_e1
+    type: ending
+    result: survive
+    cause: "Sống"
+    reveal: "Đã sống."
+    scene: {bg: nen_b, light: dawn}
+    lines:
+      - {ch: env, sense: nhìn, text: "Hết."}
+    unlock: [{dossier: hs_thu, if: {clue: c1}}]
+  - id: m9_d1
+    type: ending
+    result: death
+    cause: "Vi phạm"
+    reveal: "Vi phạm L1."
+    violates: [L1]
+    solution: [L1]
+    lines:
+      - {ch: bloodtext, lines: [L1], style: glow}
+  - id: m9_d2
+    type: ending
+    result: death
+    cause: "Bị tìm thấy"
+    reveal: "Hệ quả của L2."
+    consequence_of: [L2]
+    lines:
+      - {ch: npc, who: tat_ca, tone: whisper, text: "Thấy rồi.", note: "nhiều giọng"}
