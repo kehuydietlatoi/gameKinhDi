@@ -212,6 +212,13 @@ describe('G41 · màn cuối', () => {
     expect(again).toMatchObject({ node: 'm9_n01', unlocked: ['hs_thu'] });
   });
 
+  test('G51: epilogue chỉ khai báo được ở màn final', () => {
+    const notFinal = levelAfter((raw) => {
+      raw.epilogue = ['Đoạn kết.'];
+    });
+    expect(validateLevel(notFinal, assets)).toContain('m9: epilogue — `epilogue` chỉ dùng ở màn có `final: true` (G51)');
+  });
+
   test('open ở màn không final là lỗi; open ở kết cục chết là lỗi schema', () => {
     const notFinal = levelAfter((raw) => {
       raw.node('m9_e1').open = true;

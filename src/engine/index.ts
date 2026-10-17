@@ -3,3 +3,4 @@ export { view, bloodtextPanel, highlightOptions, endingView, displayLines } from
 export type { View, DisplayLine, EndingView } from './view.ts';
 export type { BloodtextView, Segment, Mark } from './bloodtext.ts';
 export { EngineError, following, type GameState, type Notice, type Phase } from './state.ts';
+export { campaignSummary, emptyCampaign, type Campaign, type CampaignSummary } from './campaign.ts';

@@ -111,6 +111,10 @@ export type EndingView = {
   violates: string[];
   /** Kết cục chết: những dòng người chơi đang đọc thấy khác bản gốc (bị bóp méo), như lúc chết (G47). */
   misread: BloodtextView[];
+  /** G50: lần đầu chết ở kết cục này thì chưa hiện câu hé lộ, chỉ tô sinh lộ. */
+  revealHidden: boolean;
+  /** G51: đoạn kết của game, chỉ có ở kết cục trọn vẹn của màn cuối. */
+  epilogue: string[];
   keywords: { id: string; text: string; correct: boolean }[];
   dossiers: string[];
   /**
@@ -130,6 +134,8 @@ export function endingView(level: Level, state: GameState): EndingView | null {
     reveal: fill(state, node.reveal),
     solution: viewSolution(level, node.solution ?? level.solution),
     labels: level.bloodtext.filter((b) => !b.fake).map((b) => b.id),
+    revealHidden: node.result === 'death' && (state.campaign.endings[node.id] ?? 0) < 2,
+    epilogue: level.final && node.result === 'survive' && !node.open ? (level.epilogue ?? []) : [],
     violates: node.result === 'death' ? (node.violates ?? []) : [],
     misread:
       node.result === 'death'

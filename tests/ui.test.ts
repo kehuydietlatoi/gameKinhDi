@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { initialState } from '../src/engine/index.ts';
-import { DEFAULT_SETTINGS, loadSave, SAVE_KEY, usableState, writeSave } from '../src/ui/save.ts';
+import { initialState, type GameState } from '../src/engine/index.ts';
+import { DEFAULT_SETTINGS, loadSave, SAVE_KEY, SAVE_KEY_V1, usableState, writeSave } from '../src/ui/save.ts';
 import { strings } from '../src/ui/strings.ts';
 import { contrast, TEXT_COLORS, theme } from '../src/ui/theme.ts';
 import { loadLevel } from './helpers/play.ts';
@@ -38,13 +38,29 @@ describe('lưu tiến trình (AGENTS.md mục 10)', () => {
   test('ghi rồi đọc lại', () => {
     const store = memory();
     const state = initialState(level);
-    writeSave({ version: 1, state, settings: { speed: 'fast' } }, store);
+    const save = { version: 2 as const, state, settings: { speed: 'fast' as const }, lastMarks: { level: 'm1', ids: ['k4'] } };
+    writeSave(save, store);
     expect([...store.data.keys()]).toEqual([SAVE_KEY]);
-    expect(loadSave(store)).toEqual({ version: 1, state, settings: { speed: 'fast' } });
+    expect(SAVE_KEY).toBe('sinhlo.save.v2');
+    expect(loadSave(store)).toEqual(save);
+  });
+
+  test('G55: bản lưu v1 được migrate sang v2, thêm campaign', () => {
+    const store = memory();
+    const v1State: Partial<GameState> = { ...initialState(loadLevel('m3')), deaths: 2 };
+    delete v1State.campaign;
+    store.setItem(SAVE_KEY_V1, JSON.stringify({ version: 1, state: v1State, settings: { speed: 'slow' } }));
+    const save = loadSave(store);
+    expect(save).toMatchObject({ version: 2, settings: { speed: 'slow' }, lastMarks: null });
+    expect(save.state!.campaign).toEqual({ endings: {}, deaths: 2, keywords: {}, reached: ['m1', 'm2', 'm3'] });
+    expect(usableState(save.state, loadLevel('m3'))).not.toBeNull();
+    // Bản v2 có rồi thì không đọc v1 nữa.
+    store.setItem(SAVE_KEY, JSON.stringify({ version: 2, state: null, settings: { speed: 'fast' }, lastMarks: null }));
+    expect(loadSave(store).settings.speed).toBe('fast');
   });
 
   test('storage trống, hỏng hoặc ném lỗi thì dùng mặc định', () => {
-    const empty = { version: 1, state: null, settings: DEFAULT_SETTINGS };
+    const empty = { version: 2, state: null, settings: DEFAULT_SETTINGS, lastMarks: null };
     expect(loadSave(memory())).toEqual(empty);
     const broken = memory();
     broken.setItem(SAVE_KEY, '{không phải json');
@@ -64,7 +80,7 @@ describe('lưu tiến trình (AGENTS.md mục 10)', () => {
 
   test('tốc độ lạ trở về mặc định', () => {
     const store = memory();
-    store.setItem(SAVE_KEY, JSON.stringify({ version: 1, state: null, settings: { speed: 'turbo' } }));
+    store.setItem(SAVE_KEY, JSON.stringify({ version: 2, state: null, settings: { speed: 'turbo' }, lastMarks: null }));
     expect(loadSave(store).settings).toEqual({ speed: 'normal' });
   });
 
@@ -74,5 +90,8 @@ describe('lưu tiến trình (AGENTS.md mục 10)', () => {
     expect(usableState({ ...state, node: 'm1_n99' }, level)).toBeNull();
     expect(usableState({ ...state, level: 'm2' }, level)).toBeNull();
     expect(usableState(null, level)).toBeNull();
+    const noCampaign: Partial<GameState> = { ...state };
+    delete noCampaign.campaign;
+    expect(usableState(noCampaign as GameState, level)).toBeNull();
   });
 });

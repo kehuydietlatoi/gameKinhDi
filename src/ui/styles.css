@@ -548,3 +548,72 @@ select {
     animation: none;
   }
 }
+
+/* ---------- Số Tỉnh táo (G54): luôn hiện, kể cả ở 360px ---------- */
+
+.sanity-value {
+  margin-left: 6px;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+  white-space: nowrap;
+}
+
+/* ---------- Màn hình tiêu đề (G52) và sau kết thúc (G51) ---------- */
+
+.title-screen,
+.finale-screen {
+  width: 100%;
+  max-width: 28rem;
+  margin: auto 0;
+  padding: 32px 16px;
+}
+
+.title-screen h1 {
+  margin: 0 0 1.5em;
+  color: var(--c-blood);
+  font-size: 2.4rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.title-settings {
+  margin-top: 16px;
+}
+
+.title-settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.finale-screen.epilogue p {
+  margin: 0 0 1em;
+  line-height: 1.7;
+}
+
+.summary-list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 16px;
+  margin: 0 0 1.5em;
+}
+
+.summary-list dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.finale-screen.credits {
+  text-align: center;
+}
+
+.finale-screen.credits .row {
+  justify-content: center;
+}
+
+.thanks {
+  margin: 1.5em 0;
+  color: var(--c-muted);
+}

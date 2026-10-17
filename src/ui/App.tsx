@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } 
 import type { Asset, Level } from '../content/types.ts';
 import {
   bloodtextPanel,
+  campaignSummary,
   endingView,
   highlightOptions,
   initialState,
@@ -13,12 +14,14 @@ import {
 import { BloodtextPanel } from './BloodtextPanel.tsx';
 import { loadContent } from './content.ts';
 import { DeathScreen, ResultScreen } from './EndingScreens.tsx';
+import { FinaleScreens, type FinaleStage } from './FinaleScreens.tsx';
 import { HighlightPanel } from './HighlightPanel.tsx';
 import { useReducedMotion } from './hooks.ts';
 import { loadSave, usableState, writeSave, type Settings, type Speed } from './save.ts';
 import { SceneLayer } from './SceneLayer.tsx';
 import { strings } from './strings.ts';
 import { theme } from './theme.ts';
+import { TitleScreen } from './TitleScreen.tsx';
 import { TopBar } from './TopBar.tsx';
 import { Typewriter } from './Typewriter.tsx';
 
@@ -56,6 +59,17 @@ function startState(levels: Level[], saved: GameState | null): GameState {
   return initialState(levels[0]!);
 }
 
+/** G53: `?dev=1` mở mọi màn trong bảng chọn màn. */
+function devMode(): boolean {
+  try {
+    return new URLSearchParams(window.location.search).get('dev') === '1';
+  } catch {
+    return false;
+  }
+}
+
+type Screen = 'title' | 'play' | FinaleStage;
+
 function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> }) {
   const reducedMotion = useReducedMotion();
   const [game, setGame] = useState(() => {
@@ -64,19 +78,22 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
       state: startState(levels, save.state),
       settings: save.settings,
       entry: 0,
-      // G49: từ khoá đánh dấu lần trước, để Chơi lại không phải chọn lại từ đầu.
-      lastMarks: null as { level: string; ids: string[] } | null,
+      lastMarks: save.lastMarks,
+      /** Có tiến trình để "Chơi tiếp" (G52). */
+      hasProgress: save.state !== null,
     };
   });
+  const [screen, setScreen] = useState<Screen>('title');
+  const [dev] = useState(devMode);
   const [panelOpen, setPanelOpen] = useState(false);
-  const { state, settings } = game;
+  const { state, settings, lastMarks } = game;
   const levelOf = useCallback((s: GameState) => levels.find((l) => l.level === s.level)!, [levels]);
   const level = levelOf(state);
   const nextLevel = levels[levels.indexOf(level) + 1];
 
   useEffect(() => {
-    writeSave({ version: 1, state, settings });
-  }, [state, settings]);
+    if (game.hasProgress) writeSave({ version: 2, state, settings, lastMarks });
+  }, [game.hasProgress, state, settings, lastMarks]);
 
   const dispatch = useCallback(
     (action: Action) =>
@@ -92,33 +109,70 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
   const setSettings = (s: Settings) => setGame((g) => ({ ...g, settings: s }));
   const closePanel = useCallback(() => setPanelOpen(false), []);
 
-  const v = view(level, state);
-  const ending = endingView(level, state);
-  const msPerChar = reducedMotion ? 0 : MS_PER_CHAR[settings.speed];
-  const replay = () => dispatch({ type: 'restart' });
-  // G34: chơi thẳng một màn từ đầu, giữ hồ sơ đã mở khoá.
+  /** Bắt đầu một màn từ đầu, mang theo hồ sơ và số liệu chuyến chơi (G33, G34, G51). */
+  const startLevel = (target: Level) => {
+    setPanelOpen(false);
+    setScreen('play');
+    setGame((g) => ({
+      ...g,
+      state: initialState(target, { unlocked: g.state.unlocked, campaign: g.state.campaign }),
+      entry: g.entry + 1,
+    }));
+  };
   const selectLevel = (id: string) => {
     const target = levels.find((l) => l.level === id);
-    if (!target) return;
-    setPanelOpen(false);
-    setGame((g) => ({ ...g, state: initialState(target, { unlocked: g.state.unlocked }), entry: g.entry + 1 }));
+    if (target) startLevel(target);
   };
-  // G33: sang màn kế, mang theo hồ sơ đã mở khoá; Tỉnh táo về init của màn mới (G23).
-  const goNext = nextLevel
-    ? () =>
-        setGame((g) => ({
-          ...g,
-          state: initialState(nextLevel, { unlocked: g.state.unlocked }),
-          entry: g.entry + 1,
-        }))
-    : undefined;
+  const newGame = () => {
+    setScreen('play');
+    setGame((g) => ({ ...g, state: initialState(levels[0]!), lastMarks: null, hasProgress: true, entry: g.entry + 1 }));
+  };
+
+  if (screen === 'title') {
+    return (
+      <main className="app" style={themeVars}>
+        <TitleScreen
+          canContinue={game.hasProgress}
+          onContinue={() => setScreen('play')}
+          onNewGame={newGame}
+          settings={settings}
+          onSettings={setSettings}
+          reducedMotion={reducedMotion}
+        />
+      </main>
+    );
+  }
+
+  const v = view(level, state);
+  const ending = endingView(level, state);
+  if (screen !== 'play' && ending) {
+    const order: FinaleStage[] = ['epilogue', 'summary', 'credits'];
+    return (
+      <main className="app" style={themeVars}>
+        <FinaleScreens
+          stage={screen}
+          epilogue={ending.epilogue}
+          summary={campaignSummary(levels, state.campaign)}
+          onNext={() => setScreen(order[order.indexOf(screen) + 1] ?? 'credits')}
+          onReplayFromStart={() => startLevel(levels[0]!)}
+          onTitle={() => setScreen('title')}
+        />
+      </main>
+    );
+  }
+
+  const msPerChar = reducedMotion ? 0 : MS_PER_CHAR[settings.speed];
+  const replay = () => dispatch({ type: 'restart' });
+  // G51: không có đoạn kết thì vào thẳng tổng kết.
+  const finale = () => setScreen(ending?.epilogue.length ? 'epilogue' : 'summary');
+  const selectable = dev ? levels : levels.filter((l) => state.campaign.reached.includes(l.level));
 
   let footer: ReactNode;
   if (v.phase === 'highlight') {
     footer = (
       <HighlightPanel
         options={highlightOptions(level)}
-        initial={game.lastMarks?.level === level.level ? game.lastMarks.ids : []}
+        initial={lastMarks?.level === level.level ? lastMarks.ids : []}
         onDone={(ids) => dispatch({ type: 'highlight', ids })}
       />
     );
@@ -127,7 +181,12 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
       ending.result === 'death' ? (
         <DeathScreen ending={ending} onReplay={replay} />
       ) : (
-        <ResultScreen ending={ending} onReplay={replay} onNext={goNext} onRestartGame={() => selectLevel(levels[0]!.level)} />
+        <ResultScreen
+          ending={ending}
+          onReplay={replay}
+          onNext={nextLevel ? () => startLevel(nextLevel) : undefined}
+          onFinale={finale}
+        />
       );
   } else {
     footer = (
@@ -165,9 +224,10 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
         settings={settings}
         onSettings={setSettings}
         reducedMotion={reducedMotion}
-        levels={levels.map((l) => ({ id: l.level, title: l.title }))}
+        levels={selectable.map((l) => ({ id: l.level, title: l.title }))}
         currentLevel={level.level}
         onSelectLevel={selectLevel}
+        onTitle={() => setScreen('title')}
       />
       <SceneLayer scene={v.scene} assets={assets} />
       <section className="text-panel">

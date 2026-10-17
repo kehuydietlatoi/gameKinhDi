@@ -5,6 +5,7 @@ import { check } from '../src/engine/conditions.ts';
 import { applyEffects } from '../src/engine/effects.ts';
 import {
   bloodtextPanel,
+  campaignSummary,
   endingView,
   EngineError,
   following,
@@ -367,7 +368,35 @@ describe('kết cục', () => {
   test('Chơi lại: về start với init, xoá đánh dấu, giữ số lần chết và hồ sơ', () => {
     const dead = run(level, ['Đi A', 'Đi B', 'Từ chối'], { highlights: ['k1'] }).state;
     const again = step(level, { ...dead, unlocked: ['hs_thu'] }, { type: 'restart' });
-    expect(again).toEqual({ ...initialState(level, { deaths: 1, unlocked: ['hs_thu'] }) });
+    expect(again).toEqual({ ...initialState(level, { deaths: 1, unlocked: ['hs_thu'], campaign: dead.campaign }) });
     expect(again.highlights).toEqual([]);
   });
+});
+
+describe('số liệu chuyến chơi (G50, G51, G53)', () => {
+  const DIE = ['Đi A', 'Đi B', 'Từ chối'];
+
+  test('màn bắt đầu được ghi vào reached; chết được đếm theo kết cục và cộng dồn', () => {
+    expect(initialState(level).campaign).toEqual({ endings: {}, deaths: 0, keywords: {}, reached: ['m9'] });
+    const dead = run(level, DIE).state;
+    expect(dead.campaign).toMatchObject({ endings: { [dead.node]: 1 }, deaths: 1 });
+    const twice = run(level, DIE, { from: step(level, dead, { type: 'restart' }) }).state;
+    expect(twice.campaign).toMatchObject({ endings: { [dead.node]: 2 }, deaths: 2 });
+    // Sang màn khác vẫn giữ số liệu.
+    expect(initialState(level, { campaign: twice.campaign }).campaign.deaths).toBe(2);
+  });
+
+  test('G50: lần chết đầu ở một kết cục ẩn câu hé lộ, từ lần thứ hai thì hiện', () => {
+    const dead = run(level, DIE).state;
+    expect(endingView(level, dead)!.revealHidden).toBe(true);
+    const twice = run(level, DIE, { from: step(level, dead, { type: 'restart' }) }).state;
+    expect(endingView(level, twice)!.revealHidden).toBe(false);
+  });
+
+  test('campaignSummary: chết, từ khoá trúng / đã đánh dấu, kết cục đã mở / tổng số', () => {
+    const c = { endings: { m9_d1: 2, khong_co: 1 }, deaths: 2, keywords: { m1: { hit: 2, marked: 3 }, m2: { hit: 1, marked: 1 } }, reached: ['m9'] };
+    // Màn giả có ba kết cục m9_e1, m9_d1, m9_d2; id không có thật thì không tính.
+    expect(campaignSummary([level], c)).toEqual({ deaths: 2, keywordsHit: 3, keywordsMarked: 4, endingsOpened: 1, endingsTotal: 3 });
+  });
+
 });

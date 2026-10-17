@@ -18,10 +18,14 @@ export function DeathScreen({ ending, onReplay }: { ending: EndingView; onReplay
         </>
       )}
       <BloodLines lines={ending.solution} labels={ending.labels} violated={ending.violates} />
-      <p className="reveal">
-        <span className="ch-prefix">{strings.reveal} · </span>
-        {ending.reveal}
-      </p>
+      {ending.revealHidden ? (
+        <p className="hint">{strings.revealLater}</p>
+      ) : (
+        <p className="reveal">
+          <span className="ch-prefix">{strings.reveal} · </span>
+          {ending.reveal}
+        </p>
+      )}
       <button type="button" className="btn btn-primary" onClick={onReplay} autoFocus>
         {strings.replay}
       </button>
@@ -33,14 +37,16 @@ type ResultProps = {
   ending: EndingView;
   onReplay: () => void;
   onNext?: (() => void) | undefined;
-  onRestartGame?: (() => void) | undefined;
+  /** G51: kết cục trọn vẹn của màn cuối đi tiếp sang đoạn kết và tổng kết. */
+  onFinale?: (() => void) | undefined;
 };
 
 /**
- * Kết cục sống: ghi rõ kết cục nào (G28), cụm sinh lộ, từ khoá, hồ sơ; sang màn kế (G33).
- * Ở màn cuối (G41): kết cục trọn vẹn là hết game; kết thúc mở thì mời chơi lại màn cuối.
+ * Kết cục sống: ghi rõ kết cục nào (G28), cụm sinh lộ, từ khoá; sang màn kế (G33).
+ * Hồ sơ chỉ là cờ ẩn, không hiển thị (G56).
+ * Ở màn cuối (G41): kết cục trọn vẹn đi tiếp sang đoạn kết (G51); kết thúc mở thì mời chơi lại màn cuối.
  */
-export function ResultScreen({ ending, onReplay, onNext, onRestartGame }: ResultProps) {
+export function ResultScreen({ ending, onReplay, onNext, onFinale }: ResultProps) {
   return (
     <section className="ending survive">
       {ending.finale === 'complete' && <p className="finale">{strings.gameComplete}</p>}
@@ -63,25 +69,15 @@ export function ResultScreen({ ending, onReplay, onNext, onRestartGame }: Result
       ) : (
         <p className="hint">{strings.keywordsNone}</p>
       )}
-      {ending.dossiers.length > 0 && (
-        <>
-          <h3>{strings.dossiersTitle}</h3>
-          <ul>
-            {ending.dossiers.map((d) => (
-              <li key={d}>{d}</li>
-            ))}
-          </ul>
-        </>
-      )}
       <div className="row">
         {onNext && (
           <button type="button" className="btn btn-primary" onClick={onNext} autoFocus>
             {strings.nextLevel}
           </button>
         )}
-        {ending.finale === 'complete' && onRestartGame && (
-          <button type="button" className="btn btn-primary" onClick={onRestartGame} autoFocus>
-            {strings.replayFromStart}
+        {ending.finale === 'complete' && onFinale && (
+          <button type="button" className="btn btn-primary" onClick={onFinale} autoFocus>
+            {strings.continue}
           </button>
         )}
         <button

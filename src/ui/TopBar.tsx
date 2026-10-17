@@ -16,6 +16,8 @@ type Props = {
   levels: { id: string; title: string }[];
   currentLevel: string;
   onSelectLevel: (id: string) => void;
+  /** G52: về màn hình tiêu đề. */
+  onTitle: () => void;
 };
 
 export function SanityBar({ value }: { value: number }) {
@@ -25,6 +27,10 @@ export function SanityBar({ value }: { value: number }) {
       {[1, 2, 3, 4, 5].map((n) => (
         <span key={n} className={`notch${n <= value ? ' on' : ''}`} />
       ))}
+      {/* G54: luôn hiện số, kể cả ở 360px. */}
+      <span className="sanity-value" aria-hidden="true">
+        {value}/5
+      </span>
     </div>
   );
 }
@@ -77,14 +83,24 @@ export function TopBar(props: Props) {
                   props.onSelectLevel(e.target.value);
                 }}
               >
-                {props.levels.map((l, i) => (
+                {props.levels.map((l) => (
                   <option key={l.id} value={l.id}>
-                    {strings.levelLabel(i + 1, l.title)}
+                    {strings.levelLabel(Number(l.id.slice(1)), l.title)}
                   </option>
                 ))}
               </select>
             </label>
             <p className="hint">{strings.chooseLevelNote}</p>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                setOpen(false);
+                props.onTitle();
+              }}
+            >
+              {strings.backToTitle}
+            </button>
           </div>
         )}
       </div>

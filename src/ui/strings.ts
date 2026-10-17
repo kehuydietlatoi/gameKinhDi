@@ -9,6 +9,19 @@ export const strings = {
   openEnding: 'Kết thúc mở',
   replayLevel: 'Chơi lại màn này',
   replayFromStart: 'Chơi lại từ màn đầu',
+  // G52: màn hình tiêu đề.
+  continueGame: 'Chơi tiếp',
+  newGame: 'Chơi mới',
+  newGameConfirm: 'Chơi mới sẽ xoá tiến trình hiện tại. Bấm "Chơi mới" lần nữa để bắt đầu.',
+  backToTitle: 'Về màn hình chính',
+  // G51: tổng kết và credits sau đoạn kết.
+  summaryTitle: 'Tổng kết',
+  summaryDeaths: 'Số lần chết',
+  summaryKeywords: 'Từ khoá là chìa khoá / đã đánh dấu',
+  summaryEndings: 'Kết cục đã mở',
+  /** Nội dung credits: chờ người dùng gửi (quyết định C9). */
+  credits: [] as readonly string[],
+  thanks: 'Cảm ơn bạn đã chơi.',
   sanity: 'Tỉnh táo',
   bloodtext: 'Huyết tự',
   bloodtextLocked: 'Huyết tự chưa xuất hiện',
@@ -36,11 +49,12 @@ export const strings = {
   misreadTitle: 'Huyết tự bạn đã đọc',
   trueBloodtextTitle: 'Huyết tự thật',
   reveal: 'Hé lộ',
+  // G50: lần chết đầu ở một kết cục chưa hiện câu hé lộ.
+  revealLater: 'Chết theo cách này thêm một lần nữa, Huyết tự sẽ hé lộ vì sao.',
   keywordsTitle: 'Từ khoá đã đánh dấu',
   keywordsNone: 'Không đánh dấu từ khoá nào.',
   // G48: "đúng" của từ khoá nghĩa là cụm đó thuộc sinh lộ, không phải người chơi đánh dấu sai.
   keywordCorrect: 'chìa khoá của sinh lộ',
   keywordWrong: 'không phải chìa khoá',
-  dossiersTitle: 'Hồ sơ được mở khoá',
   loadError: 'Không nạp được nội dung màn chơi.',
 } as const;

@@ -243,7 +243,7 @@ describe('kết cục chết', () => {
   test('Chơi lại sau khi chết: về M1-01, giữ số lần chết, xoá đánh dấu', () => {
     const dead = playM1([...QUIET, '"Tôi không chơi."'], { highlights: ['k1'] });
     const again = step(level, dead, { type: 'restart' });
-    expect(again).toEqual(initialState(level, { deaths: 1 }));
+    expect(again).toEqual(initialState(level, { deaths: 1, campaign: dead.campaign }));
     expect(again).toMatchObject({ node: 'm1_n01', highlights: [], highlightDone: false, sanity: 5 });
   });
 });

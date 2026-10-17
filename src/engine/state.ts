@@ -1,6 +1,7 @@
 // Trạng thái game (docs/dac-ta-kich-ban.md mục 2, 5; G1–G22).
 // Chỉ dùng kiểu JSON thuần (mảng thay cho Set) để lưu được vào localStorage.
 import type { Light, Role } from '../content/types.ts';
+import type { Campaign } from './campaign.ts';
 
 export type NpcState = { alive: boolean; found: boolean; following: boolean };
 
@@ -38,6 +39,8 @@ export type GameState = {
   deaths: number;
   /** Hồ sơ đã mở khoá, giữ qua các màn (G18). */
   unlocked: string[];
+  /** Số liệu cả chuyến chơi, giữ qua Chơi lại và qua các màn (G50, G51, G53). */
+  campaign: Campaign;
 };
 
 export class EngineError extends Error {

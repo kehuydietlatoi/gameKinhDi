@@ -1,6 +1,7 @@
 // Máy trạng thái: step(level, state, action) => state. Hàm thuần, tất định (AGENTS.md mục 5).
 import type { Effect, EndingNode, Level, Node, SceneNode } from '../content/types.ts';
 import { check } from './conditions.ts';
+import { emptyCampaign, type Campaign } from './campaign.ts';
 import { applyEffects } from './effects.ts';
 import { resolveScene } from './scene.ts';
 import { addUnique, EngineError, type GameState, type NpcState } from './state.ts';
@@ -24,8 +25,8 @@ export function nodeById(level: Level, id: string): Node {
   return node;
 }
 
-/** Tỉnh táo luôn lấy từ `init` của màn (G23); chỉ số lần chết và hồ sơ được mang theo. */
-export type InitOptions = { deaths?: number; unlocked?: string[] };
+/** Tỉnh táo luôn lấy từ `init` của màn (G23); chỉ số lần chết, hồ sơ và số liệu chuyến chơi được mang theo. */
+export type InitOptions = { deaths?: number; unlocked?: string[]; campaign?: Campaign };
 
 export function initialState(level: Level, opts: InitOptions = {}): GameState {
   const npc: Record<string, NpcState> = {};
@@ -52,6 +53,7 @@ export function initialState(level: Level, opts: InitOptions = {}): GameState {
     bloodtextSeen: false,
     deaths: opts.deaths ?? 0,
     unlocked: opts.unlocked ?? [],
+    campaign: withReached(opts.campaign ?? emptyCampaign(), level.level),
   };
   return enter(level, base, level.start);
 }
@@ -89,6 +91,17 @@ function shown(line: SceneNode['lines'][number], state: GameState): boolean {
   return !(state.eyes_closed && line.ch === 'env' && line.sense === 'nhìn');
 }
 
+const withReached = (c: Campaign, level: string): Campaign => ({ ...c, reached: addUnique(c.reached, level) });
+
+/** Ghi kết cục vào số liệu chuyến chơi (G50, G51). */
+function recordEnding(level: Level, state: GameState, node: EndingNode): Campaign {
+  const c = state.campaign;
+  const endings = { ...c.endings, [node.id]: (c.endings[node.id] ?? 0) + 1 };
+  if (node.result === 'death') return { ...c, endings, deaths: c.deaths + 1 };
+  const hit = state.highlights.filter((id) => level.keywords.find((k) => k.id === id)?.correct).length;
+  return { ...c, endings, keywords: { ...c.keywords, [level.level]: { hit, marked: state.highlights.length } } };
+}
+
 function enterEnding(level: Level, state: GameState, node: EndingNode): GameState {
   const scene = node.scene === undefined && node.result === 'death' ? { bg: null, light: 'dark' as const } : state.scene;
   const lines = node.lines.flatMap((l, i) => (check(l.if, level, state) ? [i] : []));
@@ -103,6 +116,7 @@ function enterEnding(level: Level, state: GameState, node: EndingNode): GameStat
     phase: 'ending',
     deaths: node.result === 'death' ? state.deaths + 1 : state.deaths,
     unlocked,
+    campaign: recordEnding(level, state, node),
   };
 }
 
@@ -124,7 +138,7 @@ export function exits(level: Level, state: GameState): Exit {
 export function step(level: Level, state: GameState, action: Action): GameState {
   switch (action.type) {
     case 'restart':
-      return initialState(level, { deaths: state.deaths, unlocked: state.unlocked });
+      return initialState(level, { deaths: state.deaths, unlocked: state.unlocked, campaign: state.campaign });
 
     case 'highlight': {
       if (state.phase !== 'highlight') throw new EngineError('Không ở bước đánh dấu từ khoá');

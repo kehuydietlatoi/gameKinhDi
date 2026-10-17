@@ -71,6 +71,7 @@ export function validateLevel(level: Level, assets: Assets | null, knownDossiers
   if (new Set(distortionKinds).size !== distortionKinds.length) {
     err('distortions', 'mỗi dòng chỉ có một bản méo đổi chữ và một bản méo đổi mực');
   }
+  if (level.final === undefined && level.epilogue) err('epilogue', '`epilogue` chỉ dùng ở màn có `final: true` (G51)');
   if (level.final === undefined && level.nodes.some((n) => n.type === 'ending' && n.open)) {
     err('nodes', '`open` chỉ dùng ở màn có `final: true` (G41)');
   }

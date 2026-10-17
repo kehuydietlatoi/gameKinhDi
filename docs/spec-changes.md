@@ -558,3 +558,57 @@ Sau một lượt chơi thử cả 9 màn, người chơi qua mọi màn ngay l�
 | `docs/man-6-cau-noi.md` | Hé lộ của D3 thêm câu "Đứng yên không phải lúc nào cũng an toàn." | Quyết định B4: M6 là màn phá mẹo "đứng yên là thắng" của các màn trước; L3 "không được dừng bước" đã sẵn có, không thêm node |
 | `docs/man-1-tron-tim.md` … `docs/man-9-nguoi-dan-ba-khong-mat.md` | Bỏ dòng `system` "Bạn có N lượt hành động…" trước hub quan sát (9 màn) | Quyết định D14: trùng với dòng "Còn N lượt hành động." của G46 |
 | `docs/man-8-binh-minh-khong-den.md` | Brief `phong_404_1986` thêm câu "Cửa ra vào nằm ở bức tường đối diện cửa sổ bếp, ngoài khung hình." | Quyết định C11: khớp với dòng mới ở M8-05, để người vẽ không vẽ trái ngược |
+
+## G50 · Lần chết đầu chưa hiện câu hé lộ
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn hình chết của mọi màn (quyết định B5). Câu hé lộ thường nói thẳng sinh lộ, ví dụ M1 D2 "Người trốn không có đường sống."
+- **Bổ sung:** engine đếm số lần tới từng kết cục trong `campaign.endings` (G51). Lần đầu chết ở một kết cục, màn hình chết vẫn tô cụm hoặc dòng trong `solution`, tô dòng bị vi phạm và hiện bản méo đã đọc (G47), nhưng thay câu hé lộ bằng chuỗi UI "Chết theo cách này thêm một lần nữa, Huyết tự sẽ hé lộ vì sao." Từ lần thứ hai ở cùng kết cục, hiện câu hé lộ đầy đủ. Kết cục sống luôn hiện hé lộ. Không đổi YAML.
+
+## G51 · Số liệu chuyến chơi, đoạn kết, tổng kết, credits
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** kết thúc game sau M9 E1 (quyết định C9).
+- **Bổ sung:**
+  - `GameState.campaign` giữ qua Chơi lại và qua các màn (như `unlocked`): `endings` (số lần tới từng kết cục, theo id node), `deaths` (tổng số lần chết), `keywords` (theo màn, lần qua màn gần nhất: số từ khoá đánh dấu có `correct: true` / số đã đánh dấu), `reached` (G53). Biến `deaths` cũ vẫn là số lần chết trong màn đang chơi.
+  - Màn có `final: true` được khai báo `epilogue`: danh sách đoạn văn. Validator báo lỗi nếu màn không final có `epilogue`.
+  - Kết cục sống không `open` của màn final: nút "Tiếp" (thay cho "Chơi lại từ màn đầu" của G41) dẫn tới đoạn kết (nếu có `epilogue`), rồi màn tổng kết (số lần chết; từ khoá là chìa khoá / đã đánh dấu; kết cục đã mở / tổng số kết cục của mọi màn), rồi credits với hai nút "Chơi lại từ màn đầu" (giữ hồ sơ và số liệu) và "Về màn hình chính".
+  - Nội dung credits là `strings.credits` trong `src/ui/strings.ts`. Đoạn kết và nội dung credits đang chờ người dùng gửi; khi chưa có `epilogue`, nút "Tiếp" đi thẳng vào tổng kết.
+
+```yaml
+level: m9
+final: true
+epilogue:
+  - "Đoạn văn thứ nhất."
+  - "Đoạn văn thứ hai."
+```
+
+## G52 · Màn hình tiêu đề
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** mở game (quyết định D12).
+- **Bổ sung:** mở game luôn vào màn tiêu đề "Sinh lộ" với "Chơi tiếp" (chỉ khi có bản lưu), "Chơi mới" và "Cài đặt" (tốc độ chữ). Có bản lưu thì "Chơi mới" phải bấm hai lần (lần đầu hiện câu nhắc sẽ xoá tiến trình; không dùng hộp thoại của trình duyệt). Chơi mới xoá cả `campaign` và `lastMarks`. Bảng cài đặt trong game có nút "Về màn hình chính". Chưa bấm "Chơi mới" hay "Chơi tiếp" thì không ghi bản lưu.
+
+## G53 · Chọn màn chỉ mở các màn đã tới
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** bảng chọn màn của G34 (quyết định D13).
+- **Bổ sung:** bảng chọn màn chỉ liệt kê các màn trong `campaign.reached`; mỗi lần `initialState` một màn, màn đó được thêm vào `reached`. URL có `?dev=1` thì liệt kê mọi màn. Nhãn "Màn N" lấy số từ id màn, không theo vị trí trong danh sách.
+
+## G54 · Số Tỉnh táo cạnh thanh
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** thanh trên cùng (quyết định D15).
+- **Bổ sung:** cạnh năm ô của thanh Tỉnh táo luôn có số dạng "3/5", kể cả ở chiều rộng 360px (nhãn chữ "Tỉnh táo" vẫn ẩn ở màn hẹp).
+
+## G55 · Bản lưu v2
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** G49, G51 (quyết định D16).
+- **Bổ sung:** key `sinhlo.save.v2`; `Save = { version: 2, state, settings, lastMarks }`. `state` có `campaign`; `lastMarks` là từ khoá đánh dấu lần trước `{ level, ids }` hoặc `null`. Không có v2 thì đọc `sinhlo.save.v1` và migrate: thêm `campaign` với `deaths` lấy từ `state.deaths`, `reached` là m1 tới màn đang chơi, `endings` và `keywords` rỗng; `lastMarks` null. Bản lưu thiếu `campaign` bị coi là không dùng được.
+
+## G56 · Hồ sơ là cờ ẩn
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** quyết định C10.
+- **Bổ sung:** bỏ mục "Hồ sơ được mở khoá" khỏi màn hình kết quả. Hồ sơ vẫn được mở khoá như G18 và vẫn mở lựa chọn có điều kiện `has_dossier` (M3-12, M9 c5); chỉ không hiển thị ở đâu cả.

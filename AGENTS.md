@@ -99,7 +99,7 @@ Quy cách đầy đủ ở mục 5 của `docs/dac-ta-kich-ban.md`; brief vẽ t
 
 ## 10. Lưu tiến trình
 
-- `localStorage`, key có phiên bản: `sinhlo.save.v1`.
+- `localStorage`, key có phiên bản: `sinhlo.save.v2` (v1 được migrate khi đọc, xem G55).
 - Mọi đọc/ghi bọc trong `try/catch`. Game vẫn chạy được khi storage lỗi hoặc trống.
 - Đổi cấu trúc save thì tăng phiên bản key và viết hàm migrate.
 

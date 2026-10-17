@@ -259,6 +259,7 @@ export const Level = z.strictObject({
   title: z.string().min(1),
   start: SceneNodeId,
   final: z.literal(true).optional(), // G41: màn cuối của game
+  epilogue: z.array(z.string().min(1)).min(1).optional(), // G51: đoạn kết, chỉ ở màn final
   on_sanity_zero: NodeId.optional(), // G19, G26: node bất kỳ
   init: z.strictObject({
     sanity: z.int().min(0).max(5),
