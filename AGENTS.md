@@ -18,7 +18,9 @@ Game là **data-driven**: engine chỉ biết luật chơi; toàn bộ nội dun
 | Những gì đã bổ sung vào đặc tả | `docs/spec-changes.md` |
 
 - Khi `content/*.yaml` khác `docs/man-*.md`, file trong `docs/` là đúng.
-- Không sửa file trong `docs/`, trừ `docs/spec-changes.md`.
+- `docs/` vẫn là nguồn sự thật. Được sửa `docs/man-*.md` để đồng bộ với quyết định đã được người dùng duyệt; mỗi lần sửa ghi vào `docs/spec-changes.md` (ngày, màn, lý do).
+- Không tự thêm hay viết lại thoại, node, manh mối hay kết cục khi chưa được duyệt (xem mục 6).
+- Các file khác trong `docs/` chỉ sửa khi người dùng yêu cầu, trừ `docs/spec-changes.md`.
 
 ## 3. Cấu trúc thư mục
 
