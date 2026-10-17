@@ -82,13 +82,23 @@ Ghi vào `docs/spec-changes.md` theo AGENTS.md mục 12.
 
 ## Cảnh và ảnh nền
 
-Màn 5 không cần ảnh mới; dùng lại `can_ho_304`.
+Màn 5 cần 1 ảnh mới và dùng lại `can_ho_304`.
+
+### Brief vẽ
+
+| id | Góc nhìn và nội dung | Bắt buộc có | Cấm vẽ | `clue` |
+| --- | --- | --- | --- | --- |
+| `hanh_lang_lo_khoa` | Nhìn qua lỗ khoá cửa căn hộ 304 ra hành lang tầng 3. Dựng từ code của `hanh_lang_tang_2`. Khung hình là mảng đen, ô nhìn hình lỗ khoá ở giữa. | Hành lang tối với các cửa gỗ sơn xanh; trên mỗi cánh cửa nhìn thấy được có một mảng chữ đỏ máu không đọc được | Người, bàn tay, bút lông, lọ mực, chữ đọc được, mảng chữ màu nâu | không |
+
+Bàn tay, bút lông và lọ mực ở M5-06 là manh mối c3; để chữ kể, không vẽ (cũng vì không được vẽ người), nên ảnh không mang `clue`.
 
 ### Gán cảnh cho node
 
 | Node | `bg` | `light` | Ghi chú |
 | --- | --- | --- | --- |
 | M5-01 | `can_ho_304` | `normal` | |
+| M5-03 | `can_ho_304` | `normal` | Khai báo ở hub; đặt lại cảnh sau M5-06 |
+| M5-06 | `hanh_lang_lo_khoa` | `normal` | Nhìn qua lỗ khoá |
 | M5-30 | `can_ho_304` | `dark` | Mất điện |
 | M5-31 | `can_ho_304` | `candle` | Giữ đến M5-40 |
 | M5-41 | `can_ho_304` | `dawn` | |

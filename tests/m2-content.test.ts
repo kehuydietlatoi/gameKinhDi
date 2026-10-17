@@ -4,9 +4,16 @@ import type { Line } from '../src/content/types.ts';
 import { checkLevelContent } from './helpers/content-check.ts';
 import { section } from './helpers/script-doc.ts';
 
-const { md, level, nodes } = checkLevelContent('m2', 'man-2-canh-linh-cuu.md');
+const { md, level, nodes } = checkLevelContent('m2', 'man-2-canh-linh-cuu.md', { specialSceneRows: ['M2-09'] });
 
 describe('m2: kiểm tra riêng', () => {
+  test('cảnh M2-09: cầu thang chỉ ở nhánh di_xuong (bảng gán cảnh)', () => {
+    expect(section(md, '### Gán cảnh cho node')).toContain(
+      '| M2-09 | `cau_thang_chieu_nghi` | `flicker` | Chỉ khi có cờ `di_xuong`; nếu nằm xuống giường thì giữ `can_ho_304` |',
+    );
+    expect(nodes.scene('m2_n09').scene).toEqual([{ if: { flag: 'di_xuong' }, bg: 'cau_thang_chieu_nghi', light: 'flicker' }]);
+  });
+
   test('Huyết tự đặt đúng chỗ', () => {
     const blood = (lines: Line[]) => lines.filter((l) => l.ch === 'bloodtext');
     expect(blood(nodes.scene('m2_n02').lines)).toEqual([{ ch: 'bloodtext', lines: ['L1', 'L2', 'L3', 'L4'] }]);

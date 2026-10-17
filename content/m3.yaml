@@ -135,6 +135,7 @@ nodes:
 
   - id: m3_n15   # Thằng Bin
     type: scene
+    scene: {bg: cau_thang_chieu_nghi, light: flicker}
     lines:
       - {ch: env, sense: nhìn, text: "Thằng Bin ngồi bó gối trên bậc cầu thang, tay mân mê một chiếc khăn tang."}
       - {ch: npc, who: thang_bin, tone: whisper, text: "Mẹ cháu bảo Bin là tên ở nhà. Tên thật cháu là Lâm, đặt theo tên ông ngoại."}

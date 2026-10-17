@@ -122,6 +122,8 @@ nodes:
 
   - id: m2_n09   # Thiếp đi
     type: scene
+    scene:   # chỉ nhánh đi xuống; nằm xuống giường thì giữ can_ho_304
+      - {if: {flag: di_xuong}, bg: cau_thang_chieu_nghi, light: flicker}
     lines:
       - {ch: narration, if: {flag: di_xuong}, text: "Bạn bước xuống cầu thang. Đến chiếu nghỉ tầng 2 thì hai chân khuỵu xuống."}
       - {ch: narration, if: {not_flag: di_xuong}, text: "Bạn nằm xuống. Chăn lạnh như vừa giặt xong chưa phơi."}

@@ -34,7 +34,9 @@ describe('đường sống', () => {
     expect(t.state).toMatchObject({ node: 'm8_e1', time: '05:30', scene: { bg: 'can_ho_304', light: 'dawn' } });
     // Giờ đứng ở 23:59 đến M8-31.
     for (const v of t.views.filter((x) => !['m8_n31', 'm8_e1'].includes(x.node))) expect(v.time, v.node).toBe('23:59');
-    expect(t.views.find((v) => v.node === 'm8_n31')!.scene).toEqual({ bg: 'phong_404_1986', light: 'dawn' });
+    // Mặt trời sáp vàng đã vẽ trên tường cửa sổ bếp: dùng ảnh riêng cho M8-31.
+    expect(t.views.find((v) => v.node === 'm8_n31')!.scene).toEqual({ bg: 'phong_404_1986_mat_troi', light: 'dawn' });
+    expect(t.views.find((v) => v.node === 'm8_n30')!.scene).toEqual({ bg: 'phong_404_1986', light: 'flicker' });
   });
 
   test('có long_sat: M8-30 không mất Tỉnh táo, nghe tiếng song sắt (G40)', () => {

@@ -152,6 +152,7 @@ nodes:
 
   - id: m6_n30   # Đi lùi
     type: scene
+    scene: {bg: cau_noi_nhin_ve_c4, light: flicker}   # mặt hướng về C4
     effects: [{sanity: -1}]
     lines:
       - {ch: narration, text: "Bạn quay mặt về phía hành lang C4, rồi lùi một bước lên cầu."}

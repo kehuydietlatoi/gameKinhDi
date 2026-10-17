@@ -66,13 +66,14 @@ Không cần bổ sung.
 
 ## Cảnh và ảnh nền
 
-Màn 6 cần 1 ảnh mới. Phòng 305 dùng lại `can_ho_304` (hai căn cùng kiểu).
+Màn 6 cần 2 ảnh mới. Phòng 305 dùng lại `can_ho_304` (hai căn cùng kiểu).
 
 ### Brief vẽ
 
 | id | Góc nhìn và nội dung | Bắt buộc có | Cấm vẽ | `clue` |
 | --- | --- | --- | --- | --- |
 | `cau_noi_c4_c5` | Đứng ở đầu cầu phía C4 nhìn sang nhà C5, ban đêm. | Mặt cầu bê tông hẹp, ướt loang loáng; lan can sắt hai bên, nguyên vẹn; cửa đầu cầu C5 hắt ánh vàng; mảng trời xanh đêm; một mảng tường nhà C5 với vài ô cửa sổ, chỉ một ô sáng | Người, bóng người, dấu chân, lan can gãy | không |
+| `cau_noi_nhin_ve_c4` | Đứng trên cầu nối, quay mặt về phía nhà C4, ban đêm. Cùng vật liệu với `cau_noi_c4_c5`. Dùng cho M6-30 đến M6-33. | Mặt cầu bê tông hẹp, ướt loang loáng, chạy về phía C4; lan can sắt hai bên, nguyên vẹn; cửa sắt đầu cầu C4 mở; sau cửa là hành lang C4, nửa sau chìm hẳn vào bóng tối (chỗ "nó" đứng); mảng trời xanh đêm phía trên | Người, bóng người kể cả trong vùng tối, dấu chân, lan can gãy, vệt sáng vàng của cửa C5 | không |
 
 ### Gán cảnh cho node
 
@@ -82,7 +83,8 @@ Màn 6 cần 1 ảnh mới. Phòng 305 dùng lại `can_ho_304` (hai căn cùng 
 | M6-05 | `cau_noi_c4_c5` | `normal` | |
 | M6-06 | `cau_noi_c4_c5` | `normal` | |
 | M6-07 | `can_ho_304` | `normal` | |
-| M6-10 | `cau_noi_c4_c5` | `flicker` | Giữ đến hết các node trên cầu |
+| M6-10 | `cau_noi_c4_c5` | `flicker` | Giữ cho M6-20, M6-21 (đi tiến) |
+| M6-30 | `cau_noi_nhin_ve_c4` | `flicker` | Đi lùi, mặt hướng về C4; giữ đến M6-33 |
 | M6-11 | `can_ho_304` | `dark` | |
 | E1 | `cau_noi_c4_c5` | `normal` | |
 | D1–D4 | | | Mặc định nền đen |

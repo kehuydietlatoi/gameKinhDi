@@ -44,7 +44,7 @@ Người chơi sống ở căn hộ 304. Từ màn 1, tờ cáo phó đã có th
 
 ## Danh sách ảnh toàn game
 
-Tổng cộng 18 ảnh.
+Tổng cộng 23 ảnh.
 
 | id | Màn đầu tiên | Dùng lại ở màn | `clue` |
 | --- | --- | --- | --- |
@@ -58,16 +58,19 @@ Tổng cộng 18 ảnh.
 | `san_phoi` | 1 | | |
 | `can_ho_304` | 2 | 3, 5, 6 (cả phòng 305), 8, 9 | |
 | `phong_sinh_hoat_tang` | 2 | | |
+| `cau_thang_chieu_nghi` | 2 | 3 | |
 | `hanh_lang_tang_4` | 3 | | |
 | `tiem_vang_ma` | 3 | | |
 | `ban_tho_chieu_nghi` | 3 | 9 | `m3:c1` |
 | `phong_luu_benh` | 4 | | |
+| `hanh_lang_lo_khoa` | 5 | | |
 | `cau_noi_c4_c5` | 6 | | |
+| `cau_noi_nhin_ve_c4` | 6 | | |
 | `bep_tap_the` | 7 | | |
 | `phong_404_1986` | 8 | | |
+| `phong_404_1986_mat_troi` | 8 | | |
 | `bang_tin_cao_pho_7_day` | 9 | | |
-
-Màn 5 không có ảnh mới.
+| `tiem_vang_ma_ngoai` | 9 | | |
 
 ## Yêu cầu engine theo màn
 

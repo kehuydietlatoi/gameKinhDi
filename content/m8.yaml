@@ -201,7 +201,7 @@ nodes:
 
   - id: m8_n31   # Bình minh
     type: scene
-    scene: {bg: phong_404_1986, light: dawn}
+    scene: {bg: phong_404_1986_mat_troi, light: dawn}
     effects: [{time: "05:30"}]
     lines:
       - {ch: env, sense: nhìn, text: "Ông mặt trời sáp vàng trên tường cửa sổ bếp bắt đầu toả sáng."}

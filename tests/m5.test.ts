@@ -170,3 +170,11 @@ test('mọi kết cục của màn 5 đều có test đi tới', () => {
   const endings = level.nodes.filter((n) => n.type === 'ending').map((n) => n.id).sort();
   expect([...reached].sort()).toEqual(endings);
 });
+
+describe('cảnh M5-06 (brief hanh_lang_lo_khoa)', () => {
+  test('nhìn qua lỗ khoá thấy hành lang; về hub thì trở lại căn hộ', () => {
+    const t = run(level, [KEYHOLE]);
+    expect(t.views.find((v) => v.node === 'm5_n06')!.scene).toEqual({ bg: 'hanh_lang_lo_khoa', light: 'normal' });
+    expect(t.state).toMatchObject({ node: 'm5_n03', scene: { bg: 'can_ho_304', light: 'normal' } });
+  });
+});

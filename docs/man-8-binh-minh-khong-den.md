@@ -70,20 +70,23 @@ Giờ trong game giữ nguyên "23:59" cho đến M8-31; màn này không dùng 
 
 ## Cảnh và ảnh nền
 
-Màn 8 cần 1 ảnh mới.
+Màn 8 cần 2 ảnh mới.
 
 ### Brief vẽ
 
 | id | Góc nhìn và nội dung | Bắt buộc có | Cấm vẽ | `clue` |
 | --- | --- | --- | --- | --- |
 | `phong_404_1986` | Phòng một gian năm 1986, nhìn vào góc giữa tường cửa sổ bếp (bên trái) và tường đầu giường (bên phải). | Tường kín tranh bút sáp nét trẻ con (sông, thuyền giấy, nhà, cây); trên tường cửa sổ bếp có một khoảng trống lớn chưa vẽ; trên tường đầu giường có một hình con ma đen khổng lồ, nét sáp dày đè nhiều lớp; cửa sổ bếp tối om; bàn học nhỏ với hộp bút; đồng hồ treo tường | Người thật, chữ đọc được, mặt trời, màu đỏ máu | không |
+| `phong_404_1986_mat_troi` | Dựng từ code của `phong_404_1986`, cùng góc nhìn; chỉ khác ở tường cửa sổ bếp. Dùng cho M8-31. | Trong khoảng trống trên tường cửa sổ bếp, một ông mặt trời vẽ bằng sáp vàng, nét trẻ con, tia nắng là những nét sáp ngắn; ô cửa sổ bếp không còn tối om mà sáng lên; con ma đen trên tường đầu giường giữ nguyên như bản gốc | Người thật, chữ đọc được, màu đỏ máu, mặt trời đỏ đang lặn, song sắt quanh con ma | không |
+
+Ghi chú cho `phong_404_1986_mat_troi`: bảng màu không có vàng tươi; dùng `#d9cfa8` và `#b8a77a` cho sáp vàng, `#e8e6dc` cho ô cửa sổ sáng. Ô cửa sổ sáng là nội dung (mặt trời đã mọc), không phải biến thể ánh sáng; ánh bình minh vẫn do lớp `dawn` lo. Không vẽ song sắt vì chỉ một nhánh có (cờ `long_sat`).
 
 ### Gán cảnh cho node
 
 | Node | `bg` | `light` | Ghi chú |
 | --- | --- | --- | --- |
-| M8-01 | `phong_404_1986` | `flicker` | Giữ suốt màn |
-| M8-31 | `phong_404_1986` | `dawn` | |
+| M8-01 | `phong_404_1986` | `flicker` | Giữ đến M8-32 |
+| M8-31 | `phong_404_1986_mat_troi` | `dawn` | |
 | E1 | `can_ho_304` | `dawn` | Tỉnh dậy ở nhà |
 | D1, D2 | | | Mặc định nền đen |
 

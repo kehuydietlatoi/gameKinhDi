@@ -214,3 +214,11 @@ test('mọi kết cục của màn 9 đều có test đi tới', () => {
   const endings = level.nodes.filter((n) => n.type === 'ending').map((n) => n.id).sort();
   expect([...reached].sort()).toEqual(endings);
 });
+
+describe('cảnh M9-06 (brief tiem_vang_ma_ngoai)', () => {
+  test('bà Hoa chờ ở bậc thềm tiệm; về hub thì trở lại căn hộ', () => {
+    const t = run(level, [INCENSE]);
+    expect(t.views.find((v) => v.node === 'm9_n06')!.scene).toEqual({ bg: 'tiem_vang_ma_ngoai', light: 'normal' });
+    expect(t.state).toMatchObject({ node: 'm9_n03', scene: { bg: 'can_ho_304', light: 'normal' } });
+  });
+});

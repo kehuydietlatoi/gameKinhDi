@@ -85,13 +85,14 @@ Ghi vào `docs/spec-changes.md` theo AGENTS.md mục 12.
 
 ## Cảnh và ảnh nền
 
-Màn 9 cần 1 ảnh mới. Dùng lại `can_ho_304`, `hanh_lang_tang_2` (hành lang tầng 3 cùng kiểu với tầng 2) và `ban_tho_chieu_nghi`.
+Màn 9 cần 2 ảnh mới. Dùng lại `can_ho_304`, `hanh_lang_tang_2` (hành lang tầng 3 cùng kiểu với tầng 2) và `ban_tho_chieu_nghi`.
 
 ### Brief vẽ
 
 | id | Góc nhìn và nội dung | Bắt buộc có | Cấm vẽ | `clue` |
 | --- | --- | --- | --- | --- |
 | `bang_tin_cao_pho_7_day` | Dựng từ code của `bang_tin_cao_pho_7`, cùng góc nhìn và ánh sáng. | Khung ảnh thứ bảy có ảnh: một bà cụ tóc búi, đôi mắt là hai chấm nhỏ hiền | Chữ đọc được, màu đỏ máu | không |
+| `tiem_vang_ma_ngoai` | Mặt tiền tiệm vàng mã ở tầng trệt nhà C4, ban đêm, nhìn từ ngoài vào. | Cửa xếp sắt kéo kín; bậc thềm xi măng trước cửa; tấm biển hiệu gỗ phía trên cửa | Người (chỗ bà Hoa đứng nằm ngoài khung hoặc trong vùng tối), chữ đọc được trên biển, đồ mã bày ra ngoài, hình nhân | không |
 
 ### Gán cảnh cho node
 
@@ -99,6 +100,7 @@ Màn 9 cần 1 ảnh mới. Dùng lại `can_ho_304`, `hanh_lang_tang_2` (hành 
 | --- | --- | --- | --- |
 | M9-01 | `can_ho_304` | `normal` | |
 | M9-03 | `can_ho_304` | `normal` | Khai báo ở hub |
+| M9-06 | `tiem_vang_ma_ngoai` | `normal` | Về hub M9-03 thì trở lại `can_ho_304` |
 | M9-10 | `hanh_lang_tang_2` | `flicker` | Hành lang tầng 3; giữ đến M9-14 |
 | M9-20 | `ban_tho_chieu_nghi` | `candle` | Giữ đến M9-23 |
 | M9-21, M9-22 | `ban_tho_chieu_nghi` | `dawn` | |

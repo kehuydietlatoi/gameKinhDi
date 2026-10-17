@@ -486,3 +486,19 @@ nodes:
 - **Ngày:** 2026-10-17
 - **Cần cho:** M9 D2 "Ngã cầu thang" (cột Luật là "—")
 - **Bổ sung:** bỏ quy tắc của G16 "kết cục chết phải có `violates` hoặc `consequence_of`". Quy tắc "mỗi dòng `violable` phải có ít nhất một kết cục chết `violates` nó" vẫn giữ.
+
+## Sửa trực tiếp `docs/` lần 2 (được duyệt một lần, 2026-10-17)
+
+Người dùng cho phép chép brief ảnh bổ sung (do Claude viết) vào docs. Lý do: rà ảnh nền thực tế ở từng node, thấy hai chỗ ảnh mâu thuẫn với chữ (M8-31, M6-30 → M6-33) và ba chỗ lệch địa điểm (M9-06, M2-09/M3-15, M5-06).
+
+| File | Chỗ sửa |
+| --- | --- |
+| `docs/man-2-canh-linh-cuu.md` | Brief `cau_thang_chieu_nghi`; gán cảnh M2-09 (chỉ nhánh `di_xuong`); "cần 3 ảnh mới" |
+| `docs/man-3-hinh-nhan-the-mang.md` | Gán cảnh M3-15 `cau_thang_chieu_nghi`; nhắc ảnh dùng lại |
+| `docs/man-5-noi-quy.md` | Thêm mục "Brief vẽ" với `hanh_lang_lo_khoa`; gán cảnh M5-06 và M5-03 (hub đặt lại `can_ho_304`); "cần 1 ảnh mới" |
+| `docs/man-6-cau-noi.md` | Brief `cau_noi_nhin_ve_c4`; gán cảnh M6-30 (giữ đến M6-33); ghi chú M6-10 chỉ còn giữ cho M6-20, M6-21; "cần 2 ảnh mới" |
+| `docs/man-8-binh-minh-khong-den.md` | Brief `phong_404_1986_mat_troi` kèm ghi chú màu; M8-31 dùng ảnh này; M8-01 "giữ đến M8-32"; "cần 2 ảnh mới" |
+| `docs/man-9-nguoi-dan-ba-khong-mat.md` | Brief `tiem_vang_ma_ngoai`; gán cảnh M9-06; "cần 2 ảnh mới" |
+| `docs/tong-quan-cot-truyen.md` | Danh sách ảnh: 23 ảnh; bỏ câu "Màn 5 không có ảnh mới" |
+
+YAML và `content/assets.yaml` (5 ảnh placeholder, `alt` do Claude viết từ brief) cập nhật trong cùng thay đổi.

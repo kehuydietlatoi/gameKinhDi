@@ -33,7 +33,16 @@ describe('đường sống', () => {
     reached.add(t.state.node);
     expect(t.state).toMatchObject({ node: 'm6_e1', sanity: 3, scene: { bg: 'cau_noi_c4_c5', light: 'normal' } });
     expect(endingView(level, t.state)!.cause).toBe('Sang được C5');
-    for (const id of ['m6_n10', 'm6_n30', 'm6_n31', 'm6_n32', 'm6_n33']) {
+    // Đứng ở đầu cầu nhìn sang C5; từ lúc quay người đi lùi thì nhìn về C4.
+    expect(t.views.find((v) => v.node === 'm6_n10')!.scene).toEqual({ bg: 'cau_noi_c4_c5', light: 'flicker' });
+    for (const id of ['m6_n30', 'm6_n31', 'm6_n32', 'm6_n33']) {
+      expect(t.views.find((v) => v.node === id)!.scene, id).toEqual({ bg: 'cau_noi_nhin_ve_c4', light: 'flicker' });
+    }
+  });
+
+  test('đi tiến thì vẫn nhìn sang C5', () => {
+    const t = run(level, [...QUIET, FORWARD, 'Đi tiếp']);
+    for (const id of ['m6_n20', 'm6_n21']) {
       expect(t.views.find((v) => v.node === id)!.scene, id).toEqual({ bg: 'cau_noi_c4_c5', light: 'flicker' });
     }
   });

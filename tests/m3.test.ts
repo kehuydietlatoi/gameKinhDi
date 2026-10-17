@@ -247,3 +247,11 @@ test('mọi kết cục của màn 3 đều có test đi tới', () => {
   const endings = level.nodes.filter((n) => n.type === 'ending').map((n) => n.id).sort();
   expect([...reached].sort()).toEqual(endings);
 });
+
+describe('cảnh M3-15 (dùng lại cau_thang_chieu_nghi)', () => {
+  test('nói chuyện với thằng Bin trên cầu thang; về hub thì trở lại hành lang tầng 4', () => {
+    const t = run(level, [BIN]);
+    expect(t.views.find((v) => v.node === 'm3_n15')!.scene).toEqual({ bg: 'cau_thang_chieu_nghi', light: 'flicker' });
+    expect(t.state).toMatchObject({ node: 'm3_n10', scene: { bg: 'hanh_lang_tang_4', light: 'flicker' } });
+  });
+});

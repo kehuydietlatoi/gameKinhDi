@@ -235,3 +235,12 @@ test('mọi kết cục của màn 2 đều có test đi tới', () => {
   const endings = level.nodes.filter((n) => n.type === 'ending').map((n) => n.id).sort();
   expect([...reached].sort()).toEqual(endings);
 });
+
+describe('cảnh M2-09 (brief cau_thang_chieu_nghi)', () => {
+  test('đi xuống thì thấy cầu thang; nằm xuống giường thì vẫn ở căn hộ', () => {
+    const down = run(level, [...QUIET, 'Xuống phòng sinh hoạt chung']).views.find((v) => v.node === 'm2_n09')!;
+    expect(down.scene).toEqual({ bg: 'cau_thang_chieu_nghi', light: 'flicker' });
+    const bed = run(level, [...QUIET, 'Nằm xuống giường']).views.find((v) => v.node === 'm2_n09')!;
+    expect(bed.scene).toEqual({ bg: 'can_ho_304', light: 'normal' });
+  });
+});

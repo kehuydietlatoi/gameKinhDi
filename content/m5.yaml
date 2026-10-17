@@ -67,6 +67,7 @@ nodes:
     hub: true
     hub_done: {actions_left_lte: 0}
     hub_exit: m5_n10
+    scene: {bg: can_ho_304, light: normal}   # đặt lại sau M5-06
     choices:
       - {text: "Gõ vách sang phòng 305", goto: m5_n04, effects: [{actions_left: -1}]}
       - {text: "Tìm nến và diêm", goto: m5_n05, effects: [{actions_left: -1}]}
@@ -93,6 +94,7 @@ nodes:
 
   - id: m5_n06   # Lỗ khoá
     type: scene
+    scene: {bg: hanh_lang_lo_khoa, light: normal}
     lines:
       - {ch: env, sense: nhìn, text: "Hành lang tối. Trên cửa nhà nào cũng có chữ đỏ."}
       - {ch: env, sense: nhìn, text: "Trước cửa 306, một bàn tay gầy cầm bút lông, chấm vào lọ mực nâu, viết thêm một dòng."}

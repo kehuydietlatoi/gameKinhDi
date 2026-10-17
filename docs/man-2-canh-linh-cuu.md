@@ -82,7 +82,7 @@ Bảy người canh là cư dân thật, đều là người sống. Hai giọng
 
 ## Cảnh và ảnh nền
 
-Màn 2 cần 2 ảnh mới. Phần lớn màn diễn ra khi nhắm mắt nên màn hình đen. Quy cách chung theo mục 5 của `docs/dac-ta-kich-ban.md`.
+Màn 2 cần 3 ảnh mới. Phần lớn màn diễn ra khi nhắm mắt nên màn hình đen. Quy cách chung theo mục 5 của `docs/dac-ta-kich-ban.md`.
 
 ### Brief vẽ
 
@@ -90,6 +90,7 @@ Màn 2 cần 2 ảnh mới. Phần lớn màn diễn ra khi nhắm mắt nên m�
 | --- | --- | --- | --- | --- |
 | `can_ho_304` | Căn hộ một phòng của người chơi, nhìn từ giường về phía cửa ra vào. Ảnh này dùng lại ở nhiều màn. | Mảng tường vôi trống cạnh cửa (chỗ Huyết tự hiện); cửa gỗ có khe hở ở chân cửa; tủ gỗ hai cánh bên phải; gương nhỏ treo cạnh tủ; một bóng đèn sợi đốt trên trần; mép giường đơn ở góc dưới bên trái | Người; bất cứ hình gì trong gương (gương chỉ là một mảng sáng mờ); chữ đọc được | không |
 | `phong_sinh_hoat_tang` | Cùng bức tường với `phong_sinh_hoat` (đồng hồ quả lắc bên phải), góc nhìn cao hơn để thấy sàn. Phòng đã dựng thành nơi để linh cữu. | Quan tài gỗ mở nắp, trống, đặt giữa sàn; bàn thờ thấp với bát hương và hai cây nến; khung di ảnh nhìn nghiêng, không thấy mặt; bảy chiếc ghế quanh quan tài, một chiếc đổ nghiêng; vệt nước loang dưới chiếc ghế đổ | Người; khuôn mặt trong di ảnh; mèo | không |
+| `cau_thang_chieu_nghi` | Cầu thang bê tông chung của nhà C4, đứng ở chiếu nghỉ nhìn xuống các bậc, ban đêm. Ảnh dùng lại được ở nhiều màn. | Bậc thang bê tông mòn; tay vịn sắt; mảng tường vôi bong tróc; chân cầu thang chìm vào bóng tối | Người, bàn thờ, bát hương, bài vị, chữ đọc được | không |
 
 ### Gán cảnh cho node
 
@@ -98,6 +99,7 @@ Node không có trong bảng thì giữ cảnh trước đó. Khi `eyes_closed` 
 | Node | `bg` | `light` | Ghi chú |
 | --- | --- | --- | --- |
 | M2-01 | `can_ho_304` | `normal` | |
+| M2-09 | `cau_thang_chieu_nghi` | `flicker` | Chỉ khi có cờ `di_xuong`; nếu nằm xuống giường thì giữ `can_ho_304` |
 | M2-10 | `phong_sinh_hoat_tang` | `flicker` | Bị che vì `eyes_closed`; khai báo để cảnh đúng khi mắt mở |
 | M2-51 | `phong_sinh_hoat_tang` | `dawn` | |
 | E1 | `phong_sinh_hoat_tang` | `dawn` | |

@@ -85,7 +85,7 @@ Sáu người đã khuất trong vụ cháy năm 1986: Tâm, Hằng, Khải, Na,
 
 ## Cảnh và ảnh nền
 
-Màn 3 cần 3 ảnh mới và dùng lại `can_ho_304`.
+Màn 3 cần 3 ảnh mới và dùng lại `can_ho_304`, `cau_thang_chieu_nghi` (màn 2).
 
 ### Brief vẽ
 
@@ -107,6 +107,7 @@ Node không có trong bảng thì giữ cảnh trước đó.
 | M3-11 | `tiem_vang_ma` | `normal` | |
 | M3-12 | `ban_tho_chieu_nghi` | `normal` | Node thêm clue c1 |
 | M3-14 | `hanh_lang_tang_4` | `dark` | Ghé mắt vào khe cửa |
+| M3-15 | `cau_thang_chieu_nghi` | `flicker` | Về hub M3-10 thì trở lại `hanh_lang_tang_4` |
 | M3-20 | `hanh_lang_tang_4` | `flicker` | Giữ cho M3-21 đến M3-33 |
 | M3-21 | giữ nguyên | `dark` | Bên trong phòng 404 |
 | M3-40 | `hanh_lang_tang_4` | `dawn` | |

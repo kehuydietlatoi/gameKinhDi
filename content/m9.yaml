@@ -94,6 +94,7 @@ nodes:
 
   - id: m9_n06   # Bó hương
     type: scene
+    scene: {bg: tiem_vang_ma_ngoai, light: normal}
     lines:
       - {ch: env, sense: nhìn, text: "Tiệm vàng mã đóng cửa, nhưng bà Hoa đứng chờ sẵn ở bậc thềm."}
       - {ch: npc, who: ba_hoa, text: "Bó này bảy nén. Bà để dành từ năm tám sáu."}
