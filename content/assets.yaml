@@ -50,3 +50,9 @@ assets:
     file: bg/ban_tho_chieu_nghi.png
     alt: "Chiếu nghỉ cầu thang bê tông với một bàn thờ nhỏ kê sát tường và bát hương đầy chân nhang."
     clue: m3:c1
+
+  # Màn 4 (alt do Claude viết từ brief, G21)
+  - id: phong_luu_benh
+    file: bg/phong_luu_benh.png
+    alt: "Phòng lưu bệnh trạm y tế nhìn từ giường về phía bức tường đối diện, ba bình phong vải trắng, quạt trần và tủ thuốc cửa kính."
+    placeholder: true

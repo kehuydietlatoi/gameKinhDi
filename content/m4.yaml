@@ -1,0 +1,301 @@
+# Màn 4 – Trạm y tế. Nguồn: docs/man-4-tram-y-te.md (file đó là đúng khi hai bên khác nhau).
+# Bổ sung đặc tả dùng ở đây: docs/spec-changes.md (G1–G44).
+level: m4
+title: "Trạm y tế"
+start: m4_n01
+init: {sanity: 5, actions_left: 3, time: "20:00"}
+
+bloodtext:
+  - {id: L1, text: "Bệnh nhân phải uống thuốc lúc chín giờ tối."}
+  - {id: L2, text: "Bác sĩ luôn nói thật.", violable: false}
+  - {id: L3, text: "Sau khi đèn tắt, bệnh nhân không được rời giường."}
+  - {id: L4, text: "Bệnh nhân nào không uống thuốc sẽ được đưa xuống tầng hầm.", violable: false}
+
+keywords:
+  - {id: k1, line: L1, text: "Bệnh nhân phải uống thuốc", correct: false}
+  - {id: k2, line: L1, text: "lúc chín giờ tối", correct: true}
+  - {id: k3, line: L2, text: "Bác sĩ luôn nói thật", correct: true}
+  - {id: k4, line: L3, text: "không được rời giường", correct: true}
+  - {id: k5, line: L4, text: "đưa xuống tầng hầm", correct: false}
+  - {id: k6, line: L4, text: "Bệnh nhân nào không uống thuốc", correct: false}
+
+distortions:
+  - {line: L2, unless_highlighted: k3, text: "Y tá luôn nói thật."}
+  - {line: L3, unless_highlighted: k4, text: "Sau khi đèn tắt, bệnh nhân không được ở lại giường."}
+
+solution: [k3]
+
+npcs:
+  - {id: bac_si_thanh, name: "Bác sĩ Thanh"}
+  - {id: y_ta_hong, name: "Y tá Hồng"}
+  - {id: ong_cuong, name: "Ông Cường"}
+  - {id: chi_hien, name: "Chị Hiền"}
+  - {id: ba_tu, name: "Bà Tư"}
+  - {id: nguoi_ao_blouse, name: "Người mặc áo blouse"}
+
+clues: [c1, c2, c3, c4, c5]
+
+nodes:
+  # ---------- Pha 0 – Tỉnh dậy ----------
+
+  - id: m4_n01   # Phòng lưu bệnh
+    type: scene
+    scene: {bg: phong_luu_benh, light: normal}
+    effects: [{time: "20:00"}]
+    lines:
+      - {ch: narration, text: "Bạn tỉnh dậy trên một chiếc giường sắt. Đầu nặng như đổ chì."}
+      - {ch: env, sense: nhìn, text: "Phòng lưu bệnh của trạm y tế phường. Ba chiếc giường còn lại khuất sau bình phong vải trắng."}
+      - {ch: env, sense: ngửi, text: "Mùi cồn, mùi thuốc đỏ."}
+      - {ch: sound, src: "trên trần", vol: 1, text: "Vù… vù… — quạt trần quay chậm."}
+      - {ch: sound, src: "cửa", vol: 2, text: "Cộp. Cộp. — tiếng guốc gỗ bước vào."}
+      - {ch: npc, who: bac_si_thanh, text: "Tỉnh rồi à. Cậu ngất ở cầu thang nhà C4, người ta khiêng sang đây."}
+      - {ch: npc, who: bac_si_thanh, text: "Chín giờ tôi quay lại phát thuốc. Nằm yên đấy."}
+      - {ch: sound, src: "hành lang", vol: 1, text: "Cộp… cộp… — tiếng guốc gỗ xa dần."}
+    next: m4_n02
+
+  - id: m4_n02   # Huyết tự
+    type: scene
+    lines:
+      - {ch: sound, src: "bức tường đối diện", vol: 2, text: "Sột… soạt…"}
+      - {ch: env, sense: nhìn, text: "Những vệt đỏ sẫm rỉ ra giữa bức tường đối diện, chảy thành chữ."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4]}
+      - {ch: sound, src: "sau bình phong", vol: 1, text: "Khục khục… — có người cười khẽ sau tấm bình phong."}
+      - {ch: system, text: "Bạn có 3 lượt hành động trước chín giờ."}
+    highlight: true
+    next: m4_n03
+
+  # ---------- Pha 1 – Trước giờ uống thuốc ----------
+
+  - id: m4_n03   # Hub phòng lưu bệnh
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m4_n10
+    choices:
+      - {text: "Đọc bảng phân công trực đêm", goto: m4_n04, effects: [{actions_left: -1}]}
+      - {text: "Hỏi ông Cường giường bên", goto: m4_n05, effects: [{actions_left: -1}]}
+      - {text: "Đọc thẻ bệnh nhân treo ở cuối giường bên", goto: m4_n06, effects: [{actions_left: -1}]}
+      - {text: "Đọc bệnh án ở cuối giường mình", goto: m4_n07, effects: [{actions_left: -1}]}
+      - {text: "Hỏi y tá Hồng", goto: m4_n08, effects: [{actions_left: -1}]}
+
+  - id: m4_n04   # Bảng phân công
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Tấm bảng gỗ cạnh cửa, chữ phấn: \"Đêm 20/7. Bác sĩ trực: Thanh. Y tá trực: Hồng.\""}
+      - {ch: env, sense: nhìn, text: "Không có tên ai khác."}
+    effects: [{clue: c1}]
+    next: m4_n03
+
+  - id: m4_n05   # Ông Cường
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Sau tấm bình phong thứ nhất, một ông cụ nằm kéo chăn tới cằm."}
+      - {ch: npc, who: ong_cuong, tone: whisper, text: "Đừng uống thuốc của mụ bác sĩ. Độc đấy."}
+      - {ch: npc, who: ong_cuong, tone: whisper, text: "Tôi thấy rồi. Người uống xong là bị đẩy xuống tầng hầm."}
+      - {ch: env, sense: ngửi, text: "Hơi thở ông có mùi khói."}
+    effects: [{clue: c2}, {sanity: -1}]
+    next: m4_n03
+
+  - id: m4_n06   # Thẻ bệnh nhân
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Ở cuối giường bên treo một tấm thẻ bìa cứng đã ngả vàng."}
+      - {ch: env, sense: nhìn, text: "\"Ngày vào viện: 15/7/1986. Chẩn đoán: bỏng.\""}
+      - {ch: sound, src: "sau bình phong", vol: 1, text: "Sột soạt… — người trên giường trở mình, rất chậm."}
+    effects: [{clue: c3}, {sanity: -1}]
+    next: m4_n03
+
+  - id: m4_n07   # Bệnh án
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Tập bệnh án kẹp ở cuối giường bạn, nét chữ gọn gàng:"}
+      - {ch: env, sense: nhìn, text: "\"Sốt cao, mê sảng. Uống đủ liều lúc 21h. Sau tắt đèn không rời giường. — BS Thanh.\""}
+    effects: [{clue: c4}]
+    next: m4_n03
+
+  - id: m4_n08   # Y tá Hồng
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Một cô y tá trẻ đang xếp lọ thuốc vào tủ kính. Cô ta quay lại, cười."}
+      - {ch: npc, who: y_ta_hong, text: "Bác sĩ bận lắm. Tối nay chị phát thuốc thay."}
+      - {ch: npc, who: y_ta_hong, text: "Liều của em khác mọi người. Uống sớm một chút cho ngấm."}
+    effects: [{clue: c5}]
+    next: m4_n03
+
+  # ---------- Pha 2 – Chín giờ ----------
+
+  - id: m4_n10   # Y tá đến sớm
+    type: scene
+    effects: [{time: "20:50"}, {sanity: -1}]
+    lines:
+      - {ch: sound, src: "cửa", vol: 1, text: "Lạch cạch… — tiếng khay inox."}
+      - {ch: env, sense: nhìn, text: "Y tá Hồng đặt trước mặt bạn một viên thuốc màu hồng và chén nước."}
+      - {ch: npc, who: y_ta_hong, text: "Liều của em đây. Bác sĩ dặn uống sớm."}
+      - {ch: env, sense: chạm, text: "Tay chị ta chạm vào tay bạn, lạnh như vừa nhúng nước đá."}
+      - {ch: npc, who: ong_cuong, tone: whisper, text: "Uống của cô ấy đi. Đừng đợi mụ kia."}
+      - {ch: bloodtext, lines: [L2], if: {sanity_lte: 2, not_highlighted: k3}}
+    choices:
+      - {text: "Uống viên thuốc của y tá", goto: m4_n11}
+      - {text: "\"Tôi đợi bác sĩ.\"", goto: m4_n12}
+      - {text: "Cầm lấy viên thuốc, giấu xuống gối", goto: m4_n12, effects: [{flag: giau_thuoc}]}
+
+  - id: m4_n11   # Ngủ thiếp
+    type: scene
+    lines:
+      - {ch: narration, text: "Viên thuốc ngọt lịm. Mí mắt bạn sụp xuống."}
+      - {ch: sound, src: "rất xa", vol: 1, text: "Boong… boong… — đồng hồ ở đâu đó điểm chín tiếng. Bạn đếm không hết."}
+      - {ch: env, sense: chạm, text: "Giường bạn đang lăn đi."}
+    next: m4_d1
+
+  - id: m4_n12   # Bác sĩ Thanh
+    type: scene
+    effects: [{time: "21:00"}]
+    lines:
+      - {ch: sound, src: "cửa", vol: 2, text: "Cộp. Cộp. — tiếng guốc gỗ."}
+      - {ch: npc, who: bac_si_thanh, text: "Chín giờ. Thuốc của cậu đây."}
+      - {ch: env, sense: nhìn, text: "Một viên thuốc nâu xỉn và chén nước."}
+      - {ch: npc, who: bac_si_thanh, text: "Đắng lắm. Uống xong cậu sẽ thấy những thứ không muốn thấy."}
+      - {ch: npc, who: bac_si_thanh, if: {flag: giau_thuoc}, text: "Viên hồng dưới gối là ai đưa? Trạm này không có thuốc màu hồng."}
+      - {ch: npc, who: chi_hien, tone: whisper, text: "Độc đấy… Em thấy rồi, uống xong là xuống hầm."}
+      - {ch: npc, who: ba_tu, tone: whisper, text: "Đừng uống…"}
+    choices:
+      - {text: "Uống thuốc", goto: m4_n13}
+      - {text: "Hỏi: \"Thuốc này có độc không?\"", goto: m4_n12b}
+      - {text: "Đợi bác sĩ quay đi, đổ thuốc xuống gầm giường", goto: m4_d2}
+
+  - id: m4_n12b  # Câu hỏi
+    type: scene
+    lines:
+      - {ch: npc, who: bac_si_thanh, text: "Không độc với cậu."}
+      - {ch: env, sense: nhìn, text: "Bà nhìn bạn, không chớp mắt."}
+      - {ch: npc, who: ong_cuong, tone: whisper, text: "Bác sĩ nào chẳng nói thế."}
+    choices:
+      - {text: "Uống thuốc", goto: m4_n13}
+      - {text: "Đợi bác sĩ quay đi, đổ thuốc xuống gầm giường", goto: m4_d2}
+
+  - id: m4_n13   # Những thứ không muốn thấy
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: env, sense: ngửi, text: "Đắng ngắt, như nhai than."}
+      - {ch: narration, text: "Rồi bạn nhìn thấy."}
+      - {ch: env, sense: nhìn, text: "Ba tấm bình phong trở nên mỏng như giấy pơ-luya. Sau mỗi tấm là một chiếc giường, và trên mỗi giường là một lớp tro mỏng nằm thành hình người."}
+      - {ch: npc, who: ong_cuong, text: "Nó uống rồi."}
+      - {ch: npc, who: y_ta_hong, tone: whisper, text: "Tiếc quá."}
+    next: m4_n20
+
+  # ---------- Pha 3 – Đèn tắt ----------
+
+  - id: m4_n20   # Tắt đèn
+    type: scene
+    scene: {bg: phong_luu_benh, light: dark}
+    effects: [{time: "22:00"}]
+    lines:
+      - {ch: sound, src: "công tắc", vol: 2, text: "Tách. — đèn tắt."}
+      - {ch: env, sense: ngửi, text: "Mùi khói. Mỗi lúc một đặc."}
+      - {ch: npc, who: chi_hien, tone: shout, text: "Cháy! Cháy dưới tầng hầm! Chạy đi!"}
+      - {ch: sound, src: "quanh giường", vol: 2, text: "Bịch bịch bịch — tiếng chân trần chạy ra cửa."}
+      - {ch: bloodtext, lines: [L3], if: {sanity_lte: 2, not_highlighted: k4}}
+    choices:
+      - {text: "Rời giường, chạy theo", goto: m4_d3}
+      - {text: "Nằm yên", goto: m4_n21}
+      - {text: "Gọi to: \"Bác sĩ ơi!\"", goto: m4_n20b}
+
+  - id: m4_n20b  # Tiếng gọi
+    type: scene
+    lines:
+      - {ch: npc, who: bac_si_thanh, note: "từ cuối hành lang", text: "Không có cháy. Nằm yên."}
+      - {ch: sound, src: "hành lang", vol: 1, text: "Cộp… cộp…"}
+    next: m4_n21
+
+  - id: m4_n21   # Khói tan
+    type: scene
+    lines:
+      - {ch: env, sense: ngửi, text: "Mùi khói nhạt dần, rồi mất hẳn."}
+      - {ch: sound, src: "ngoài cửa", vol: 1, text: "Khúc khích… — ba giọng cười khẽ, rồi im."}
+    next: m4_n30
+
+  - id: m4_n30   # Người mặc áo blouse
+    type: scene
+    effects: [{time: "01:00"}]
+    lines:
+      - {ch: sound, src: "hành lang", vol: 2, text: "Cộp… cộp… — không phải tiếng guốc gỗ. Tiếng giày da."}
+      - {ch: npc, who: nguoi_ao_blouse, text: "Tôi là bác sĩ. Cậu phải dậy theo tôi sang phòng thủ thuật ngay."}
+      - {ch: env, sense: chạm, text: "Một bàn tay đàn ông, to và ấm, nắm lấy cổ tay bạn."}
+    choices:
+      - {text: "Dậy đi theo", goto: m4_d3}
+      - {text: "Hỏi: \"Anh tên gì?\"", goto: m4_n31}
+      - {text: "Rút tay lại, nằm yên", goto: m4_n32}
+
+  - id: m4_n31   # Tên
+    type: scene
+    lines:
+      - {ch: npc, who: nguoi_ao_blouse, text: "Bác sĩ Thanh. Tôi trực đêm nay."}
+      - {ch: narration, text: "Bác sĩ Thanh bạn gặp lúc chín giờ là một người phụ nữ."}
+      - {ch: narration, if: {clue: c1}, text: "Bảng phân công chỉ ghi một bác sĩ trực."}
+    choices:
+      - {text: "Dậy đi theo", goto: m4_d3}
+      - {text: "Rút tay lại, nằm yên", goto: m4_n32}
+
+  - id: m4_n32   # Một bác sĩ
+    type: scene
+    lines:
+      - {ch: sound, src: "cạnh giường", vol: 1, text: "Bàn tay kia buông ra. Tiếng giày da đứng im rất lâu."}
+      - {ch: sound, src: "cuối hành lang", vol: 2, text: "Cộp. Cộp."}
+      - {ch: npc, who: bac_si_thanh, text: "Đêm nay chỉ có một bác sĩ trực là tôi. Cậu nằm yên đến sáng."}
+      - {ch: sound, src: "cửa", vol: 1, text: "Tiếng giày da lùi ra cửa, rồi tắt."}
+    next: m4_n40
+
+  - id: m4_n40   # Sáng
+    type: scene
+    scene: {bg: phong_luu_benh, light: dawn}
+    effects: [{time: "05:30"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Trời hửng sáng. Ba tấm bình phong đã được gấp lại. Ba chiếc giường sau đó trống trơn, đệm phủ một lớp bụi xám."}
+      - {ch: npc, who: bac_si_thanh, text: "Hết sốt rồi. Cậu về được."}
+      - {ch: npc, who: bac_si_thanh, text: "Ba giường kia bỏ trống từ năm tám sáu. Không ai dám xếp bệnh nhân vào."}
+    next: m4_e1
+
+  # ---------- Kết cục ----------
+
+  - id: m4_e1
+    type: ending
+    result: survive
+    cause: "Sống sót"
+    scene: {bg: phong_luu_benh, light: dawn}
+    lines:
+      - {ch: env, sense: nhìn, text: "Trên khung cửa phòng lưu bệnh có một tấm biển đồng xỉn màu: \"Tưởng niệm các nạn nhân vụ cháy nhà C4 được cấp cứu tại đây.\""}
+    reveal: "Huyết tự chỉ bảo đảm cho bác sĩ. Bác sĩ Thanh nói thật: thuốc không độc với bạn, và đêm nay chỉ có một bác sĩ trực."
+    solution: [k2, k3]
+
+  - id: m4_d1
+    type: ending
+    result: death
+    cause: "Ngủ quên giờ thuốc"
+    lines:
+      - {ch: env, sense: chạm, text: "Giường lăn qua ngưỡng cửa, rồi dốc xuống. Không khí lạnh dần."}
+    reveal: "Viên thuốc hồng làm bạn ngủ quên giờ uống thuốc. Huyết tự không bảo đảm gì cho y tá."
+    violates: [L1]
+    consequence_of: [L4]
+    solution: [k2, k3]
+
+  - id: m4_d2
+    type: ending
+    result: death
+    cause: "Đổ thuốc"
+    lines:
+      - {ch: sound, src: "rất xa", vol: 2, text: "Ken két… — bánh xe giường lăn xuống một con dốc, dù trạm y tế chỉ có một tầng."}
+    reveal: "Bác sĩ luôn nói thật: thuốc không độc với bạn. Người thì thầm không phải bác sĩ."
+    violates: [L1]
+    consequence_of: [L4]
+    solution: [k3]
+
+  - id: m4_d3
+    type: ending
+    result: death
+    cause: "Rời giường"
+    lines:
+      - {ch: env, sense: chạm, text: "Bàn chân bạn chạm nền gạch. Dưới gầm giường có rất nhiều bàn tay đang chờ."}
+    reveal: "Đèn đã tắt. Không có cháy, và người mặc áo blouse không phải bác sĩ: bác sĩ Thanh đã nói đêm nay chỉ có một bác sĩ trực."
+    violates: [L3]
+    solution: [k4]
