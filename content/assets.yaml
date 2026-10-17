@@ -65,13 +65,11 @@ assets:
   - id: bep_tap_the
     file: bg/bep_tap_the.png
     alt: "Gian bếp tập thể tầng 1 nhìn dọc, lò than lớn xây gạch ở giữa, hai dãy bếp than tổ ong kê sát hai bên tường và cửa gỗ ra ngõ ở cuối gian."
-    placeholder: true
 
   # Màn 8 (alt do Claude viết từ brief, G21)
   - id: phong_404_1986
     file: bg/phong_404_1986.png
-    alt: "Phòng một gian năm 1986 nhìn vào góc giữa tường cửa sổ bếp và tường đầu giường, tường kín tranh bút sáp nét trẻ con, bàn học nhỏ và đồng hồ treo tường."
-    placeholder: true
+    alt: "Phòng một gian năm 1986 nhìn vào góc giữa tường cửa sổ bếp và tường đầu giường, tường kín tranh bút sáp nét trẻ con, một hình con ma đen khổng lồ trên tường đầu giường, cửa sổ bếp tối om và bàn học nhỏ."
 
   # Màn 9 (alt do Claude viết từ brief, G21)
   - id: bang_tin_cao_pho_7_day
@@ -82,7 +80,6 @@ assets:
   - id: cau_thang_chieu_nghi
     file: bg/cau_thang_chieu_nghi.png
     alt: "Cầu thang bê tông chung nhìn xuống từ chiếu nghỉ ban đêm, tay vịn sắt và chân cầu thang chìm trong bóng tối."
-    placeholder: true
   - id: hanh_lang_lo_khoa
     file: bg/hanh_lang_lo_khoa.png
     alt: "Hành lang tối nhìn qua lỗ khoá, trên các cánh cửa có những mảng chữ đỏ."
@@ -92,7 +89,6 @@ assets:
   - id: phong_404_1986_mat_troi
     file: bg/phong_404_1986_mat_troi.png
     alt: "Góc phòng năm 1986, trên tường cửa sổ bếp có một ông mặt trời bút sáp vàng mới vẽ."
-    placeholder: true
   - id: tiem_vang_ma_ngoai
     file: bg/tiem_vang_ma_ngoai.png
     alt: "Mặt tiền tiệm vàng mã ở tầng trệt ban đêm, cửa xếp sắt kéo kín và bậc thềm xi măng trước cửa."
