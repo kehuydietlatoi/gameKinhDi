@@ -83,7 +83,7 @@ Màn 1 cần 8 ảnh nền; 6 ảnh địa điểm dùng lại được ở các
 | --- | --- | --- | --- | --- |
 | `phong_sinh_hoat` | Nhìn thẳng vào bức tường vôi vàng ố của phòng sinh hoạt chung, ngang tầm mắt người ngồi. Đèn tuýp treo giữa trần. | Mảng tường trống ở giữa (chỗ Huyết tự hiện), đồng hồ quả lắc gỗ bên phải, góc bảng tin bên trái, sàn gạch hoa đỏ ở mép dưới | Ghế, người, bóng người | không |
 | `bang_tin_cao_pho` | Cận cảnh bảng tin tổ dân phố bằng gỗ. Giấy báo họp tổ, lịch trực vệ sinh ghim lộn xộn. | Tờ cáo phó ố vàng ở góc dưới, sáu ảnh thờ nhỏ màu nâu xám; mặt chỉ cần đủ phân biệt già, trẻ, trẻ con | Chữ đọc được trên cáo phó | c1 |
-| `bang_tin_cao_pho_7` | Giống `bang_tin_cao_pho`, ánh sáng sớm hơn. | Thêm khung ảnh thứ bảy, còn trống, ngay cạnh sáu ảnh | Khuôn mặt trong khung thứ bảy | c1 |
+| `bang_tin_cao_pho_7` | Giống `bang_tin_cao_pho`. | Thêm khung ảnh thứ bảy, còn trống, ngay cạnh sáu ảnh | Khuôn mặt trong khung thứ bảy | c1 |
 | `cua_so_kinh` | Cận cảnh ô cửa sổ kính mờ hơi nước, nhìn từ trong phòng ra. | Bóng phản chiếu mờ của một người (người chơi, nhìn từ sau vai); phía sau trong kính là vòng ghế trống | Người nào khác trong phản chiếu | c2 |
 | `hanh_lang_tang_2` | Nhìn dọc hành lang tầng 2. Cửa gỗ sơn xanh hai bên, bếp than tổ ong trước mỗi cửa. | Một bóng đèn vàng gần người xem; nửa sau hành lang chìm hẳn vào tối | Người, kể cả bóng mờ | không |
 | `nha_ve_sinh_chung` | Bên trong nhà vệ sinh chung. Dãy buồng cửa gỗ, bồn rửa xi măng với vòi nước. | Buồng trong cùng đóng kín; nền ẩm, tường bong tróc | Người, khe cửa nhìn thấy bên trong | không |
@@ -281,7 +281,7 @@ Dòng chung:
 - `npc · be_na · thì thầm` Anh ơi, em ở ngay sau lưng anh này. Anh quay lại đi.
 - Hiệu ứng: sanity −1.
 
-1. Mở mắt, quay lại → D3
+1. Mở mắt, quay lại → D3 · `eyes_closed` false
 2. Tiếp tục đếm → M1-41
 
 #### M1-41 · Đếm (51–100)
@@ -292,7 +292,7 @@ Dòng chung:
 - `npc · bac_tam · hét` Cậu ơi! Có người ngã cầu thang! Mở mắt ra giúp một tay!
 - Nếu sanity ≤ 2 và chưa đánh dấu k3: Huyết tự L3 hiện bản méo.
 
-1. Mở mắt → D3
+1. Mở mắt → D3 · `eyes_closed` false
 2. Đếm tiếp đến một trăm → M1-42
 
 #### M1-42 · Mở mắt

@@ -11,8 +11,8 @@ Game không dùng file âm thanh. Mọi thứ người chơi "nghe" được vi�
 | `narration` | Lời dẫn, ngôi thứ hai ("bạn") | `text` | Chữ thường |
 | `env` | Điều nhìn, ngửi, chạm thấy | `sense` (nhìn / ngửi / chạm), `text` | Chữ nghiêng, màu xám; tiền tố nhỏ theo `sense` |
 | `sound` | Mọi tiếng động | `src` (vị trí nguồn), `vol` (1–3), `text` | Tiền tố `[Âm thanh · <src>]`; cỡ chữ theo `vol`; gõ chữ chậm hơn các kênh khác |
-| `npc` | Lời thoại | `who` (id NPC), `tone` (thường / thì thầm / hét), `text` | Tên NPC in đậm; thì thầm = chữ nhỏ, mờ; hét = chữ in hoa |
-| `bloodtext` | Huyết tự | `lines[]` | Màu đỏ máu, hiện từng chữ; luôn mở lại được |
+| `npc` | Lời thoại | `who` (id NPC), `tone` (`normal` thường / `whisper` thì thầm / `shout` hét), `text` | Tên NPC in đậm; `whisper` = chữ nhỏ, mờ; `shout` = chữ in hoa |
+| `bloodtext` | Huyết tự | `lines[]` | Chữ đỏ `#ff5a52` (đạt ≥ 4.5:1 trên nền tối nhất của UI; không dùng `#8a0b0b`, màu đó chỉ dành cho ảnh), hiện từng chữ; luôn mở lại được |
 | `system` | Thông báo cơ chế | `text` | Khung riêng, ví dụ "Tỉnh táo −1" |
 
 Quy tắc viết kênh `sound`:
@@ -49,7 +49,7 @@ Mỗi màn là một file YAML: phần đầu khai báo luật và trạng thái
 level: m1
 title: "Trốn tìm"
 start: m1_n01
-on_sanity_zero: m1_d_sanity        # node chuyển tới khi sanity = 0
+on_sanity_zero: m1_d6              # tuỳ chọn; node chuyển tới khi sanity = 0
 init: {sanity: 5, actions_left: 3, time: "23:59"}
 bloodtext:
   - {id: L1, text: "Tất cả những ai đang ở trong phòng này phải chơi trốn tìm."}
@@ -81,6 +81,7 @@ nodes:
 Quy ước:
 
 - `id` node theo dạng `m<màn>_n<số>`; kết cục dùng `m<màn>_e<số>` (sống) và `m<màn>_d<số>` (chết). Trong tab kịch bản, M1-05 tương ứng `m1_n05`, D4 tương ứng `m1_d4`.
+- `on_sanity_zero` là tuỳ chọn. Màn không khai báo mà `sanity` về 0 là lỗi.
 - Điều kiện `if` hỗ trợ: `clue`, `flag`, `not_flag`, `role`, `sanity_lte`, `visited_count_gte`, `not_visited`, `not_highlighted`.
 - Hiệu ứng `effects` hỗ trợ: `sanity` (cộng/trừ), `flag`, `clue`, `role`, `spot`, `found` (đánh dấu NPC đã bị tìm và tăng `following`), `actions_left`, `time`, `visit`, `eyes_closed`.
 - Hub là node có `hub: true`: lựa chọn đã chọn sẽ bị ẩn, và engine tự chuyển tới `hub_exit` khi điều kiện `hub_done` đúng.
@@ -89,7 +90,7 @@ Quy ước:
 
 1. **Luật tối thượng:** vi phạm bất kỳ dòng Huyết tự nào đều dẫn tới một kết cục chết. Mỗi màn phải khai báo node chết cho từng dòng có thể bị vi phạm.
 2. **Đọc lại Huyết tự:** nút "Huyết tự" luôn hiển thị. Khi `sanity` ≥ 3, hiện bản gốc. Khi `sanity` ≤ 2, dòng nào có `distortions` và chưa được đánh dấu thì hiện bản méo; bản méo không có dấu hiệu gì khác bản thật.
-3. **Đánh dấu từ khoá:** hiện ngay sau lần đầu Huyết tự xuất hiện. Người chơi chạm vào tối đa 3 cụm trong danh sách `keywords`; có thể bỏ qua. Cụm đã đánh dấu được gạch chân vĩnh viễn và không bao giờ bị bóp méo.
+3. **Đánh dấu từ khoá:** mở sau khi node có `highlight: true` hiện hết các dòng (đặt ở node Huyết tự xuất hiện lần đầu). Người chơi chạm vào tối đa 3 cụm trong danh sách `keywords`; có thể bỏ qua. Cụm đã đánh dấu được gạch chân vĩnh viễn và không bao giờ bị bóp méo.
 4. **Tỉnh táo:** thanh 5 nấc ở góc màn hình. Mỗi lần thay đổi, kênh `system` báo "Tỉnh táo −1". Khi về 0, engine chuyển tới `on_sanity_zero`.
 5. **Màn hình chết:** hiện dòng cuối của kết cục, sau đó hiện lại Huyết tự với cụm sinh lộ được tô sáng và câu `reveal`. Có nút "Chơi lại".
 6. **Chơi lại:** quay về node `start` với trạng thái `init` và `sanity` đầu màn. Các biến thể Huyết tự (nếu màn có) được xoay vòng theo số lần chết.

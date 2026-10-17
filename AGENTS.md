@@ -77,7 +77,7 @@ Trước khi báo một việc là xong: `typecheck`, `lint`, `test`, `validate`
 Quy cách đầy đủ ở mục 5 của `docs/dac-ta-kich-ban.md`; brief vẽ từng ảnh ở phần "Cảnh và ảnh nền" của từng file màn.
 
 1. Ảnh nền PNG 320×180 px, không khử răng cưa, chỉ dùng 16 màu của bảng màu chung. Hiển thị bằng `image-rendering: pixelated`, phóng theo bội số nguyên.
-2. Màu đỏ máu `#8a0b0b` chỉ dùng cho máu và Huyết tự.
+2. Màu đỏ máu `#8a0b0b` chỉ dùng trong ảnh, cho máu và Huyết tự vẽ trên tường. Chữ Huyết tự trên UI dùng màu riêng (mục 9).
 3. **Không vẽ người.** Chỗ NPC đứng nằm ngoài khung hoặc trong vùng tối.
 4. Ảnh không được chứa thông tin mà kịch bản không có. Chi tiết hình là manh mối thì ảnh phải khai báo `clue` trong `content/assets.yaml`.
 5. Ảnh có `clue` chỉ dùng ở node thêm đúng clue đó hoặc ở ending; validator kiểm tra.
@@ -91,7 +91,7 @@ Quy cách đầy đủ ở mục 5 của `docs/dac-ta-kich-ban.md`; brief vẽ t
 - Font phải hỗ trợ đầy đủ dấu tiếng Việt (ví dụ Be Vietnam Pro, Noto Serif). Kiểm tra với chữ "Huyết tự", "Ò… ó… o…".
 - Hiệu ứng gõ chữ: chạm/nhấp để hiện hết ngay; có cài đặt tốc độ; tắt hẳn khi `prefers-reduced-motion`.
 - An toàn thị giác: không nhấp nháy quá 3 lần mỗi giây, không jump scare bằng chớp sáng toàn màn hình.
-- Màu đỏ của `bloodtext` phải đạt độ tương phản tối thiểu 4.5:1 với nền.
+- Chữ `bloodtext` dùng màu `#ff5a52`, không dùng `#8a0b0b` (màu đó chỉ cho ảnh). Phải đạt độ tương phản tối thiểu 4.5:1 trên nền tối nhất của UI.
 - Dùng được ở chiều rộng 360px, không cuộn ngang.
 - Nút "Huyết tự" và thanh Tỉnh táo luôn hiển thị trong một màn.
 
