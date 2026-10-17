@@ -619,3 +619,18 @@ epilogue:
 | --- | --- | --- |
 | `docs/man-8-binh-minh-khong-den.md` | Brief `phong_404_1986`: bỏ "đồng hồ treo tường" khỏi "Bắt buộc có", thêm "đồng hồ" vào "Cấm vẽ"; brief `phong_404_1986_mat_troi` thêm "đồng hồ" vào "Cấm vẽ" | M8-05 đặt đồng hồ "ngay trên bức tranh" mặt trời lặn ở tường cửa ra vào; câu brief đã duyệt ở C11 đặt tường đó ngoài khung hình. Ảnh của Codex (d987493) vẽ đồng hồ trên tường cửa sổ bếp, trái kịch bản |
 
+## Sửa trực tiếp `docs/` lần 6: từ khoá "chìa khoá" (quyết định B8, 2026-10-17)
+
+Định nghĩa người dùng duyệt: `correct: true` là cụm mà nếu đọc đúng nghĩa thì dẫn thẳng tới sinh lộ; cụm chỉ quan trọng hoặc bắt buộc thì là `false`. `correct` chỉ ảnh hưởng nhãn ở màn hình kết quả (G48) và số trong màn tổng kết (G51).
+
+| Màn | Từ khoá | Trước | Sau | Lý do |
+| --- | --- | --- | --- | --- |
+| M1 | k3 "đếm đến một trăm rồi mới được mở mắt" | có | không | Luật bắt buộc; chìa khoá là k2, k4 |
+| M2 | k4 "trước khi gà gáy ba tiếng" | có | không | Luật cấm rời phòng; chìa khoá là k1, k2, k6 |
+| M4 | k2 "lúc chín giờ tối" | có | không | Chỉ gạt viên thuốc của y tá (nhánh không chết); chìa khoá là k3 |
+| M4 | k4 "không được rời giường" | có | không | Luật bắt buộc |
+| M5 | k2 "đến năm giờ sáng" | có | không | Mốc thời gian bắt buộc |
+| M5 | k4 "phải thắp nến" | có | không | Luật bắt buộc; chìa khoá của M5 là màu mực |
+| M5 | k6 "cửa sẽ tự mở" | không | có | Đọc đúng thì không bao giờ cần mở cửa, gạt bẫy "bà Sáu" lúc 4:59 |
+| M6 | k4 "không được dừng bước" | có | không | Luật bắt buộc; chìa khoá là k1, k3 |
+| M8 | k3 "làm Na khóc" | có | không | Điều cấm, không chỉ ra sinh lộ; chìa khoá là k2, k4 |

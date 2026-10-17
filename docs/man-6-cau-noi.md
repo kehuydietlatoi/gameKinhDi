@@ -30,7 +30,7 @@ Sinh lộ: thứ trên cầu đi theo từ phía nhà C4. Đi tiến sang C5 là
 | k1 | L2 | Trên cầu nối | có |
 | k2 | L2 | không được quay đầu lại | không |
 | k3 | L4 | quay lưng về phía nó | có |
-| k4 | L3 | không được dừng bước | có |
+| k4 | L3 | không được dừng bước | không |
 | k5 | L1 | trước khi gà gáy | không |
 | k6 | L1 | nhà C5 | không |
 

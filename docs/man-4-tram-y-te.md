@@ -30,9 +30,9 @@ Sau khi đèn tắt, một người đàn ông mặc áo blouse xưng là bác s
 | id | Dòng | Cụm từ | Đúng |
 | --- | --- | --- | --- |
 | k1 | L1 | Bệnh nhân phải uống thuốc | không |
-| k2 | L1 | lúc chín giờ tối | có |
+| k2 | L1 | lúc chín giờ tối | không |
 | k3 | L2 | Bác sĩ luôn nói thật | có |
-| k4 | L3 | không được rời giường | có |
+| k4 | L3 | không được rời giường | không |
 | k5 | L4 | đưa xuống tầng hầm | không |
 | k6 | L4 | Bệnh nhân nào không uống thuốc | không |
 

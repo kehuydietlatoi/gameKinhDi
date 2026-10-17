@@ -18,11 +18,11 @@ bloodtext:
 
 keywords:
   - {id: k1, line: L1, text: "không được mở cửa căn hộ", correct: false}
-  - {id: k2, line: L1, text: "đến năm giờ sáng", correct: true}
+  - {id: k2, line: L1, text: "đến năm giờ sáng", correct: false}
   - {id: k3, line: L2, text: "gõ cửa ba tiếng", correct: false}
-  - {id: k4, line: L4, text: "phải thắp nến", correct: true}
+  - {id: k4, line: L4, text: "phải thắp nến", correct: false}
   - {id: k5, line: L5, text: "chỉ có một mình bạn", correct: true}
-  - {id: k6, line: L6, text: "cửa sẽ tự mở", correct: false}
+  - {id: k6, line: L6, text: "cửa sẽ tự mở", correct: true}
 
 distortions:
   - {line: F1, ink: do}   # G37: mực đổi sang đỏ, nội dung giữ nguyên

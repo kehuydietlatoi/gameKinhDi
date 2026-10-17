@@ -15,7 +15,7 @@ bloodtext:
 keywords:
   - {id: k1, line: L1, text: "Tất cả những ai đang ở trong phòng này", correct: false}
   - {id: k2, line: L2, text: "Một người làm người đi tìm", correct: true}
-  - {id: k3, line: L3, text: "đếm đến một trăm rồi mới được mở mắt", correct: true}
+  - {id: k3, line: L3, text: "đếm đến một trăm rồi mới được mở mắt", correct: false}
   - {id: k4, line: L4, text: "bị quỷ tìm thấy", correct: true}
   - {id: k5, line: L4, text: "sẽ chết", correct: false}
   - {id: k6, line: L5, text: "khi gà gáy", correct: false}

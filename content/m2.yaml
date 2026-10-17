@@ -16,7 +16,7 @@ keywords:
   - {id: k1, line: L1, text: "bảy người", correct: true}
   - {id: k2, line: L2, text: "Người trong quan tài", correct: true}
   - {id: k3, line: L2, text: "không được mở mắt", correct: false}
-  - {id: k4, line: L3, text: "trước khi gà gáy ba tiếng", correct: true}
+  - {id: k4, line: L3, text: "trước khi gà gáy ba tiếng", correct: false}
   - {id: k5, line: L4, text: "người canh được về", correct: false}
   - {id: k6, line: L4, text: "người nằm được dậy", correct: true}
 

@@ -15,7 +15,7 @@ keywords:
   - {id: k1, line: L2, text: "Trên cầu nối", correct: true}
   - {id: k2, line: L2, text: "không được quay đầu lại", correct: false}
   - {id: k3, line: L4, text: "quay lưng về phía nó", correct: true}
-  - {id: k4, line: L3, text: "không được dừng bước", correct: true}
+  - {id: k4, line: L3, text: "không được dừng bước", correct: false}
   - {id: k5, line: L1, text: "trước khi gà gáy", correct: false}
   - {id: k6, line: L1, text: "nhà C5", correct: false}
 

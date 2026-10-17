@@ -13,9 +13,9 @@ bloodtext:
 
 keywords:
   - {id: k1, line: L1, text: "Bệnh nhân phải uống thuốc", correct: false}
-  - {id: k2, line: L1, text: "lúc chín giờ tối", correct: true}
+  - {id: k2, line: L1, text: "lúc chín giờ tối", correct: false}
   - {id: k3, line: L2, text: "Bác sĩ luôn nói thật", correct: true}
-  - {id: k4, line: L3, text: "không được rời giường", correct: true}
+  - {id: k4, line: L3, text: "không được rời giường", correct: false}
   - {id: k5, line: L4, text: "đưa xuống tầng hầm", correct: false}
   - {id: k6, line: L4, text: "Bệnh nhân nào không uống thuốc", correct: false}
 

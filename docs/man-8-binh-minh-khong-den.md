@@ -31,7 +31,7 @@ Con ma đen cũng có thật vì nó ở trên tường, nhưng đó là con ma 
 | --- | --- | --- | --- |
 | k1 | L1 | đến khi mặt trời mọc | không |
 | k2 | L2 | phía đông | có |
-| k3 | L3 | làm Na khóc | có |
+| k3 | L3 | làm Na khóc | không |
 | k4 | L4 | có trên tường thì có thật | có |
 | k5 | L1 | Sống sót | không |
 | k6 | L2 | Ở đây | không |

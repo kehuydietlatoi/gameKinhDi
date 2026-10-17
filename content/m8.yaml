@@ -15,7 +15,7 @@ bloodtext:
 keywords:
   - {id: k1, line: L1, text: "đến khi mặt trời mọc", correct: false}
   - {id: k2, line: L2, text: "phía đông", correct: true}
-  - {id: k3, line: L3, text: "làm Na khóc", correct: true}
+  - {id: k3, line: L3, text: "làm Na khóc", correct: false}
   - {id: k4, line: L4, text: "có trên tường thì có thật", correct: true}
   - {id: k5, line: L1, text: "Sống sót", correct: false}
   - {id: k6, line: L2, text: "Ở đây", correct: false}

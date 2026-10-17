@@ -36,11 +36,11 @@ Chỉ chọn trong các dòng đỏ.
 | id | Dòng | Cụm từ | Đúng |
 | --- | --- | --- | --- |
 | k1 | L1 | không được mở cửa căn hộ | không |
-| k2 | L1 | đến năm giờ sáng | có |
+| k2 | L1 | đến năm giờ sáng | không |
 | k3 | L2 | gõ cửa ba tiếng | không |
-| k4 | L4 | phải thắp nến | có |
+| k4 | L4 | phải thắp nến | không |
 | k5 | L5 | chỉ có một mình bạn | có |
-| k6 | L6 | cửa sẽ tự mở | không |
+| k6 | L6 | cửa sẽ tự mở | có |
 
 ### Bóp méo (khi `sanity` ≤ 2)
 

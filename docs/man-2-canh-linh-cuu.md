@@ -32,7 +32,7 @@ L1 nói bảy người canh, và đúng bảy người đã điểm danh. Ngư�
 | k1 | L1 | bảy người | có |
 | k2 | L2 | Người trong quan tài | có |
 | k3 | L2 | không được mở mắt | không |
-| k4 | L3 | trước khi gà gáy ba tiếng | có |
+| k4 | L3 | trước khi gà gáy ba tiếng | không |
 | k5 | L4 | người canh được về | không |
 | k6 | L4 | người nằm được dậy | có |
 

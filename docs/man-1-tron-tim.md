@@ -29,7 +29,7 @@ L4 không nói quỷ là người đi tìm. Trong trò trốn tìm, chỉ ngư�
 | --- | --- | --- | --- |
 | k1 | L1 | Tất cả những ai đang ở trong phòng này | không |
 | k2 | L2 | Một người làm người đi tìm | có |
-| k3 | L3 | đếm đến một trăm rồi mới được mở mắt | có |
+| k3 | L3 | đếm đến một trăm rồi mới được mở mắt | không |
 | k4 | L4 | bị quỷ tìm thấy | có |
 | k5 | L4 | sẽ chết | không |
 | k6 | L5 | khi gà gáy | không |
