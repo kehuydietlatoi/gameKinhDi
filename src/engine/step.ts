@@ -65,7 +65,7 @@ function enter(level: Level, state: GameState, id: string): GameState {
 
   if (node.type === 'ending') return enterEnding(level, s, node);
 
-  s = applyEffects(s, node.effects);
+  s = applyEffects(s, node.effects, level);
   const lines = node.lines.flatMap((l, i) => (check(l.if, level, s) ? [i] : []));
   s = {
     ...s,
@@ -141,7 +141,7 @@ export function step(level: Level, state: GameState, action: Action): GameState 
       const choice = node.choices![action.index]!;
       let s: GameState = { ...state, notices: [] };
       if (node.hub) s = { ...s, visited: addUnique(s.visited, choice.goto) }; // G1
-      s = applyEffects(s, choice.effects as Effect[] | undefined);
+      s = applyEffects(s, choice.effects as Effect[] | undefined, level);
       return enter(level, s, choice.goto);
     }
   }

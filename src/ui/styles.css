@@ -404,3 +404,75 @@ select {
   white-space: pre-wrap;
   color: var(--c-muted);
 }
+
+/* ---------- Mực (G36): phân biệt bằng nét chữ, không chỉ bằng màu ---------- */
+
+.bloodtext .ink-do {
+  color: var(--c-blood);
+  font-weight: 700;
+}
+
+.bloodtext .ink-nau {
+  color: var(--c-inkNau);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.bloodtext .ink-kho {
+  color: var(--c-inkKho);
+  font-style: italic;
+  text-decoration: underline dotted;
+  text-underline-offset: 5px;
+}
+
+/* Dòng giả trong solution của màn hình chết (G38). */
+.mark-struck {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Ánh nến (G39): ấm, viền tối; tối đa 2 lần đổi mỗi giây ---------- */
+
+.overlay.candle {
+  background: radial-gradient(ellipse at 50% 60%, transparent 0%, transparent 30%, rgb(0 0 0 / 0.7) 100%),
+    var(--c-candle);
+  background-blend-mode: normal;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  animation: candle 2s step-end infinite;
+}
+
+.overlay.candle.still {
+  animation: none;
+  opacity: 0.55;
+}
+
+@keyframes candle {
+  0% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay.candle {
+    animation: none;
+    opacity: 0.55;
+  }
+}
+
+.finale {
+  font-size: 1.1rem;
+  margin: 0.5em 0;
+}

@@ -114,7 +114,7 @@ function Game({ levels, assets }: { levels: Level[]; assets: Map<string, Asset> 
       ending.result === 'death' ? (
         <DeathScreen ending={ending} onReplay={replay} />
       ) : (
-        <ResultScreen ending={ending} onReplay={replay} onNext={goNext} />
+        <ResultScreen ending={ending} onReplay={replay} onNext={goNext} onRestartGame={() => selectLevel(levels[0]!.level)} />
       );
   } else {
     footer = (

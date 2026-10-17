@@ -29,6 +29,7 @@ export function SceneLayer({ scene, assets }: Props) {
       {picture}
       {scene.light === 'flicker' && <div className={`overlay flicker${reduced ? ' still' : ''}`} />}
       {scene.light === 'dawn' && <div className="overlay dawn" />}
+      {scene.light === 'candle' && <div className={`overlay candle${reduced ? ' still' : ''}`} />}
     </div>
   );
 }

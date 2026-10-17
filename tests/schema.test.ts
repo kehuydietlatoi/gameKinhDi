@@ -55,11 +55,11 @@ describe('schema màn', () => {
     expect(errors.join('\n')).toMatch(/kết cục chết phải có id dạng m<màn>_d<số>/);
   });
 
-  test('kết cục chết thiếu violates và consequence_of', () => {
+  test('G44: kết cục chết được phép không gắn với dòng luật nào', () => {
     const errors = errorsAfter((raw) => {
       delete raw.node('m9_d2').consequence_of;
     });
-    expect(errors.join('\n')).toMatch(/kết cục chết phải có `violates` hoặc `consequence_of`/);
+    expect(errors).toEqual([]);
   });
 
   test('hub thiếu hub_exit', () => {

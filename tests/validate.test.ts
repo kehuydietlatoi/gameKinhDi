@@ -164,7 +164,7 @@ describe('validateLevel', () => {
 describe('validateAssets', () => {
   test('file sai tên và clue không ai khai báo', () => {
     const bad = parseAssets(
-      'assets:\n  - {id: nen_c, file: bg/khac.png, alt: "C.", clue: c9, level: m9}\n',
+      'assets:\n  - {id: nen_c, file: bg/khac.png, alt: "C.", clue: "m9:c9"}\n',
       'assets.yaml',
     );
     if (!bad.ok) throw new Error(bad.errors.join('\n'));

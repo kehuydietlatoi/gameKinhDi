@@ -144,6 +144,7 @@ describe('kết cục chết', () => {
     expect(e).toMatchObject({ result: 'death', cause: 'Từ chối chơi', reveal: 'Vi phạm L1: tất cả phải chơi.' });
     expect(e.solution[0]).toEqual({
       id: 'L1',
+      ink: 'do',
       segments: [{ text: 'Tất cả những ai đang ở trong phòng này phải chơi trốn tìm.', mark: 'solution' }],
     });
     expect(view(level, s).lines[0]).toMatchObject({ ch: 'bloodtext', glow: true });

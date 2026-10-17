@@ -119,6 +119,7 @@ describe('kết cục chết', () => {
     const e = endingView(level, s)!;
     expect(e.solution[0]).toEqual({
       id: 'L1',
+      ink: 'do',
       segments: [{ text: 'Đêm nay, trước khi đồng hồ điểm mười hai tiếng, phải có một người bước vào phòng 404.', mark: 'solution' }],
     });
   });

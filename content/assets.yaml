@@ -9,18 +9,15 @@ assets:
   - id: bang_tin_cao_pho
     file: bg/bang_tin_cao_pho.png
     alt: "Cận cảnh bảng tin tổ dân phố bằng gỗ, giấy báo họp tổ và lịch trực vệ sinh ghim lộn xộn."
-    clue: c1
-    level: m1
+    clue: m1:c1
   - id: bang_tin_cao_pho_7
     file: bg/bang_tin_cao_pho_7.png
     alt: "Cận cảnh bảng tin tổ dân phố bằng gỗ, giấy báo họp tổ và lịch trực vệ sinh ghim lộn xộn."
-    clue: c1
-    level: m1
+    clue: m1:c1
   - id: cua_so_kinh
     file: bg/cua_so_kinh.png
     alt: "Cận cảnh ô cửa sổ kính mờ hơi nước, nhìn từ trong phòng ra."
-    clue: c2
-    level: m1
+    clue: m1:c2
   - id: hanh_lang_tang_2
     file: bg/hanh_lang_tang_2.png
     alt: "Hành lang tầng 2 nhìn dọc, cửa gỗ sơn xanh hai bên và bếp than tổ ong trước mỗi cửa."
@@ -52,5 +49,4 @@ assets:
   - id: ban_tho_chieu_nghi
     file: bg/ban_tho_chieu_nghi.png
     alt: "Chiếu nghỉ cầu thang bê tông với một bàn thờ nhỏ kê sát tường và bát hương đầy chân nhang."
-    clue: c1
-    level: m3
+    clue: m3:c1

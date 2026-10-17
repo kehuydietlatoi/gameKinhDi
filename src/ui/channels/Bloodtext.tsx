@@ -1,4 +1,5 @@
 import type { BloodtextView } from '../../engine/index.ts';
+import { strings } from '../strings.ts';
 import type { ChannelProps } from './types.ts';
 import { cutSegments, segmentsLength } from './text.ts';
 
@@ -12,7 +13,7 @@ export function BloodLines({ lines, visible = Infinity, glow = false }: { lines:
         const segments = cutSegments(l.segments, visible - starts[i]!);
         if (!segments.length) return null;
         return (
-          <p key={l.id} className="blood-line">
+          <p key={l.id} className={`blood-line ink-${l.ink}`}>
             {segments.map((s, i) =>
               s.mark ? (
                 <span key={i} className={`mark-${s.mark}`}>
@@ -22,6 +23,7 @@ export function BloodLines({ lines, visible = Infinity, glow = false }: { lines:
                 <span key={i}>{s.text}</span>
               ),
             )}
+            {l.ink !== 'do' && <span className="sr-only">{strings.inkLabel[l.ink]}</span>}
           </p>
         );
       })}

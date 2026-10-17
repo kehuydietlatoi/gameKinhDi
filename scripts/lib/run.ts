@@ -40,6 +40,14 @@ export function runValidate(contentDir: string, publicDir: string): Report {
   }
   const levels = parsedLevels.map((p) => p.level);
 
+  // G41: chỉ một màn final, và đó phải là màn có số lớn nhất.
+  const finals = levels.filter((l) => l.final);
+  const last = [...levels].sort((a, b) => Number(b.level.slice(1)) - Number(a.level.slice(1)))[0];
+  if (finals.length > 1) report.errors.push(`final — có ${finals.length} màn final: ${finals.map((l) => l.level).join(', ')}`);
+  for (const f of finals) {
+    if (f !== last) report.errors.push(`${f.level}.yaml: final — màn final phải là màn cuối (màn cuối hiện là ${last!.level})`);
+  }
+
   // Hồ sơ của mọi màn, để has_dossier tham chiếu được hồ sơ ở màn trước (G27).
   const dossiers = new Set(levels.flatMap((l) => l.dossiers.map((d) => d.id)));
   for (const { file, level } of parsedLevels) {

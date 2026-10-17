@@ -281,7 +281,7 @@ describe('Huyết tự', () => {
 
   test('sanity ≤ 2 và chưa đánh dấu: bản méo, không có dấu hiệu khác', () => {
     const panel = bloodtextPanel(level, { ...sane, sanity: 2 });
-    expect(panel[0]).toEqual({ id: 'L1', segments: [{ text: 'Dòng một có thể bỏ qua.' }] });
+    expect(panel[0]).toEqual({ id: 'L1', ink: 'do', segments: [{ text: 'Dòng một có thể bỏ qua.' }] });
     expect(level.bloodtext[0]!.text).toBe('Dòng một phải được tuân thủ.'); // level giữ bản gốc
   });
 
@@ -289,6 +289,7 @@ describe('Huyết tự', () => {
     const marked = run(level, [], { highlights: ['k1'] }).state;
     expect(bloodtextPanel(level, { ...marked, sanity: 1 })[0]).toEqual({
       id: 'L1',
+      ink: 'do',
       segments: [{ text: 'Dòng một ' }, { text: 'phải được tuân thủ', mark: 'highlighted' }, { text: '.' }],
     });
   });
@@ -312,7 +313,7 @@ describe('Huyết tự', () => {
     expect(view(level, atChoice).lines[1]).toEqual({
       ch: 'bloodtext',
       glow: false,
-      lines: [{ id: 'L1', segments: [{ text: 'Dòng một có thể bỏ qua.' }] }],
+      lines: [{ id: 'L1', ink: 'do', segments: [{ text: 'Dòng một có thể bỏ qua.' }] }],
     });
   });
 });
@@ -322,7 +323,7 @@ describe('kết cục', () => {
     const t = run(level, ['Đi A', 'Đi B', 'Từ chối'], { highlights: ['k2'] });
     const e = endingView(level, { ...t.state, sanity: 1 })!;
     expect(e).toMatchObject({ result: 'death', cause: 'Vi phạm', reveal: 'Vi phạm L1.' });
-    expect(e.solution[0]).toEqual({ id: 'L1', segments: [{ text: 'Dòng một phải được tuân thủ.', mark: 'solution' }] });
+    expect(e.solution[0]).toEqual({ id: 'L1', ink: 'do', segments: [{ text: 'Dòng một phải được tuân thủ.', mark: 'solution' }] });
     expect(e.keywords).toEqual([{ id: 'k2', text: 'hệ quả', correct: false }]);
   });
 

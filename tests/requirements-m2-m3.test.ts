@@ -194,22 +194,33 @@ describe('G31 · lựa chọn cùng chữ', () => {
   });
 });
 
-describe('G32 · ảnh có clue gắn với màn sở hữu manh mối', () => {
-  test('ảnh có clue phải ghi level', () => {
+describe('G43 · clue của ảnh ghi theo màn (m3:c1), thay G32', () => {
+  test('clue không ghi màn là lỗi schema', () => {
     const r = parseAssets('assets:\n  - {id: x, file: bg/x.png, alt: "X.", clue: c1}\n', 'assets.yaml');
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.errors.join('\n')).toMatch(/ảnh có `clue` phải ghi `level`/);
+    if (!r.ok) expect(r.errors.join('\n')).toMatch(/clue của ảnh phải có dạng m<màn>:c<số>/);
   });
 
-  test('dùng ảnh mang manh mối của màn khác ở node thường là lỗi; ở ending thì được', () => {
+  test('ảnh mang manh mối của màn khác được dùng tự do ở node thường', () => {
     const other = parseAssets(
-      'assets:\n  - {id: nen_a, alt: "A.", placeholder: true}\n  - {id: nen_b, alt: "B.", placeholder: true, clue: c1, level: m1}\n',
+      'assets:\n  - {id: nen_a, alt: "A.", placeholder: true}\n  - {id: nen_b, alt: "B.", placeholder: true, clue: "m1:c1"}\n',
       'assets.yaml',
     );
     if (!other.ok) throw new Error(other.errors.join('\n'));
-    expect(validateLevel(level, other.value)).toContain(
-      'm9: m9_n03.scene — ảnh `nen_b` chứa manh mối của màn m1, ở màn khác chỉ được dùng ở ending (G32)',
+    // m9_n02 (hub) không thêm c1; nếu nen_b thuộc m9 thì đó là lỗi G22, nhưng nen_b thuộc m1.
+    const inherits = levelAfter((raw) => {
+      delete raw.node('m9_n02').scene;
+    });
+    expect(validateLevel(inherits, other.value)).toEqual([]);
+    expect(validateAssets(other.value, [level]).errors).toEqual(['assets: assets[1] (nen_b).clue — không có màn m1']);
+  });
+
+  test('trong màn sở hữu manh mối, quy tắc G22 vẫn áp', () => {
+    const inherits = levelAfter((raw) => {
+      delete raw.node('m9_n02').scene;
+    });
+    expect(validateLevel(inherits, assets)).toContain(
+      'm9: m9_n02.scene — ảnh `nen_b` chứa manh mối c1 nhưng node không thêm c1 (G22)',
     );
-    expect(validateAssets(other.value, [level]).errors).toEqual(['assets: assets[1] (nen_b).level — không có màn m1']);
   });
 });

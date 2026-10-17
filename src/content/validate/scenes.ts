@@ -1,5 +1,6 @@
 // G22: ảnh có `clue` chỉ được dùng ở node thêm đúng clue đó, hoặc ở ending (AGENTS.md 8.5).
 // Cảnh được kế thừa qua node, nên phải lan theo đồ thị để biết ảnh nào có thể đang hiện.
+import { splitLevelClue } from '../schema.ts';
 import type { Assets, Level, Node, Scene } from '../types.ts';
 import { successors } from './walk.ts';
 
@@ -56,10 +57,10 @@ export function checkSceneClues(level: Level, assets: Assets, nodes: Map<string,
     for (const bg of bgs) {
       const asset = clueImages.get(bg);
       if (!asset) continue;
-      if (asset.level !== level.level) {
-        errors.push(`${id}.scene — ảnh \`${bg}\` chứa manh mối của màn ${asset.level}, ở màn khác chỉ được dùng ở ending (G32)`);
-      } else if (!added.has(asset.clue!)) {
-        errors.push(`${id}.scene — ảnh \`${bg}\` chứa manh mối ${asset.clue} nhưng node không thêm ${asset.clue} (G22)`);
+      // G43: quy tắc chỉ áp trong màn sở hữu manh mối; màn khác dùng ảnh tự do.
+      const { level: owner, clue } = splitLevelClue(asset.clue!);
+      if (owner === level.level && !added.has(clue)) {
+        errors.push(`${id}.scene — ảnh \`${bg}\` chứa manh mối ${clue} nhưng node không thêm ${clue} (G22)`);
       }
     }
   }

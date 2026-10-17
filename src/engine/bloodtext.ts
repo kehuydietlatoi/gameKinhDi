@@ -1,11 +1,13 @@
-// Hiển thị Huyết tự: bóp méo, gạch chân cụm đã đánh dấu, tô cụm sinh lộ.
+// Hiển thị Huyết tự: bóp méo (đổi chữ hoặc đổi mực), gạch chân cụm đã đánh dấu, tô cụm sinh lộ.
 // Bóp méo chỉ đổi phần hiển thị; level và state luôn giữ bản gốc (AGENTS.md mục 5.7).
-import type { Level } from '../content/types.ts';
+import type { Ink, Level } from '../content/types.ts';
 import type { GameState } from './state.ts';
 
-export type Mark = 'highlighted' | 'solution';
+/** highlighted: cụm đã đánh dấu; solution: cụm sinh lộ; struck: dòng giả trong solution (G38). */
+export type Mark = 'highlighted' | 'solution' | 'struck';
 export type Segment = { text: string; mark?: Mark };
-export type BloodtextView = { id: string; segments: Segment[] };
+/** Không có trường "fake": người chơi chỉ phân biệt dòng giả qua mực (G36). */
+export type BloodtextView = { id: string; ink: Ink; segments: Segment[] };
 
 /** Tách `text` thành đoạn, đánh dấu các cụm cho trước (bỏ cụm chồng lên cụm trước). */
 function segment(text: string, phrases: { text: string; mark: Mark }[]): Segment[] {
@@ -25,36 +27,45 @@ function segment(text: string, phrases: { text: string; mark: Mark }[]): Segment
   return out;
 }
 
-/** Chữ của một dòng như người chơi đang thấy (có thể là bản méo). */
-export function displayLineText(level: Level, state: GameState, lineId: string): string {
+/** Chữ và mực của một dòng như người chơi đang thấy (có thể là bản méo). */
+export function displayLine(level: Level, state: GameState, lineId: string): { text: string; ink: Ink } {
   const line = level.bloodtext.find((b) => b.id === lineId);
-  if (!line) return '';
-  if (state.sanity > 2) return line.text;
-  const d = level.distortions.find((x) => x.line === lineId);
-  if (!d || state.highlights.includes(d.unless_highlighted)) return line.text;
-  return d.text;
+  if (!line) return { text: '', ink: 'do' };
+  const shown = { text: line.text, ink: line.ink };
+  if (state.sanity > 2) return shown;
+  for (const d of level.distortions) {
+    if (d.line !== lineId) continue;
+    if ('ink' in d) shown.ink = d.ink; // G37: đổi mực, không bảo vệ được
+    else if (!state.highlights.includes(d.unless_highlighted)) shown.text = d.text;
+  }
+  return shown;
 }
 
-/** Một dòng Huyết tự theo góc nhìn người chơi; bản méo không có dấu hiệu gì khác. */
+/** Một dòng theo góc nhìn người chơi; bản méo không có dấu hiệu gì khác bản thật. */
 export function viewLine(level: Level, state: GameState, lineId: string): BloodtextView {
-  const text = displayLineText(level, state, lineId);
+  const { text, ink } = displayLine(level, state, lineId);
   const marked = level.keywords
     .filter((k) => k.line === lineId && state.highlights.includes(k.id))
     .map((k) => ({ text: k.text, mark: 'highlighted' as const }));
-  return { id: lineId, segments: segment(text, marked) };
+  return { id: lineId, ink, segments: segment(text, marked) };
 }
 
 export function viewAll(level: Level, state: GameState): BloodtextView[] {
   return level.bloodtext.map((b) => viewLine(level, state, b.id));
 }
 
-/** Bản gốc, tô cụm sinh lộ (G17): id từ khoá tô cụm đó, id dòng tô cả dòng. */
+/**
+ * Bản gốc, tô cụm sinh lộ (G17): id từ khoá tô cụm đó, id dòng tô cả dòng.
+ * Dòng giả có trong solution thì gạch ngang (G38).
+ */
 export function viewSolution(level: Level, solution: string[]): BloodtextView[] {
   return level.bloodtext.map((b) => {
-    if (solution.includes(b.id)) return { id: b.id, segments: [{ text: b.text, mark: 'solution' as const }] };
+    if (solution.includes(b.id)) {
+      return { id: b.id, ink: b.ink, segments: [{ text: b.text, mark: b.fake ? ('struck' as const) : ('solution' as const) }] };
+    }
     const marked = level.keywords
       .filter((k) => k.line === b.id && solution.includes(k.id))
       .map((k) => ({ text: k.text, mark: 'solution' as const }));
-    return { id: b.id, segments: segment(b.text, marked) };
+    return { id: b.id, ink: b.ink, segments: segment(b.text, marked) };
   });
 }

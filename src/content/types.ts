@@ -12,6 +12,7 @@ export type Choice = z.infer<typeof S.Choice>;
 export type Scene = z.infer<typeof S.Scene>;
 export type Light = z.infer<typeof S.Light>;
 export type Role = z.infer<typeof S.Role>;
+export type Ink = z.infer<typeof S.Ink>;
 export type BloodtextLine = z.infer<typeof S.BloodtextLine>;
 export type Keyword = z.infer<typeof S.Keyword>;
 export type Distortion = z.infer<typeof S.Distortion>;

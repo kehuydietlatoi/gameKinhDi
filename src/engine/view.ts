@@ -86,6 +86,7 @@ export function highlightOptions(level: Level) {
   return level.bloodtext.map((b) => ({
     line: b.id,
     text: b.text,
+    ink: b.ink,
     keywords: level.keywords.filter((k) => k.line === b.id).map((k) => ({ id: k.id, text: k.text })),
   }));
 }
@@ -97,6 +98,11 @@ export type EndingView = {
   solution: BloodtextView[];
   keywords: { id: string; text: string; correct: boolean }[];
   dossiers: string[];
+  /**
+   * G41: kết cục của màn cuối. `complete` = hết game; `open` = kết thúc mở, chơi lại màn
+   * cuối để tìm kết cục trọn vẹn; `none` = không phải màn cuối hoặc là kết cục chết.
+   */
+  finale: 'none' | 'complete' | 'open';
 };
 
 /** Màn hình chết / kết quả (đặc tả mục 4.5, 4.7; G17, G18). */
@@ -118,5 +124,6 @@ export function endingView(level: Level, state: GameState): EndingView | null {
             .filter((u) => check(u.if, level, state))
             .map((u) => level.dossiers.find((d) => d.id === u.dossier)?.title ?? u.dossier)
         : [],
+    finale: level.final && node.result === 'survive' ? (node.open ? 'open' : 'complete') : 'none',
   };
 }

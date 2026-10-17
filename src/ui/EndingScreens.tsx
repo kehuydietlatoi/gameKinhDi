@@ -21,12 +21,22 @@ export function DeathScreen({ ending, onReplay }: { ending: EndingView; onReplay
   );
 }
 
-type ResultProps = { ending: EndingView; onReplay: () => void; onNext?: (() => void) | undefined };
+type ResultProps = {
+  ending: EndingView;
+  onReplay: () => void;
+  onNext?: (() => void) | undefined;
+  onRestartGame?: (() => void) | undefined;
+};
 
-/** Kết cục sống: ghi rõ kết cục nào (G28), cụm sinh lộ, từ khoá, hồ sơ; sang màn kế (G33). */
-export function ResultScreen({ ending, onReplay, onNext }: ResultProps) {
+/**
+ * Kết cục sống: ghi rõ kết cục nào (G28), cụm sinh lộ, từ khoá, hồ sơ; sang màn kế (G33).
+ * Ở màn cuối (G41): kết cục trọn vẹn là hết game; kết thúc mở thì mời chơi lại màn cuối.
+ */
+export function ResultScreen({ ending, onReplay, onNext, onRestartGame }: ResultProps) {
   return (
     <section className="ending survive">
+      {ending.finale === 'complete' && <p className="finale">{strings.gameComplete}</p>}
+      {ending.finale === 'open' && <p className="finale">{strings.openEnding}</p>}
       <h2>{ending.cause}</h2>
       <BloodLines lines={ending.solution} />
       <p className="reveal">
@@ -61,8 +71,18 @@ export function ResultScreen({ ending, onReplay, onNext }: ResultProps) {
             {strings.nextLevel}
           </button>
         )}
-        <button type="button" className={onNext ? 'btn' : 'btn btn-primary'} onClick={onReplay} autoFocus={!onNext}>
-          {strings.replay}
+        {ending.finale === 'complete' && onRestartGame && (
+          <button type="button" className="btn btn-primary" onClick={onRestartGame} autoFocus>
+            {strings.replayFromStart}
+          </button>
+        )}
+        <button
+          type="button"
+          className={onNext || ending.finale === 'complete' ? 'btn' : 'btn btn-primary'}
+          onClick={onReplay}
+          autoFocus={!onNext && ending.finale !== 'complete'}
+        >
+          {ending.finale === 'none' ? strings.replay : strings.replayLevel}
         </button>
       </div>
     </section>

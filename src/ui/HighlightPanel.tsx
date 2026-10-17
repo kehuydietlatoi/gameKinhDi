@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MAX_HIGHLIGHTS } from '../engine/index.ts';
 import { strings } from './strings.ts';
 
-type Option = { line: string; text: string; keywords: { id: string; text: string }[] };
+type Option = { line: string; text: string; ink: 'do' | 'nau' | 'kho'; keywords: { id: string; text: string }[] };
 
 /** Tách dòng thành chữ thường và các cụm chọn được (theo vị trí trong dòng). */
 function pieces(o: Option) {
@@ -33,7 +33,7 @@ export function HighlightPanel({ options, onDone }: { options: Option[]; onDone:
       <h2>{strings.highlightTitle}</h2>
       <div className="bloodtext">
         {options.map((o) => (
-          <p key={o.line} className="blood-line">
+          <p key={o.line} className={`blood-line ink-${o.ink}`}>
             {pieces(o).map((p, i) =>
               'id' in p ? (
                 <button

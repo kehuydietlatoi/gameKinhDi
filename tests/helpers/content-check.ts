@@ -9,7 +9,9 @@ import {
   expandRefs,
   parseEndings,
   parseNodes,
+  parseDistortions,
   parseOverview,
+  parseWall,
   section,
   tableObjects,
   tableRows,
@@ -67,10 +69,15 @@ function comparable(lines: Line[], withIf: boolean[]): DocLine[] {
 const docLines = (lines: DocLine[]) => lines.filter((l) => l.ch !== 'bloodtext');
 
 /** Các node không có trong bảng gán cảnh phải không khai báo scene; trả về các hàng đặc biệt để màn tự kiểm. */
-function checkSceneTable(md: string, level: Level, special: string[]) {
+function checkSceneTable(md: string, level: Level, special: string[], hubScenes: Map<string, object>) {
   const nodes = nodeAccess(level);
   const strip = (s: string) => s.replace(/`/g, '');
   const listed = new Set<string>();
+  // `scene` ghi ngay ở dòng mô tả hub ("`hub: true`, …, `scene: {…}`").
+  for (const [id, scene] of hubScenes) {
+    listed.add(id);
+    expect(nodes.any(id)!.scene, id).toEqual(scene);
+  }
   for (const row of tableObjects(section(md, '### Gán cảnh cho node'))) {
     const refs = expandRefs(row.Node!);
     const ids = refs.map((r) => (/^[DE]\d+$/.test(r) ? `${level.level}_${r.toLowerCase()}` : `m${r.slice(1).replace('-', '_n')}`));
@@ -79,6 +86,7 @@ function checkSceneTable(md: string, level: Level, special: string[]) {
     const bg = strip(row.bg ?? '');
     const light = strip(row.light ?? '');
     for (const id of ids) {
+      if (hubScenes.has(id)) continue;
       const scene = nodes.any(id)!.scene;
       if (!bg && !light) expect(scene, id).toBeUndefined();
       else if (bg === 'giữ nguyên') expect(scene, id).toEqual({ light });
@@ -104,18 +112,24 @@ export function checkLevelContent(levelId: string, docFile: string, opts: CheckO
   const overview = parseOverview(md);
 
   describe(`${levelId}.yaml khớp ${docFile}`, () => {
-    test('tổng quan: trạng thái đầu, on_sanity_zero, solution cấp màn', () => {
+    test('tổng quan: trạng thái đầu, on_sanity_zero, solution cấp màn, final', () => {
       expect(level.init).toEqual(overview.init);
+      expect(level.final === true).toBe(overview.final);
       expect(level.on_sanity_zero).toBe(overview.on_sanity_zero);
       if (overview.solution) expect(level.solution).toEqual(overview.solution);
     });
 
-    test('Huyết tự nguyên văn (và violable nếu bảng có cột này)', () => {
-      const rows = tableObjects(section(md, '### Huyết tự (nguyên văn)'));
-      expect(level.bloodtext.map((b) => [b.id, b.text])).toEqual(rows.map((r) => [r['Dòng'], r['Nội dung']]));
-      if (rows[0] && 'violable' in rows[0]) {
-        expect(level.bloodtext.map((b) => b.violable)).toEqual(rows.map((r) => r.violable === 'true'));
-      }
+    test('các dòng trên tường nguyên văn, đúng thứ tự, mực, dòng giả, violable', () => {
+      const wall = parseWall(md);
+      expect(
+        level.bloodtext.map((b, i) => ({
+          id: b.id,
+          text: b.text,
+          ink: b.ink,
+          fake: b.fake,
+          ...(wall[i]?.violable === undefined ? {} : { violable: b.violable }),
+        })),
+      ).toEqual(wall);
     });
 
     test('từ khoá', () => {
@@ -124,8 +138,7 @@ export function checkLevelContent(levelId: string, docFile: string, opts: CheckO
     });
 
     test('bóp méo', () => {
-      const rows = tableRows(section(md, '### Bóp méo (khi `sanity` ≤ 2)'));
-      expect(level.distortions.map((d) => [d.line, d.unless_highlighted, d.text])).toEqual(rows);
+      expect(level.distortions).toEqual(parseDistortions(md));
     });
 
     test('nhân vật', () => {
@@ -184,7 +197,7 @@ export function checkLevelContent(levelId: string, docFile: string, opts: CheckO
         expect(comparable(node.lines, docLines(doc.lines).map(() => false))).toEqual(docLines(doc.lines));
         expect(node.reveal).toBe(doc.reveal);
         expect(node.result).toBe(doc.id.includes('_e') ? 'survive' : 'death');
-        if ('violates' in doc || 'consequence_of' in doc) {
+        if (doc.hasRule) {
           expect(node.violates).toEqual(doc.violates);
           expect(node.consequence_of).toEqual(doc.consequence_of);
         }
@@ -193,7 +206,8 @@ export function checkLevelContent(levelId: string, docFile: string, opts: CheckO
     });
 
     test('gán cảnh khớp bảng', () => {
-      checkSceneTable(md, level, opts.specialSceneRows ?? []);
+      const hubScenes = new Map(docNodes.flatMap((n) => (n.hub?.scene ? [[n.id, n.hub.scene] as const] : [])));
+      checkSceneTable(md, level, opts.specialSceneRows ?? [], hubScenes);
     });
   });
 

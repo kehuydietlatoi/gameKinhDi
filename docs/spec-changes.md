@@ -185,6 +185,8 @@ clues: [c1, c2, c3, c4, c5, c6]
 
 ## G16 · Gắn dòng Huyết tự với kết cục chết
 
+> Đã sửa bởi G44: kết cục chết không còn bắt buộc có `violates` hoặc `consequence_of`.
+
 - **Ngày:** 2026-10-17
 - **Cần cho:** D1–D5; validator (AGENTS 6.5)
 - **Bổ sung:** dòng Huyết tự có `violable` (mặc định `true`). Ending chết khai báo `violates` (vi phạm dòng đó) hoặc `consequence_of` (chết vì hệ quả của dòng đó), ít nhất một trong hai. Ending sống không có hai trường này. Validator đòi mỗi dòng `violable` có ít nhất một ending chết `violates` nó.
@@ -368,6 +370,8 @@ choices:
 
 ## G32 · Ảnh có `clue` ghi màn sở hữu manh mối
 
+> Đã thay bằng G43 (theo yêu cầu của `docs/man-9-nguoi-dan-ba-khong-mat.md`): cú pháp `clue: m3:c1`, bỏ trường `level`, và ở màn khác ảnh được dùng tự do.
+
 - **Ngày:** 2026-10-17
 - **Cần cho:** `ban_tho_chieu_nghi` (`c1` của màn 3) trong khi `bang_tin_cao_pho` mang `c1` của màn 1; id manh mối chỉ duy nhất trong một màn còn `assets.yaml` dùng chung
 - **Bổ sung:** ảnh có `clue` bắt buộc có `level`. Trong màn đó, quy tắc G22 áp như cũ; ở màn khác, ảnh ấy chỉ được dùng ở ending. Validator kiểm tra màn `level` tồn tại và có khai báo manh mối đó. Ba ảnh có clue của màn 1 đã thêm `level: m1`.
@@ -387,3 +391,98 @@ choices:
 - **Ngày:** 2026-10-17
 - **Cần cho:** chơi thử thẳng một màn (ví dụ màn 2) mà không phải qua các màn trước
 - **Bổ sung:** bảng cài đặt (nút ⚙) có ô "Chọn màn" liệt kê mọi màn theo thứ tự G33. Chọn một màn thì bắt đầu màn đó từ `start` như G33: Tỉnh táo theo `init` (G23), giữ hồ sơ đã mở khoá, số lần chết về 0. Không đổi schema hay engine.
+
+## G35 · Chú thích đặt trước lời thoại
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M4-20b "(từ cuối hành lang)", M5-32 "(giờ ở ngay sau lưng bạn)", M6-31 "(giọng mẹ)", M9-11 "(sát tai)"
+- **Bổ sung:** chú thích trong ngoặc ngay sau tên kênh `npc`, trước lời thoại, cũng ghi vào trường `note` (G8). UI hiện `note` ngay sau lời thoại cho cả hai trường hợp; nội dung giữ nguyên văn, chỉ bỏ dấu ngoặc.
+
+```yaml
+- {ch: npc, who: ke_tren_cau, text: "Con ơi, nhìn đường kìa. …", note: "giọng mẹ"}
+```
+
+## G36 · Dòng giả và kiểu mực
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 5 ("Yêu cầu với engine" mục 1, 2), màn 9 (mục 2)
+- **Bổ sung:** dòng trên tường có `ink: do | nau | kho` (mặc định `do`). Dòng giả có id `F<số>` và `fake: true`, không có `violable`, không được làm từ khoá, không được nằm trong `violates`/`consequence_of`; validator kiểm tra. Dòng `kho` là Huyết tự thật như dòng đỏ. View chỉ trả `ink`, không trả `fake`, để người chơi phân biệt bằng mực như trên tường.
+- **Hiển thị:** `do` chữ đỏ `#ff5a52` in đậm; `nau` chữ `#a8927a` nét thường, giãn đều; `kho` chữ `#c98a62` in nghiêng, gạch chân chấm. Mỗi kiểu khác nhau cả về nét, không chỉ về màu; trình đọc màn hình đọc thêm "(mực nâu đen)" hoặc "(máu khô)". Cả ba màu đạt ≥ 4.5:1 trên `bg` và `surface` (test).
+
+```yaml
+bloodtext:
+  - {id: L1, text: "…"}
+  - {id: F1, text: "Nếu nghe tiếng mẹ gọi, hãy mở cửa.", fake: true, ink: nau}
+  - {id: L4, text: "Khi đủ bảy cái tên được khấn, lửa sẽ tắt.", ink: kho, violable: false}
+```
+
+## G37 · Bóp méo đổi mực
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 5 (mục 3: F1, F2 sang mực đỏ), màn 9 (F1 sang mực `kho`)
+- **Bổ sung:** mục `distortions` có hai dạng: đổi chữ `{line, unless_highlighted, text}` như cũ, hoặc đổi mực `{line, ink}` áp mỗi khi `sanity` ≤ 2, không bảo vệ được bằng từ khoá. Một dòng được có tối đa một bản méo mỗi dạng.
+
+```yaml
+distortions:
+  - {line: F1, ink: do}
+  - {line: L1, unless_highlighted: k2, text: "Từ mười một giờ đêm đến bốn giờ sáng, không được mở cửa căn hộ."}
+```
+
+## G38 · `solution` tham chiếu dòng giả
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 5 (`solution: [F1, F2]`, D2 `[k2, F1]`, D4 `[k4, F2]`), màn 9 (D1 `[k1, F1]`)
+- **Bổ sung:** `solution` nhận id dòng giả. Trên màn hình chết và màn hình kết quả, dòng giả trong `solution` hiện bằng mực gốc và gạch ngang (mark `struck`), dòng thật được tô như G17.
+
+## G39 · Ánh sáng `candle`
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 5 (M5-31), màn 7 (ánh lò), màn 9 (M9-20)
+- **Bổ sung:** `light: candle`: lớp phủ cam ấm `#ff9a3c`, viền tối dần. Lay động nhẹ, tối đa 2 lần đổi mỗi giây; đứng yên khi `prefers-reduced-motion`. Nhắm mắt thì vẫn đen như mọi ánh sáng khác.
+
+## G40 · Hiệu ứng có điều kiện
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M8-30 (màn 8 "Yêu cầu với engine" mục 1)
+- **Bổ sung:** một phần tử `effects` (của node hoặc lựa chọn) được kèm `if`. Engine áp mọi hiệu ứng không điều kiện của danh sách trước, theo thứ tự; sau đó xét lần lượt các hiệu ứng có điều kiện trên state đã cập nhật. Phần tử vẫn chỉ có đúng một khoá hiệu ứng. Validator kiểm tra cả điều kiện của hiệu ứng (cờ chưa bật, v.v.).
+
+```yaml
+effects: [{sanity: -1, if: {not_flag: long_sat}}]
+```
+
+## G41 · Màn cuối và kết thúc mở
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 9 (mục 1)
+- **Bổ sung:** màn khai báo `final: true`; chỉ một màn final và đó phải là màn có số lớn nhất (validator). Kết cục sống `open: true` là kết thúc mở; chỉ dùng ở màn final. Kịch bản không nói cách đánh dấu E2, nên chọn trường `open` cho E2. Màn hình kết quả của màn final:
+  - kết cục sống không `open` (E1): dòng "Kết thúc", nút "Chơi lại từ màn đầu" (giữ hồ sơ) và "Chơi lại màn này";
+  - kết cục `open` (E2): dòng "Kết thúc mở", nút "Chơi lại màn này".
+
+```yaml
+level: m9
+final: true
+nodes:
+  - {id: m9_e2, type: ending, result: survive, open: true, …}
+```
+
+## G42 · Mực `kho` là Huyết tự thật
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M9 L4 (màn 9 mục 2)
+- **Bổ sung:** không cần gì thêm ngoài G36: dòng `ink: kho` không `fake`, nên có `violable`, được làm từ khoá và bị bóp méo đổi chữ như dòng đỏ.
+
+## G43 · `clue` của ảnh tính theo màn (thay G32)
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** màn 9 (mục 3), dùng lại `ban_tho_chieu_nghi` ở M9-20
+- **Bổ sung:** trong `assets.yaml`, `clue: m<màn>:c<số>`. Quy tắc G22 (AGENTS.md 8.5) chỉ áp trong màn sở hữu manh mối; ở màn khác ảnh dùng tự do (kịch bản bảo đảm chữ của node đã mô tả chi tiết trong ảnh; validator không kiểm tra được điều này). Validator kiểm tra màn đó tồn tại và có khai báo manh mối đó. Bỏ trường `level` của G32.
+
+```yaml
+- {id: ban_tho_chieu_nghi, file: bg/ban_tho_chieu_nghi.png, alt: "…", clue: m3:c1}
+```
+
+## G44 · Kết cục chết không bắt buộc gắn với dòng luật
+
+- **Ngày:** 2026-10-17
+- **Cần cho:** M9 D2 "Ngã cầu thang" (cột Luật là "—")
+- **Bổ sung:** bỏ quy tắc của G16 "kết cục chết phải có `violates` hoặc `consequence_of`". Quy tắc "mỗi dòng `violable` phải có ít nhất một kết cục chết `violates` nó" vẫn giữ.

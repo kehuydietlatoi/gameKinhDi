@@ -44,8 +44,15 @@ export function validateLevel(level: Level, assets: Assets | null, knownDossiers
   const lineText = new Map(level.bloodtext.map((b) => [b.id, b.text]));
   const keywordLine = new Map(level.keywords.map((k) => [k.id, k.line]));
 
+  const fakeIds = new Set(level.bloodtext.filter((b) => b.fake).map((b) => b.id));
+  /** G36: dòng giả không phải Huyết tự, nên không được làm từ khoá, violates hay consequence_of. */
+  const needReal = (id: string, where: string, what: string) => {
+    need(lineIds, 'dòng Huyết tự', id, where);
+    if (fakeIds.has(id)) err(where, `dòng giả ${id} không dùng được cho ${what} (G36)`);
+  };
+
   for (const [i, k] of level.keywords.entries()) {
-    need(lineIds, 'dòng Huyết tự', k.line, `keywords[${i}]`);
+    needReal(k.line, `keywords[${i}]`, 'từ khoá');
     const text = lineText.get(k.line);
     if (text !== undefined && !text.includes(k.text)) {
       err(`keywords[${i}] (${k.id})`, `"${k.text}" không có nguyên văn trong dòng ${k.line}`);
@@ -53,14 +60,19 @@ export function validateLevel(level: Level, assets: Assets | null, knownDossiers
   }
   for (const [i, d] of level.distortions.entries()) {
     need(lineIds, 'dòng Huyết tự', d.line, `distortions[${i}]`);
+    if (!('unless_highlighted' in d)) continue; // G37: đổi mực, không cần từ khoá
     need(keywordIds, 'từ khoá', d.unless_highlighted, `distortions[${i}]`);
     const kLine = keywordLine.get(d.unless_highlighted);
     if (kLine && kLine !== d.line) {
       err(`distortions[${i}]`, `từ khoá ${d.unless_highlighted} thuộc dòng ${kLine}, không phải ${d.line}`);
     }
   }
-  if (new Set(level.distortions.map((d) => d.line)).size !== level.distortions.length) {
-    err('distortions', 'mỗi dòng chỉ có một bản méo');
+  const distortionKinds = level.distortions.map((d) => `${d.line}:${'ink' in d ? 'ink' : 'text'}`);
+  if (new Set(distortionKinds).size !== distortionKinds.length) {
+    err('distortions', 'mỗi dòng chỉ có một bản méo đổi chữ và một bản méo đổi mực');
+  }
+  if (level.final === undefined && level.nodes.some((n) => n.type === 'ending' && n.open)) {
+    err('nodes', '`open` chỉ dùng ở màn có `final: true` (G41)');
   }
   const solutionRef = (id: string, where: string) =>
     need(id.startsWith('k') ? keywordIds : lineIds, id.startsWith('k') ? 'từ khoá' : 'dòng Huyết tự', id, where);
@@ -88,8 +100,8 @@ export function validateLevel(level: Level, assets: Assets | null, knownDossiers
         err(`${n.id}.highlight`, 'node mở giao diện đánh dấu phải có dòng bloodtext');
       }
     } else {
-      n.violates?.forEach((id, i) => need(lineIds, 'dòng Huyết tự', id, `${n.id}.violates[${i}]`));
-      n.consequence_of?.forEach((id, i) => need(lineIds, 'dòng Huyết tự', id, `${n.id}.consequence_of[${i}]`));
+      n.violates?.forEach((id, i) => needReal(id, `${n.id}.violates[${i}]`, 'violates'));
+      n.consequence_of?.forEach((id, i) => needReal(id, `${n.id}.consequence_of[${i}]`, 'consequence_of'));
       n.solution?.forEach((id, i) => solutionRef(id, `${n.id}.solution[${i}]`));
       n.unlock?.forEach((u, i) => need(dossierIds, 'hồ sơ', u.dossier, `${n.id}.unlock[${i}]`));
     }

@@ -1,4 +1,5 @@
 // Kiểm tra assets.yaml không cần đọc file ảnh (phần đọc PNG nằm ở scripts/lib/png.ts).
+import { splitLevelClue } from '../schema.ts';
 import type { Assets, Level } from '../types.ts';
 
 export function validateAssets(assets: Assets, levels: Level[]): { errors: string[]; warnings: string[] } {
@@ -21,10 +22,11 @@ export function validateAssets(assets: Assets, levels: Level[]): { errors: strin
     if (seen.has(a.id)) errors.push(`${where} — id bị trùng`);
     seen.add(a.id);
     if (a.file && a.file !== `bg/${a.id}.png`) errors.push(`${where}.file — phải là bg/${a.id}.png`);
-    if (a.clue && a.level) {
-      const clues = cluesOf.get(a.level);
-      if (!clues) errors.push(`${where}.level — không có màn ${a.level}`);
-      else if (!clues.has(a.clue)) errors.push(`${where}.clue — màn ${a.level} không khai báo manh mối ${a.clue}`);
+    if (a.clue) {
+      const { level, clue } = splitLevelClue(a.clue); // G43
+      const clues = cluesOf.get(level);
+      if (!clues) errors.push(`${where}.clue — không có màn ${level}`);
+      else if (!clues.has(clue)) errors.push(`${where}.clue — màn ${level} không khai báo manh mối ${clue}`);
     }
     if (!used.has(a.id)) warnings.push(`${where} — chưa node nào dùng ảnh này`);
   }

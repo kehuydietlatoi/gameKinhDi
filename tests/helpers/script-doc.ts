@@ -17,7 +17,7 @@ export type DocLine = {
   if?: DocCondition;
 };
 
-export type DocEffect = Record<string, string | number | boolean>;
+export type DocEffect = Record<string, string | number | boolean | DocCondition>;
 
 export type DocChoice = { text: string; goto: string; effects: DocEffect[]; if?: DocCondition };
 
@@ -28,10 +28,12 @@ export type DocNode = {
   choices: DocChoice[];
   next?: string;
   highlight?: boolean;
-  hub?: { done?: string; exit?: string };
+  hub?: { done?: string; exit?: string; scene?: { bg: string; light: string } };
 };
 
 export type DocEnding = {
+  /** Bảng kết cục có cột "Luật": khi đó violates/consequence_of vắng nghĩa là không có. */
+  hasRule: boolean;
   id: string;
   cause: string;
   lines: DocLine[];
@@ -131,10 +133,15 @@ export function parseChannelSegments(s: string): DocLine[] {
     } else if (ch === 'npc') {
       line.who = WHO[params[0]!] ?? params[0];
       line.tone = params[1] ? TONE[params[1]] ?? params[1] : 'normal';
-      const note = /^(.*\S)\s+\(([^)]+)\)$/.exec(line.text);
-      if (note) {
-        line.text = note[1]!;
-        line.note = note[2];
+      // Chú thích sau lời thoại "(sáu giọng…)" hoặc trước lời thoại "(giọng mẹ) …" (G8, G35).
+      const after = /^(.*\S)\s+\(([^)]+)\)$/.exec(line.text);
+      const before = /^\(([^)]+)\)\s+(.+)$/.exec(line.text);
+      if (before) {
+        line.note = before[1];
+        line.text = before[2]!;
+      } else if (after) {
+        line.text = after[1]!;
+        line.note = after[2];
       }
     }
     return line;
@@ -177,9 +184,10 @@ export function parseNodes(md: string, level: string): DocNode[] {
         });
         continue;
       }
-      const effect = /^- Hiệu ứng(?: khi vào node)?: (.+)$/.exec(line);
+      const effect = /^- Hiệu ứng(?: khi vào node)?(?: \((nếu [^)]+)\))?: (.+)$/.exec(line);
       if (effect) {
-        node.effects.push(...parseEffects(effect[1]!));
+        const cond = effect[1] ? takeCondition(`(${effect[1]})`).if : undefined;
+        node.effects.push(...parseEffects(effect[2]!).map((e) => (cond ? { ...e, if: cond } : e)));
         continue;
       }
       const next = /^- Tiếp: (\S+)$/.exec(line);
@@ -194,9 +202,11 @@ export function parseNodes(md: string, level: string): DocNode[] {
       if (line.startsWith('`hub: true`')) {
         const done = /`hub_done: (\{[^`]+\})`/.exec(line);
         const exit = /`hub_exit: (\S+?)`/.exec(line);
+        const scene = /`scene: \{bg: ([a-z0-9_]+), light: ([a-z]+)\}`/.exec(line);
         node.hub = {
           ...(done ? { done: done[1] } : {}),
           ...(exit ? { exit: docIdToNodeId(level, exit[1]!) } : {}),
+          ...(scene ? { scene: { bg: scene[1]!, light: scene[2]! } } : {}),
         };
         continue;
       }
@@ -212,10 +222,11 @@ const idList = (s: string | undefined) =>
 export function parseEndings(md: string, level: string): DocEnding[] {
   return tableObjects(section(md, '## Kết cục')).map((row) => {
     const [ref, cause] = row.id!.split(' · ');
-    const rule = row['Luật'] ?? '';
-    const violates = /violates: \[([^\]]+)\]/.exec(rule);
-    const consequence = /consequence_of: \[([^\]]+)\]/.exec(rule);
+    const rule = row['Luật'];
+    const violates = /violates: \[([^\]]+)\]/.exec(rule ?? '');
+    const consequence = /consequence_of: \[([^\]]+)\]/.exec(rule ?? '');
     return {
+      hasRule: rule !== undefined,
       id: docIdToNodeId(level, ref!.trim()),
       cause: cause!.trim(),
       lines: parseChannelSegments(row['Dòng cuối']!),
@@ -234,8 +245,40 @@ export function parseOverview(md: string) {
   const zero = /\*\*`on_sanity_zero`:\*\* `([a-z0-9_]+)`/.exec(s);
   const solution = /\*\*`solution` cấp màn:\*\* `(\[[^\]]+\])`/.exec(s);
   return {
+    final: /\*\*`final: true`:\*\*/.test(s),
     init: { sanity: num('sanity'), actions_left: num('actions_left'), time: /`time` "(\d\d:\d\d)"/.exec(s)![1]! },
     on_sanity_zero: zero?.[1],
     solution: idList(solution?.[1]),
   };
+}
+
+/** violable vắng khi bảng không có cột này (màn 1: violable đến từ G16, không ghi trong docs). */
+export type DocWallLine = { id: string; text: string; ink: string; fake: boolean; violable?: boolean };
+export type DocDistortion = { line: string; unless_highlighted: string; text: string } | { line: string; ink: string };
+
+const INK: Record<string, string> = { đỏ: 'do', nâu: 'nau', khô: 'kho' };
+
+/** Bảng "Huyết tự (nguyên văn)" hoặc "Các dòng trên tường" (có cột Mực và dòng giả, G36). */
+export function parseWall(md: string): DocWallLine[] {
+  const heading = md.includes('### Các dòng trên tường (theo thứ tự hiển thị)')
+    ? '### Các dòng trên tường (theo thứ tự hiển thị)'
+    : '### Huyết tự (nguyên văn)';
+  return tableObjects(section(md, heading)).map((r) => {
+    const id = r.id ?? r['Dòng']!;
+    const fake = r.violable === '(dòng giả)';
+    const line: DocWallLine = { id, text: r['Nội dung']!, ink: r['Mực'] ? INK[r['Mực']]! : 'do', fake };
+    if (r.violable !== undefined) line.violable = fake ? false : r.violable === 'true';
+    return line;
+  });
+}
+
+/** Bảng bóp méo: đổi chữ, hoặc "(không bảo vệ được)" + "Mực đổi sang …" (G37). */
+export function parseDistortions(md: string): DocDistortion[] {
+  return tableRows(section(md, '### Bóp méo (khi `sanity` ≤ 2)')).map(([line, unless, text]) => {
+    if (unless!.startsWith('(không')) {
+      const ink = /Mực đổi sang `?([a-zà-ỹđ]+)`?/u.exec(text!)![1]!;
+      return { line: line!, ink: INK[ink] ?? ink };
+    }
+    return { line: line!, unless_highlighted: unless!, text: text! };
+  });
 }

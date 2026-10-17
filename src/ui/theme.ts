@@ -8,7 +8,10 @@ export const theme = {
   text: '#e8e6dc',
   muted: '#a8a196', // env, tiền tố, chữ phụ
   whisper: '#9d978c', // npc thì thầm
-  blood: '#ff5a52', // chữ Huyết tự
+  blood: '#ff5a52', // chữ Huyết tự (mực đỏ)
+  inkNau: '#a8927a', // mực nâu đen của dòng giả (G36)
+  inkKho: '#c98a62', // máu khô của Huyết tự cũ (G36)
+  candle: '#ff9a3c', // lớp phủ ánh nến (G39)
   accent: '#d9cfa8', // nút đang chọn, gạch chân
   dawn: '#a9b8c4', // lớp phủ bình minh (độ mờ 25%)
 } as const;
@@ -16,7 +19,7 @@ export const theme = {
 export type ThemeColor = keyof typeof theme;
 
 /** Màu chữ cần đạt tương phản ≥ 4.5:1 với `bg` và `surface`. */
-export const TEXT_COLORS: ThemeColor[] = ['text', 'muted', 'whisper', 'blood', 'accent'];
+export const TEXT_COLORS: ThemeColor[] = ['text', 'muted', 'whisper', 'blood', 'inkNau', 'inkKho', 'accent'];
 
 function luminance(hex: string): number {
   const [r, g, b] = [1, 3, 5].map((i) => {

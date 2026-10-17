@@ -1,6 +1,7 @@
 // Nơi duy nhất định nghĩa hiệu ứng `effects` (AGENTS.md mục 5.4).
 // Bảng được khai báo theo EffectKey: thêm khoá vào schema mà quên ở đây sẽ lỗi typecheck.
-import type { Effect, EffectKey, EffectValues } from '../content/types.ts';
+import type { Effect, EffectKey, EffectValues, Level } from '../content/types.ts';
+import { check } from './conditions.ts';
 import { addUnique, EngineError, type GameState } from './state.ts';
 
 type Appliers = { [K in EffectKey]: (s: GameState, value: EffectValues[K]) => GameState };
@@ -35,14 +36,28 @@ const appliers: Appliers = {
   eyes_closed: (s, v) => ({ ...s, eyes_closed: v }),
 };
 
-export function applyEffects(state: GameState, effects: Effect[] | undefined): GameState {
+function applyOne(state: GameState, effect: Effect): GameState {
   let s = state;
-  for (const effect of effects ?? []) {
-    for (const [key, value] of Object.entries(effect)) {
-      const apply = appliers[key as EffectKey] as ((s: GameState, v: unknown) => GameState) | undefined;
-      if (!apply) throw new EngineError(`Hiệu ứng không xác định: ${key}`);
-      s = apply(s, value);
-    }
+  for (const [key, value] of Object.entries(effect)) {
+    if (key === 'if') continue;
+    const apply = appliers[key as EffectKey] as ((s: GameState, v: unknown) => GameState) | undefined;
+    if (!apply) throw new EngineError(`Hiệu ứng không xác định: ${key}`);
+    s = apply(s, value);
+  }
+  return s;
+}
+
+/**
+ * Áp hiệu ứng theo thứ tự. G40: hiệu ứng có `if` được xét sau khi mọi hiệu ứng
+ * không điều kiện của cùng danh sách đã áp, theo thứ tự khai báo.
+ */
+export function applyEffects(state: GameState, effects: Effect[] | undefined, level?: Level): GameState {
+  const list = effects ?? [];
+  let s = list.filter((e) => !e.if).reduce(applyOne, state);
+  for (const e of list) {
+    if (!e.if) continue;
+    if (!level) throw new EngineError('Hiệu ứng có điều kiện cần level để xét `if`');
+    if (check(e.if, level, s)) s = applyOne(s, e);
   }
   return s;
 }

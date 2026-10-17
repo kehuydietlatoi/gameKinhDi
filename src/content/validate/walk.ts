@@ -17,7 +17,11 @@ export function* conditions(level: Level): Generator<At<Condition>> {
       for (const [i, c] of node.scene.entries()) if (c.if) yield at(c.if, `scene[${i}].if`);
     }
     if (node.type === 'scene') {
-      for (const [i, c] of (node.choices ?? []).entries()) if (c.if) yield at(c.if, `choices[${i}].if`);
+      for (const [i, c] of (node.choices ?? []).entries()) {
+        if (c.if) yield at(c.if, `choices[${i}].if`);
+        for (const [j, e] of (c.effects ?? []).entries()) if (e.if) yield at(e.if, `choices[${i}].effects[${j}].if`);
+      }
+      for (const [i, e] of (node.effects ?? []).entries()) if (e.if) yield at(e.if, `effects[${i}].if`); // G40
       if (node.hub_done) yield at(node.hub_done, 'hub_done');
     } else {
       for (const [i, u] of (node.unlock ?? []).entries()) if (u.if) yield at(u.if, `unlock[${i}].if`);

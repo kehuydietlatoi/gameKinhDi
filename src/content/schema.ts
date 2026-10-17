@@ -1,5 +1,5 @@
 // Schema zod cho file màn và assets.yaml.
-// Nguồn: docs/dac-ta-kich-ban.md mục 3, 5 và docs/spec-changes.md (G1–G22).
+// Nguồn: docs/dac-ta-kich-ban.md mục 3, 5 và docs/spec-changes.md (G1–G44).
 // Mọi object đều strict: khoá lạ là lỗi, không bị bỏ qua (AGENTS.md mục 5.5).
 // Kiểm tra tham chiếu chéo (goto, id NPC, …) nằm ở validator, không nằm ở đây.
 import { z } from 'zod';
@@ -13,9 +13,12 @@ export const DeathId = z.string().regex(/^m\d+_d\d+$/, 'id kết cục chết ph
 export const NodeId = z.union([SceneNodeId, SurviveId, DeathId], {
   error: 'id node phải có dạng m<màn>_n<số>, m<màn>_e<số> hoặc m<màn>_d<số>',
 });
-export const LineId = z.string().regex(/^L\d+$/, 'id dòng Huyết tự phải có dạng L<số>');
+/** Dòng trên tường: L<số> là Huyết tự, F<số> là dòng giả (G36). */
+export const LineId = z.string().regex(/^[LF]\d+$/, 'id dòng phải có dạng L<số> (Huyết tự) hoặc F<số> (dòng giả)');
 export const KeywordId = z.string().regex(/^k\d+$/, 'id từ khoá phải có dạng k<số>');
 export const ClueId = z.string().regex(/^c\d+$/, 'id manh mối phải có dạng c<số>');
+/** Manh mối của một màn cụ thể, dùng trong assets.yaml: m3:c1 (G43). */
+export const LevelClueId = z.string().regex(/^m\d+:c\d+$/, 'clue của ảnh phải có dạng m<màn>:c<số>, ví dụ m3:c1');
 const SnakeId = z.string().regex(/^[a-z][a-z0-9_]*$/, 'id phải viết thường, nối bằng dấu _');
 export const NpcId = SnakeId;
 export const AssetId = SnakeId;
@@ -23,9 +26,11 @@ export const DossierId = SnakeId;
 export const Time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'giờ phải có dạng HH:MM');
 
 export const Role = z.enum(['none', 'seeker', 'hider']);
-export const Light = z.enum(['normal', 'flicker', 'dark', 'dawn']);
+export const Light = z.enum(['normal', 'flicker', 'dark', 'dawn', 'candle']); // candle: G39
 export const Sense = z.enum(['nhìn', 'ngửi', 'chạm']);
 export const Tone = z.enum(['normal', 'whisper', 'shout']);
+/** Kiểu mực (G36): do = Huyết tự, nau = mực nâu đen (dòng giả), kho = máu khô (Huyết tự cũ). */
+export const Ink = z.enum(['do', 'nau', 'kho']);
 
 // ---------- Điều kiện (if) ----------
 // Mỗi khoá là một điều kiện; nhiều khoá trong một object nghĩa là AND (G10).
@@ -55,7 +60,8 @@ export const Condition = z
   .refine((c) => Object.keys(c).length > 0, { error: '`if` không được rỗng' });
 
 // ---------- Hiệu ứng (effects) ----------
-// Mỗi phần tử có đúng một khoá, áp theo thứ tự trong danh sách (G13).
+// Mỗi phần tử có đúng một khoá hiệu ứng, áp theo thứ tự trong danh sách (G13).
+// Phần tử có thể kèm `if` (G40): xét sau khi các hiệu ứng không điều kiện đã áp.
 // Bộ áp dụng nằm ở src/engine/effects.ts, khai báo theo EffectKey.
 
 export const effectShape = {
@@ -73,10 +79,10 @@ export const effectShape = {
 };
 
 export const Effect = z
-  .strictObject(effectShape)
+  .strictObject({ ...effectShape, if: Condition })
   .partial()
-  .refine((e) => Object.keys(e).length === 1, {
-    error: 'mỗi hiệu ứng phải có đúng một khoá, ví dụ {sanity: -1}',
+  .refine((e) => Object.keys(e).filter((k) => k !== 'if').length === 1, {
+    error: 'mỗi hiệu ứng phải có đúng một khoá, ví dụ {sanity: -1} (có thể kèm `if`)',
   });
 
 // ---------- Cảnh (đặc tả mục 5) ----------
@@ -118,7 +124,7 @@ export const Line = z.discriminatedUnion('ch', [
     who: NpcId,
     tone: Tone.default('normal'),
     text: z.string().min(1),
-    note: z.string().min(1).optional(), // G8
+    note: z.string().min(1).optional(), // G8, G35
   }),
   z.strictObject({
     ...lineBase,
@@ -182,6 +188,7 @@ export const EndingNode = z
     consequence_of: z.array(LineId).min(1).optional(), // G16
     solution: z.array(z.union([KeywordId, LineId])).min(1).optional(), // G17
     unlock: z.array(Unlock).optional(), // G18
+    open: z.literal(true).optional(), // G41: kết thúc mở của màn cuối
   })
   .superRefine((n, ctx) => {
     const isDeathId = DeathId.safeParse(n.id).success;
@@ -191,16 +198,12 @@ export const EndingNode = z
     if (n.result === 'survive' && isDeathId) {
       ctx.addIssue({ code: 'custom', path: ['id'], message: 'kết cục sống phải có id dạng m<màn>_e<số>' });
     }
-    if (n.result === 'death' && !n.violates && !n.consequence_of) {
-      ctx.addIssue({
-        code: 'custom',
-        path: [],
-        message: 'kết cục chết phải có `violates` hoặc `consequence_of`',
-      });
-    }
     // G29: kết cục sống được có consequence_of (có người chết thay), không có violates.
     if (n.result === 'survive' && n.violates) {
       ctx.addIssue({ code: 'custom', path: ['violates'], message: 'kết cục sống không có `violates`' });
+    }
+    if (n.open && n.result !== 'survive') {
+      ctx.addIssue({ code: 'custom', path: ['open'], message: '`open` chỉ dùng cho kết cục sống (G41)' });
     }
   });
 
@@ -208,11 +211,27 @@ export const Node = z.discriminatedUnion('type', [SceneNode, EndingNode]);
 
 // ---------- Màn ----------
 
-export const BloodtextLine = z.strictObject({
-  id: LineId,
-  text: z.string().min(1),
-  violable: z.boolean().default(true), // G16
-});
+export const BloodtextLine = z
+  .strictObject({
+    id: LineId,
+    text: z.string().min(1),
+    violable: z.boolean().optional(), // G16; mặc định true với Huyết tự
+    fake: z.literal(true).optional(), // G36: dòng giả, không phải Huyết tự
+    ink: Ink.default('do'), // G36
+  })
+  .superRefine((b, ctx) => {
+    const fakeId = b.id.startsWith('F');
+    if (fakeId && !b.fake) {
+      ctx.addIssue({ code: 'custom', path: ['fake'], message: 'dòng F<số> phải có `fake: true` (G36)' });
+    }
+    if (!fakeId && b.fake) {
+      ctx.addIssue({ code: 'custom', path: ['id'], message: 'dòng giả phải có id dạng F<số> (G36)' });
+    }
+    if (b.fake && b.violable !== undefined) {
+      ctx.addIssue({ code: 'custom', path: ['violable'], message: 'dòng giả không có `violable` (G36)' });
+    }
+  })
+  .transform((b) => ({ ...b, fake: b.fake === true, violable: b.violable ?? !b.fake }));
 
 export const Keyword = z.strictObject({
   id: KeywordId,
@@ -221,11 +240,11 @@ export const Keyword = z.strictObject({
   correct: z.boolean(),
 });
 
-export const Distortion = z.strictObject({
-  line: LineId,
-  unless_highlighted: KeywordId,
-  text: z.string().min(1),
-});
+/** Bản méo đổi chữ (bảo vệ được bằng từ khoá) hoặc đổi mực (không bảo vệ được, G37). */
+export const Distortion = z.union([
+  z.strictObject({ line: LineId, unless_highlighted: KeywordId, text: z.string().min(1) }),
+  z.strictObject({ line: LineId, ink: Ink }),
+]);
 
 export const Npc = z.strictObject({
   id: NpcId,
@@ -239,6 +258,7 @@ export const Level = z.strictObject({
   level: LevelId,
   title: z.string().min(1),
   start: SceneNodeId,
+  final: z.literal(true).optional(), // G41: màn cuối của game
   on_sanity_zero: NodeId.optional(), // G19, G26: node bất kỳ
   init: z.strictObject({
     sanity: z.int().min(0).max(5),
@@ -248,7 +268,7 @@ export const Level = z.strictObject({
   bloodtext: z.array(BloodtextLine).min(1),
   keywords: z.array(Keyword).default([]),
   distortions: z.array(Distortion).default([]),
-  solution: z.array(z.union([KeywordId, LineId])).min(1), // G17
+  solution: z.array(z.union([KeywordId, LineId])).min(1), // G17, G38
   npcs: z.array(Npc).default([]),
   clues: z.array(ClueId).default([]), // G15
   dossiers: z.array(Dossier).default([]), // G18
@@ -262,20 +282,19 @@ export const Asset = z
     id: AssetId,
     file: z.string().regex(/^bg\/[a-z0-9_]+\.png$/, 'file phải có dạng bg/<id>.png').optional(),
     alt: z.string().min(1),
-    clue: ClueId.optional(),
-    level: LevelId.optional(), // G32: màn sở hữu manh mối `clue`
+    clue: LevelClueId.optional(), // G43: m<màn>:c<số>
     placeholder: z.literal(true).optional(),
   })
   .superRefine((a, ctx) => {
-    if (a.clue && !a.level) {
-      ctx.addIssue({ code: 'custom', path: ['level'], message: 'ảnh có `clue` phải ghi `level` của màn sở hữu manh mối (G32)' });
-    }
-    if (a.level && !a.clue) {
-      ctx.addIssue({ code: 'custom', path: ['level'], message: '`level` chỉ dùng cùng `clue` (G32)' });
-    }
     if (!a.placeholder && !a.file) {
       ctx.addIssue({ code: 'custom', path: ['file'], message: 'ảnh không phải placeholder phải có `file` (G21)' });
     }
   });
 
 export const Assets = z.strictObject({ assets: z.array(Asset) });
+
+/** "m3:c1" → {level: "m3", clue: "c1"}. */
+export function splitLevelClue(id: string): { level: string; clue: string } {
+  const [level, clue] = id.split(':') as [string, string];
+  return { level, clue };
+}
