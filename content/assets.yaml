@@ -34,28 +34,23 @@ assets:
     file: bg/san_phoi.png
     alt: "Sân phơi tầng thượng về đêm dưới bầu trời xanh đêm."
 
-  # Màn 2 (alt là bản nháp chờ duyệt, G21)
+  # Màn 2 (alt đã duyệt)
   - id: can_ho_304
     file: bg/can_ho_304.png
     alt: "Căn hộ một phòng nhìn từ giường về phía cửa ra vào, tủ gỗ hai cánh bên phải và một gương nhỏ cạnh tủ."
-    placeholder: true
   - id: phong_sinh_hoat_tang
     file: bg/phong_sinh_hoat_tang.png
     alt: "Phòng sinh hoạt chung dựng thành nơi để linh cữu, quan tài gỗ mở nắp giữa sàn, bàn thờ thấp với bát hương và hai cây nến."
-    placeholder: true
 
   # Màn 3 (alt là bản nháp chờ duyệt, G21)
   - id: hanh_lang_tang_4
     file: bg/hanh_lang_tang_4.png
     alt: "Hành lang tầng 4 nhìn dọc về phía cuối, cửa gỗ sơn xanh hai bên, bếp than tổ ong trước cửa và một bóng đèn vàng giữa hành lang."
-    placeholder: true
   - id: tiem_vang_ma
     file: bg/tiem_vang_ma.png
     alt: "Bên trong một tiệm vàng mã nhỏ nhìn từ cửa vào, nhà giấy, ngựa giấy và quần áo giấy treo kín trần."
-    placeholder: true
   - id: ban_tho_chieu_nghi
     file: bg/ban_tho_chieu_nghi.png
     alt: "Chiếu nghỉ cầu thang bê tông với một bàn thờ nhỏ kê sát tường và bát hương đầy chân nhang."
     clue: c1
     level: m3
-    placeholder: true
