@@ -1,0 +1,328 @@
+# Màn 3 – Hình nhân thế mạng. Nguồn: docs/man-3-hinh-nhan-the-mang.md (file đó là đúng khi hai bên khác nhau).
+# Bổ sung đặc tả dùng ở đây: docs/spec-changes.md (G1–G34).
+level: m3
+title: "Hình nhân thế mạng"
+start: m3_n01
+init: {sanity: 5, actions_left: 3, time: "20:00"}
+
+bloodtext:
+  - {id: L1, text: "Đêm nay, trước khi đồng hồ điểm mười hai tiếng, phải có một người bước vào phòng 404."}
+  - {id: L2, text: "Nếu không ai bước vào, cả tòa nhà sẽ chết.", violable: false}
+  - {id: L3, text: "Phòng 404 chỉ nhận người có tên.", violable: false}
+  - {id: L4, text: "Người có tên trong phòng 404 sẽ không thấy bình minh.", violable: false}
+
+keywords:
+  - {id: k1, line: L1, text: "một người", correct: true}
+  - {id: k2, line: L1, text: "mười hai tiếng", correct: false}
+  - {id: k3, line: L3, text: "chỉ nhận người có tên", correct: true}
+  - {id: k4, line: L4, text: "Người có tên trong phòng 404", correct: true}
+  - {id: k5, line: L4, text: "sẽ không thấy bình minh", correct: false}
+  - {id: k6, line: L2, text: "cả tòa nhà sẽ chết", correct: false}
+
+distortions:
+  - {line: L1, unless_highlighted: k1, text: "Đêm nay, trước khi đồng hồ điểm mười hai tiếng, phải có một người sống bước vào phòng 404."}
+  - {line: L3, unless_highlighted: k3, text: "Phòng 404 chỉ nhận người còn sống."}
+
+solution: [k1, k3]
+
+npcs:
+  - {id: ba_sau, name: "Bà Sáu"}
+  - {id: ong_quy, name: "Ông Quý"}
+  - {id: co_lien, name: "Cô Liên"}
+  - {id: thang_bin, name: "Thằng Bin"}
+  - {id: ba_hoa, name: "Bà Hoa"}
+  - {id: bac_tam, name: "Bác Tâm"}   # G30: đã khuất, chỉ một câu ở M3-33
+  - {id: be_na, name: "Bé Na"}       # G30: đã khuất, chỉ một câu ở M3-33
+
+clues: [c1, c2, c3, c4, c5, c6]
+
+nodes:
+  # ---------- Pha 0 – Họp tầng 4 ----------
+
+  - id: m3_n01   # Tối hôm sau
+    type: scene
+    scene: {bg: can_ho_304, light: normal}
+    effects: [{time: "20:00"}]
+    lines:
+      - {ch: narration, text: "Tối hôm sau. Khu tập thể vừa đưa tang ba người: anh Phong, chị Mai, chú Tư."}
+      - {ch: env, sense: nhìn, text: "Căn hộ 304. Bóng đèn sợi đốt vàng vọt."}
+      - {ch: sound, src: "tầng trệt", vol: 1, text: "Lạch xạch… — tiếng cửa xếp của tiệm vàng mã bà Hoa kéo lên."}
+      - {ch: sound, src: "bức tường cạnh cửa", vol: 2, text: "Sột… soạt…"}
+    next: m3_n02
+
+  - id: m3_n02   # Huyết tự
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Chữ đỏ lại rỉ ra từ bức tường cạnh cửa."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4]}
+      - {ch: sound, src: "hành lang", vol: 2, text: "Cộc cộc cộc. — có người gõ cửa từng nhà."}
+      - {ch: npc, who: ba_sau, text: "Cậu 304! Lên tầng 4 họp ngay. Nhà nào cũng có chữ máu cả rồi."}
+    highlight: true
+    next: m3_n03
+
+  - id: m3_n03   # Trước cửa 404
+    type: scene
+    scene: {bg: hanh_lang_tang_4, light: flicker}
+    lines:
+      - {ch: env, sense: nhìn, text: "Hành lang tầng 4. Cuối hành lang là cánh cửa 404, dán chéo hai dải giấy niêm phong đã ố vàng."}
+      - {ch: npc, who: ba_sau, text: "Chữ viết rồi. Đêm nay phải có một người vào trong đó."}
+      - {ch: npc, who: co_lien, text: "Không ai bị ép cả. Nếu không ai tự nguyện thì bốc thăm."}
+      - {ch: sound, src: "bên cạnh", vol: 1, text: "Khụ… khụ…"}
+      - {ch: npc, who: ong_quy, text: "Tôi già rồi. Để tôi vào."}
+      - {ch: env, sense: nhìn, text: "Thằng Bin đứng nép sau lưng bà Sáu, không nói gì."}
+      - {ch: npc, who: ba_sau, text: "Còn gần bốn tiếng nữa mới đến mười hai giờ. Ai cần làm gì thì làm đi, rồi quay lại đây."}
+      - {ch: system, text: "Bạn có 3 lượt hành động trước khi quyết định."}
+    next: m3_n10
+
+  # ---------- Pha 1 – Chuẩn bị ----------
+
+  - id: m3_n10   # Hub tầng 4
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m3_n20
+    scene: {bg: hanh_lang_tang_4, light: flicker}
+    choices:
+      - {text: "Xuống tiệm vàng mã bà Hoa", goto: m3_n11, effects: [{actions_left: -1}, {time_add: 60}]}
+      - {text: "Xem bàn thờ chung ở chiếu nghỉ", goto: m3_n12, effects: [{actions_left: -1}, {time_add: 60}]}
+      - {text: "Mượn sổ hộ khẩu tập thể của bà Sáu", goto: m3_n13, effects: [{actions_left: -1}, {time_add: 60}]}
+      - {text: "Nhìn qua khe cửa 404", goto: m3_n14, effects: [{actions_left: -1}, {time_add: 60}]}
+      - {text: "Nói chuyện với thằng Bin", goto: m3_n15, effects: [{actions_left: -1}, {time_add: 60}]}
+      - {text: "Nói chuyện với ông Quý", goto: m3_n16, effects: [{actions_left: -1}, {time_add: 60}]}
+
+  - id: m3_n11   # Tiệm vàng mã
+    type: scene
+    scene: {bg: tiem_vang_ma, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Tiệm chật kín đồ mã: nhà giấy, ngựa giấy, quần áo giấy treo kín trần. Mấy hình nhân giấy cao ngang ngực dựng sát tường, mặt chỉ là một vòng tròn trắng."}
+      - {ch: env, sense: ngửi, text: "Mùi hồ dán và giấy mới."}
+      - {ch: npc, who: ba_hoa, text: "Lấy một con đi cháu. Hình nhân thế mạng, ngày xưa người ta vẫn làm thế."}
+      - {ch: npc, who: ba_hoa, text: "Nhưng không có tên thì nó chẳng đi đâu được. Muốn nó thế cho ai thì viết tên người ấy lên ngực nó."}
+      - {ch: env, sense: nhìn, text: "Bà Hoa đưa bạn một hình nhân giấy và một cây bút lông."}
+    effects: [{clue: c6}, {flag: co_hinh_nhan}]
+    next: m3_n10
+
+  - id: m3_n12   # Bàn thờ chung
+    type: scene
+    scene: {bg: ban_tho_chieu_nghi, light: normal}
+    lines:
+      - {ch: env, sense: nhìn, text: "Ở chiếu nghỉ giữa tầng 3 và tầng 4 có một bàn thờ nhỏ, bát hương đầy chân nhang."}
+      - {ch: env, sense: nhìn, text: "Sáu bài vị gỗ xếp thành hàng: Tâm, Hằng, Khải, Na, Dung, Lâm."}
+      - {ch: env, sense: nhìn, text: "Tấm biển nhỏ phía trên: \"Vong linh vụ cháy nhà C4, rằm tháng Bảy năm Bính Dần.\""}
+      - {ch: narration, if: {has_dossier: hs_chay_c4_1986}, text: "Những cái tên này bạn đã từng gặp. Trên một tờ cáo phó."}
+      - {ch: sound, src: "bát hương", vol: 1, text: "Tách. — một chân nhang gãy rơi xuống."}
+    effects: [{clue: c1}]
+    next: m3_n10
+
+  - id: m3_n13   # Sổ hộ khẩu tập thể
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bà Sáu đưa bạn cuốn sổ bìa xanh, gáy sờn."}
+      - {ch: env, sense: nhìn, text: "Danh sách người đang ở tầng 3 và tầng 4: Trần Thị Sáu. Lê Văn Quý. Phạm Thị Liên. Nguyễn Văn Lâm (Bin), 10 tuổi. Và tên bạn."}
+      - {ch: npc, who: ba_sau, text: "Sổ mới ghi lại hôm qua đấy."}
+    effects: [{clue: c2}]
+    next: m3_n10
+
+  - id: m3_n14   # Khe cửa 404
+    type: scene
+    scene: {bg: hanh_lang_tang_4, light: dark}
+    lines:
+      - {ch: env, sense: nhìn, text: "Bạn ghé mắt vào khe hở giữa hai dải niêm phong. Bên trong tối om."}
+      - {ch: env, sense: ngửi, text: "Mùi khói cũ, như than củi tắt đã lâu."}
+      - {ch: sound, src: "sau cửa 404", vol: 1, text: "Sột… soạt… sột… — tiếng giấy cọ trên nền xi măng, như có ai mặc áo giấy đi qua đi lại."}
+    effects: [{clue: c3}, {sanity: -1}]
+    next: m3_n10
+
+  - id: m3_n15   # Thằng Bin
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Thằng Bin ngồi bó gối trên bậc cầu thang, tay mân mê một chiếc khăn tang."}
+      - {ch: npc, who: thang_bin, tone: whisper, text: "Mẹ cháu bảo Bin là tên ở nhà. Tên thật cháu là Lâm, đặt theo tên ông ngoại."}
+      - {ch: npc, who: thang_bin, tone: whisper, text: "Ông ngoại cháu mất trong vụ cháy hồi trước."}
+    effects: [{clue: c4}]
+    next: m3_n10
+
+  - id: m3_n16   # Ông Quý
+    type: scene
+    lines:
+      - {ch: sound, src: "bên cạnh", vol: 1, text: "Sòng sọc… — ông Quý rít một hơi điếu cày."}
+      - {ch: npc, who: ong_quy, text: "Năm tám sáu cũng có chữ máu thế này. Người ta mua hình nhân, viết tên người sống lên cho nó đi thế."}
+      - {ch: npc, who: ong_quy, text: "Sáng hôm sau, đúng người có tên ấy nằm chết trên giường."}
+    effects: [{clue: c5}, {sanity: -1}]
+    next: m3_n10
+
+  # ---------- Pha 2 – Quyết định ----------
+
+  - id: m3_n20   # Mười một giờ rưỡi
+    type: scene
+    scene: {bg: hanh_lang_tang_4, light: flicker}
+    effects: [{time: "23:30"}, {sanity: -1}]
+    lines:
+      - {ch: sound, src: "sau cửa 404", vol: 2, text: "Cộc. Cộc. Cộc. — có tiếng gõ từ phía bên trong cánh cửa."}
+      - {ch: npc, who: ba_sau, text: "Đến giờ rồi. Ai vào?"}
+      - {ch: npc, who: ong_quy, text: "Tôi đã nói rồi. Để tôi."}
+    choices:
+      - {text: "\"Tôi sẽ vào.\"", goto: m3_n21}
+      - {text: "Để ông Quý vào", goto: m3_n22, effects: [{flag: chet_quy}]}
+      - {text: "\"Bốc thăm đi.\"", goto: m3_n23, effects: [{flag: chet_lien}]}
+      - {text: "Dùng hình nhân giấy", goto: m3_n30, if: {flag: co_hinh_nhan}}
+      - {text: "\"Không ai vào cả.\"", goto: m3_n24}
+
+  - id: m3_n21   # Bước vào phòng 404
+    type: scene
+    scene: {light: dark}
+    lines:
+      - {ch: narration, text: "Bạn xé dải niêm phong, đẩy cửa bước vào."}
+      - {ch: sound, src: "sau lưng", vol: 2, text: "Cạch. — cửa đóng lại."}
+      - {ch: env, sense: ngửi, text: "Mùi khói đặc quánh."}
+    next: m3_d2
+
+  - id: m3_n22   # Ông Quý
+    type: scene
+    lines:
+      - {ch: npc, who: ong_quy, text: "Ở lại mạnh khoẻ nhé."}
+      - {ch: sound, src: "cửa 404", vol: 2, text: "Kẹttt… cạch."}
+      - {ch: narration, text: "Hành lang im lặng đến sáng."}
+    next: m3_n40
+
+  - id: m3_n23   # Bốc thăm
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Cô Liên bẻ năm que tăm, một que ngắn hơn, nắm kín trong tay."}
+      - {ch: env, sense: nhìn, text: "Từng người rút. Que của bạn dài. Que cuối cùng còn lại trong tay cô Liên là que ngắn."}
+      - {ch: npc, who: co_lien, text: "Thế là tôi."}
+      - {ch: sound, src: "cửa 404", vol: 2, text: "Kẹttt… cạch."}
+    next: m3_n40
+
+  - id: m3_n24   # Không ai vào
+    type: scene
+    lines:
+      - {ch: sound, src: "nhà ai đó", vol: 2, text: "Boong… — tiếng thứ nhất của mười hai tiếng chuông."}
+      - {ch: npc, who: ba_sau, tone: whisper, text: "Trời ơi…"}
+    next: m3_d1
+
+  - id: m3_n30   # Viết tên
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Bạn dựng hình nhân giấy trước cửa 404. Cái mặt tròn trắng hướng về phía cánh cửa."}
+      - {ch: npc, who: ba_sau, text: "Cậu định cho nó thế ai?"}
+      - {ch: system, text: "Chọn tên viết lên ngực hình nhân."}
+    choices:
+      - {text: "Tên của bạn", goto: m3_n31, effects: [{flag: ten_minh}]}
+      - {text: "\"Quý\"", goto: m3_n31, effects: [{flag: chet_quy}]}
+      - {text: "\"Tâm\"", goto: m3_n31, if: {clue: c1}, effects: [{flag: ten_dung}, {flag: ten_tam}]}
+      - {text: "\"Na\"", goto: m3_n31, if: {clue: c1}, effects: [{flag: ten_dung}, {flag: ten_na}]}
+      - {text: "\"Lâm\"", goto: m3_n31, if: {clue: c1}, effects: [{flag: chet_bin}]}
+      - {text: "Không viết gì", goto: m3_n31, effects: [{flag: khong_ten}]}
+
+  - id: m3_n31   # Đưa vào
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, if: {not_flag: khong_ten}, text: "Nét mực đen còn ướt trên ngực hình nhân."}
+      - {ch: env, sense: nhìn, if: {flag: khong_ten}, text: "Ngực hình nhân vẫn trắng trơn."}
+    choices:
+      - {text: "Ôm hình nhân bước vào phòng", goto: m3_n21}
+      # G31: hai lựa chọn cùng chữ, điều kiện loại trừ nhau.
+      - {text: "Đặt hình nhân ở ngưỡng cửa rồi buông tay", goto: m3_n32, if: {flag: khong_ten}}
+      - {text: "Đặt hình nhân ở ngưỡng cửa rồi buông tay", goto: m3_n33, if: {not_flag: khong_ten}}
+
+  - id: m3_n32   # Hình nhân đứng yên
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Hình nhân đứng im ở ngưỡng cửa. Không nhích lên được một phân."}
+      - {ch: sound, src: "sau cửa 404", vol: 2, text: "Cộc. Cộc. Cộc."}
+      - {ch: sound, src: "nhà ai đó", vol: 2, text: "Boong… — tiếng thứ nhất của mười hai tiếng chuông."}
+    next: m3_d4
+
+  - id: m3_n33   # Hình nhân bước vào
+    type: scene
+    effects: [{sanity: -1}]
+    lines:
+      - {ch: sound, src: "ngưỡng cửa", vol: 2, text: "Sột… soạt… — tiếng giấy cọ nền xi măng. Hình nhân tự bước vào trong."}
+      - {ch: sound, src: "cửa 404", vol: 2, text: "Cạch. — cánh cửa tự khép."}
+      - {ch: npc, who: bac_tam, tone: whisper, if: {flag: ten_tam}, text: "Cảm ơn cháu."}
+      - {ch: npc, who: be_na, tone: whisper, if: {flag: ten_na}, text: "Em cảm ơn anh."}
+    choices:
+      - {text: "Chờ đến sáng", goto: m3_n40, if: {not_flag: ten_minh}}
+      - {text: "Chờ đến sáng", goto: m3_d3, if: {flag: ten_minh}}
+
+  # ---------- Pha 3 – Bình minh ----------
+
+  - id: m3_n40   # Bình minh
+    type: scene
+    scene: {bg: hanh_lang_tang_4, light: dawn}
+    effects: [{time: "05:30"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Trời hửng sáng. Hành lang tầng 4 ngả màu xám nhạt."}
+      - {ch: npc, who: thang_bin, if: {flag: ten_dung}, text: "Anh ơi, sáng rồi. Mọi người vẫn đủ cả."}
+      - {ch: env, sense: nhìn, if: {flag: chet_quy}, text: "Cửa phòng 403 khép hờ. Điếu cày của ông Quý nằm lăn lóc trước cửa 404."}
+      - {ch: env, sense: nhìn, if: {flag: chet_lien}, text: "Trước cửa 404 có một đôi dép nhựa của cô Liên, xếp ngay ngắn."}
+      - {ch: env, sense: nhìn, if: {flag: chet_bin}, text: "Bà Sáu ngồi bệt trước cửa phòng 401, khóc không thành tiếng."}
+    choices:
+      - {text: "Tiếp", goto: m3_e1, if: {flag: ten_dung}}
+      - {text: "Tiếp", goto: m3_e2, if: {not_flag: ten_dung}}
+
+  # ---------- Kết cục ----------
+
+  - id: m3_e1
+    type: ending
+    result: survive
+    cause: "Không ai chết"
+    scene: {bg: hanh_lang_tang_4, light: dawn}
+    lines:
+      - {ch: env, sense: nhìn, text: "Trên ngưỡng cửa 404 còn sót một mẩu giấy trắng, dính một vệt mực đen."}
+    reveal: "\"Một người\" không nhất thiết là người sống. Hình nhân mang tên một người đã khuất, không ai đang sống trùng tên, và tự bước vào."
+    solution: [k1, k3, k4]
+
+  - id: m3_e2
+    type: ending
+    result: survive
+    cause: "Có người chết thay"
+    scene: {bg: hanh_lang_tang_4, light: dawn}
+    lines:
+      - {ch: narration, text: "Tòa nhà vẫn đứng nguyên. Chỉ thiếu đi một người."}
+    reveal: "Bạn sống, nhưng có người chết thay. L1 không đòi một người sống; L4 giết bất cứ ai mang cái tên ở trong phòng."
+    consequence_of: [L4]   # G29
+    solution: [k1, k4]
+
+  - id: m3_d1
+    type: ending
+    result: death
+    cause: "Không ai vào"
+    lines:
+      - {ch: sound, src: "khắp tòa nhà", vol: 3, text: "Boong… — tiếng chuông thứ mười hai. Rồi tiếng lửa reo từ tầng trệt."}
+    reveal: "Không ai bước vào phòng 404 trước khi đồng hồ điểm mười hai tiếng."
+    violates: [L1]
+    consequence_of: [L2]
+    solution: [L1]
+
+  - id: m3_d2
+    type: ending
+    result: death
+    cause: "Tự bước vào"
+    lines:
+      - {ch: env, sense: chạm, text: "Trong bóng tối, những bàn tay giấy khô xào xạc chạm vào mặt bạn."}
+    reveal: "Bạn là người có tên, và bạn đang ở trong phòng 404."
+    consequence_of: [L4]
+    solution: [k4]
+
+  - id: m3_d3
+    type: ending
+    result: death
+    cause: "Tên của mình"
+    lines:
+      - {ch: sound, src: "sau cửa 404", vol: 2, text: "Từ trong phòng, có tiếng ai đó gọi tên bạn, bằng chính giọng của bạn."}
+    reveal: "Tên bạn đang ở trong phòng 404. Hình nhân không thế mạng cho người mang tên; nó dẫn L4 tới đúng người đó."
+    consequence_of: [L4]
+    solution: [k4]
+
+  - id: m3_d4
+    type: ending
+    result: death
+    cause: "Hình nhân không tên"
+    lines:
+      - {ch: sound, src: "khắp tòa nhà", vol: 3, text: "Boong… — tiếng chuông thứ mười hai. Rồi tiếng lửa reo từ tầng trệt."}
+    reveal: "Phòng 404 chỉ nhận người có tên. Hình nhân không tên không bước vào được, nên đêm nay không có ai vào."
+    violates: [L1]
+    consequence_of: [L2]
+    solution: [k3]
