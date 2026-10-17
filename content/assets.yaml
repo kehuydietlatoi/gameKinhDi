@@ -33,3 +33,13 @@ assets:
   - id: san_phoi
     file: bg/san_phoi.png
     alt: "Sân phơi tầng thượng về đêm dưới bầu trời xanh đêm."
+
+  # Màn 2 (alt là bản nháp chờ duyệt, G21)
+  - id: can_ho_304
+    file: bg/can_ho_304.png
+    alt: "Căn hộ một phòng nhìn từ giường về phía cửa ra vào, tủ gỗ hai cánh bên phải và một gương nhỏ cạnh tủ."
+    placeholder: true
+  - id: phong_sinh_hoat_tang
+    file: bg/phong_sinh_hoat_tang.png
+    alt: "Phòng sinh hoạt chung dựng thành nơi để linh cữu, quan tài gỗ mở nắp giữa sàn, bàn thờ thấp với bát hương và hai cây nến."
+    placeholder: true

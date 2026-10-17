@@ -162,8 +162,10 @@ export function validateLevel(level: Level, assets: Assets | null, knownDossiers
 
   // ---------- Đồ thị ----------
   if (startNode) {
-    const reachable = new Set<string>([level.start]);
-    const queue = [level.start];
+    // on_sanity_zero tới được từ bất kỳ node nào nên cũng là một điểm xuất phát (G26).
+    const roots = [level.start, ...(level.on_sanity_zero && nodes.has(level.on_sanity_zero) ? [level.on_sanity_zero] : [])];
+    const reachable = new Set<string>(roots);
+    const queue = [...roots];
     while (queue.length) {
       const n = nodes.get(queue.shift()!);
       if (!n) continue;
@@ -174,7 +176,6 @@ export function validateLevel(level: Level, assets: Assets | null, knownDossiers
         }
       }
     }
-    if (level.on_sanity_zero) reachable.add(level.on_sanity_zero);
     for (const n of level.nodes) if (!reachable.has(n.id)) err(n.id, 'không tới được từ `start`');
 
     // Từ mọi node phải tới được một ending (không có vòng kẹt).

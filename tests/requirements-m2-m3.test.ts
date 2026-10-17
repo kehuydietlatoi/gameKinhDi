@@ -86,6 +86,17 @@ describe('G26 · on_sanity_zero trỏ tới node thường', () => {
     expect(step(zero, panic, { type: 'continue' })).toMatchObject({ node: 'm9_d2', phase: 'ending' });
   });
 
+  test('các node chỉ tới được qua on_sanity_zero vẫn được tính là tới được', () => {
+    const only = levelAfter((raw) => {
+      raw.on_sanity_zero = 'm9_n90';
+      raw.nodes.push(
+        { id: 'm9_n90', type: 'scene', scene: { bg: 'nen_a', light: 'dark' }, next: 'm9_d3' },
+        { id: 'm9_d3', type: 'ending', result: 'death', cause: 'Hoảng loạn', reveal: 'Về 0.', violates: ['L1'] },
+      );
+    });
+    expect(validateLevel(only, assets)).toEqual([]);
+  });
+
   test('on_sanity_zero không được là start', () => {
     const errors = validateLevel(levelAfter((raw) => (raw.on_sanity_zero = 'm9_n01')), assets);
     expect(errors).toContain('m9: on_sanity_zero — không được trỏ về `start`');

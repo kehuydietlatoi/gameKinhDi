@@ -1,0 +1,354 @@
+# Màn 2 – Canh linh cữu. Nguồn: docs/man-2-canh-linh-cuu.md (file đó là đúng khi hai bên khác nhau).
+# Bổ sung đặc tả dùng ở đây: docs/spec-changes.md (G1–G33).
+level: m2
+title: "Canh linh cữu"
+start: m2_n01
+on_sanity_zero: m2_n90   # G26
+init: {sanity: 5, actions_left: 2, time: "22:00"}
+
+bloodtext:
+  - {id: L1, text: "Đêm nay, bảy người hãy canh linh cữu trong phòng sinh hoạt chung.", violable: false}
+  - {id: L2, text: "Người trong quan tài tuyệt đối không được mở mắt."}
+  - {id: L3, text: "Không ai được rời khỏi phòng trước khi gà gáy ba tiếng."}
+  - {id: L4, text: "Khi gà gáy ba tiếng, người canh được về, người nằm được dậy.", violable: false}
+
+keywords:
+  - {id: k1, line: L1, text: "bảy người", correct: true}
+  - {id: k2, line: L2, text: "Người trong quan tài", correct: true}
+  - {id: k3, line: L2, text: "không được mở mắt", correct: false}
+  - {id: k4, line: L3, text: "trước khi gà gáy ba tiếng", correct: true}
+  - {id: k5, line: L4, text: "người canh được về", correct: false}
+  - {id: k6, line: L4, text: "người nằm được dậy", correct: true}
+
+distortions:
+  - {line: L2, unless_highlighted: k2, text: "Người canh linh cữu tuyệt đối không được mở mắt."}
+  - {line: L4, unless_highlighted: k6, text: "Khi gà gáy, tất cả được mở mắt."}
+
+solution: [k2]
+
+npcs:
+  - {id: ba_sau, name: "Bà Sáu"}
+  - {id: ong_quy, name: "Ông Quý"}
+  - {id: co_lien, name: "Cô Liên"}
+  - {id: chi_mai, name: "Chị Mai"}
+  - {id: chu_tu, name: "Chú Tư"}
+  - {id: anh_phong, name: "Anh Phong"}
+  - {id: thang_bin, name: "Thằng Bin"}
+  - {id: giong_la, name: "Một giọng lạ"}
+  - {id: phong_gia, name: "Anh Phong"}   # G25: trùng tên hiển thị với anh_phong
+
+clues: [c1, c2, c3, c4, c5]
+
+nodes:
+  # ---------- Pha 0 – Căn hộ 304 ----------
+
+  - id: m2_n01   # Đêm sau
+    type: scene
+    scene: {bg: can_ho_304, light: normal}
+    effects: [{time: "22:00"}]
+    lines:
+      - {ch: narration, text: "Đêm hôm sau. Bạn ngồi một mình trong căn hộ 304, không dám tắt đèn."}
+      - {ch: env, sense: nhìn, text: "Bóng đèn sợi đốt vàng vọt. Giường đơn, tủ gỗ, chiếc gương nhỏ cạnh tủ."}
+      - {ch: sound, src: "tầng dưới", vol: 1, text: "Lạch cạch… lạch cạch… — tiếng ai đó kê bàn ghế dưới tầng 1."}
+      - {ch: sound, src: "bức tường cạnh cửa", vol: 2, text: "Sột… soạt… — như có ai cào móng tay lên lớp vôi."}
+    next: m2_n02
+
+  - id: m2_n02   # Huyết tự
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Những vệt đỏ sẫm rỉ ra từ bức tường cạnh cửa, chảy thành chữ."}
+      - {ch: bloodtext, lines: [L1, L2, L3, L4]}
+      - {ch: system, text: "Bạn có 2 lượt hành động trước khi đêm xuống hẳn."}
+    highlight: true
+    next: m2_n03
+
+  - id: m2_n03   # Hub căn hộ
+    type: scene
+    hub: true
+    hub_done: {actions_left_lte: 0}
+    hub_exit: m2_n08
+    choices:
+      - {text: "Đọc tờ giấy luồn qua khe cửa", goto: m2_n04, effects: [{actions_left: -1}]}
+      - {text: "Soi gương", goto: m2_n05, effects: [{actions_left: -1}]}
+      - {text: "Mở tủ quần áo", goto: m2_n06, effects: [{actions_left: -1}]}
+      - {text: "Gõ vách sang phòng 305", goto: m2_n07, effects: [{actions_left: -1}]}
+
+  - id: m2_n04   # Tờ giấy
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Một tờ giấy pơ-luya luồn qua khe cửa, mép giấy ướt."}
+      - {ch: env, sense: nhìn, text: "\"Kính mời bà con dự lễ nhập quan tối nay tại phòng sinh hoạt chung. Người phòng 30…\" Chữ cuối nhoè nước, không đọc được."}
+      - {ch: sound, src: "ngoài cửa", vol: 1, text: "Lẹp xẹp… — tiếng dép lê đi xa dần ngoài hành lang."}
+    effects: [{clue: c1}]
+    next: m2_n03
+
+  - id: m2_n05   # Gương
+    type: scene
+    lines:
+      - {ch: env, sense: nhìn, text: "Mặt bạn trong gương trắng bệch như vừa đánh phấn."}
+      - {ch: env, sense: nhìn, text: "Trên môi có một vệt son đỏ. Bạn chưa từng tô son."}
+      - {ch: env, sense: chạm, text: "Bạn quệt tay lên môi. Vệt son trong gương vẫn còn nguyên."}
+    effects: [{clue: c2}, {sanity: -1}]
+    next: m2_n03
+
+  - id: m2_n06   # Tủ quần áo
+    type: scene
+    lines:
+      - {ch: sound, src: "cánh tủ", vol: 1, text: "Kẹt…"}
+      - {ch: env, sense: nhìn, text: "Ngăn trên cùng có một bộ đồ vải trắng gấp vuông vức. Bạn chưa từng mua bộ đồ nào như thế."}
+      - {ch: env, sense: nhìn, text: "Ở cổ áo, tên bạn được thêu bằng chỉ đen."}
+      - {ch: env, sense: ngửi, text: "Mùi long não lẫn mùi vải mới."}
+    effects: [{clue: c3}]
+    next: m2_n03
+
+  - id: m2_n07   # Gõ vách
+    type: scene
+    lines:
+      - {ch: sound, src: "vách tường", vol: 2, text: "Cộc cộc. — bạn gõ sang phòng 305."}
+      - {ch: npc, who: ba_sau, text: "Ai đấy? Cậu 304 à?"}
+      - {ch: npc, who: ba_sau, text: "Tối nay cả tầng xuống canh linh cữu. Đủ bảy người rồi."}
+      - {ch: npc, who: ba_sau, text: "Còn cậu thì… cậu không phải đi đâu. Cậu cứ nằm nghỉ đi."}
+    effects: [{clue: c4}]
+    next: m2_n03
+
+  - id: m2_n08   # Buồn ngủ
+    type: scene
+    effects: [{time: "23:59"}]
+    lines:
+      - {ch: env, sense: nhìn, text: "Đồng hồ treo tường chỉ 23:59. Mí mắt bạn nặng như đeo chì."}
+    choices:
+      - {text: "Xuống phòng sinh hoạt chung", goto: m2_n09, effects: [{flag: di_xuong}]}
+      - {text: "Nằm xuống giường", goto: m2_n09}
+
+  - id: m2_n09   # Thiếp đi
+    type: scene
+    lines:
+      - {ch: narration, if: {flag: di_xuong}, text: "Bạn bước xuống cầu thang. Đến chiếu nghỉ tầng 2 thì hai chân khuỵu xuống."}
+      - {ch: narration, if: {not_flag: di_xuong}, text: "Bạn nằm xuống. Chăn lạnh như vừa giặt xong chưa phơi."}
+      - {ch: narration, text: "Mọi thứ tối dần."}
+    next: m2_n10
+
+  # ---------- Pha 1 – Tỉnh dậy trong bóng tối ----------
+
+  - id: m2_n10   # Tỉnh dậy
+    type: scene
+    scene: {bg: phong_sinh_hoat_tang, light: flicker}
+    effects: [{eyes_closed: true}, {time: "00:00"}]
+    lines:
+      - {ch: system, text: "Bạn chưa mở mắt."}
+      - {ch: narration, text: "Bạn tỉnh dậy. Mí mắt khép, nặng trĩu."}
+      - {ch: env, sense: chạm, text: "Lưng bạn nằm trên một tấm gỗ phẳng và cứng."}
+      - {ch: env, sense: ngửi, text: "Mùi hương trầm, mùi nến, mùi vải mới."}
+      - {ch: sound, src: "xung quanh", vol: 1, text: "Xì xào… xì xào… — nhiều người đang nói nhỏ quanh bạn."}
+    choices:
+      - {text: "Mở mắt", goto: m2_d1, effects: [{eyes_closed: false}]}
+      - {text: "Nằm yên lắng nghe", goto: m2_n11}
+      - {text: "Đưa tay sờ quanh người", goto: m2_n12}
+
+  - id: m2_n12   # Sờ quanh người
+    type: scene
+    lines:
+      - {ch: env, sense: chạm, text: "Hai bên vai chạm vào vách gỗ. Bạn không xoay người được."}
+      - {ch: env, sense: chạm, text: "Một tấm vải mỏng phủ từ ngực xuống chân."}
+      - {ch: env, sense: chạm, text: "Trong miệng bạn có mấy hạt gạo sống và một đồng xu lạnh ngắt."}
+      - {ch: npc, who: chi_mai, tone: whisper, text: "Tay… tay nó vừa động đậy…"}
+      - {ch: npc, who: ba_sau, text: "Gió lùa thôi con. Đừng nhìn."}
+    effects: [{clue: c5}]
+    next: m2_n11
+
+  - id: m2_n11   # Điểm danh
+    type: scene
+    lines:
+      - {ch: npc, who: ba_sau, text: "Điểm danh cho đủ người canh. Bà Sáu đây."}
+      - {ch: sound, src: "bên trái", vol: 1, text: "Khụ… khụ…"}
+      - {ch: npc, who: ong_quy, text: "Quý."}
+      - {ch: npc, who: co_lien, text: "Liên, có."}
+      - {ch: npc, who: chi_mai, text: "Mai… có ạ."}
+      - {ch: npc, who: chu_tu, text: "Tư."}
+      - {ch: npc, who: anh_phong, text: "Phong đây. Nhanh lên cho xong."}
+      - {ch: npc, who: thang_bin, text: "Bin ạ."}
+      - {ch: npc, who: ba_sau, text: "Bảy. Đủ bảy người canh."}
+      - {ch: sound, src: "bàn thờ", vol: 1, text: "Lép bép… — tiếng nến cháy. Ngoài ra im lặng."}
+      - {ch: npc, who: ba_sau, tone: whisper, text: "Còn ai nữa không?"}
+    choices:
+      - {text: "Im lặng", goto: m2_n20}
+      - {text: "Lên tiếng: \"Còn tôi.\"", goto: m2_n13, effects: [{flag: len_tieng}, {sanity: -1}]}
+
+  - id: m2_n13   # Người nằm lên tiếng
+    type: scene
+    lines:
+      - {ch: npc, who: chi_mai, tone: shout, text: "Nó nói! Người chết nói!"}
+      - {ch: sound, src: "xung quanh", vol: 3, text: "Rầm. — ghế đổ. Tiếng nhiều người cùng lùi lại."}
+      - {ch: npc, who: ba_sau, text: "Ngồi xuống hết! Đứa nào ra khỏi phòng là chết, chữ máu viết rồi!"}
+      - {ch: npc, who: co_lien, tone: whisper, text: "Đừng ai nhìn vào mặt nó."}
+    next: m2_n20
+
+  # ---------- Pha 2 – Đêm canh ----------
+
+  - id: m2_n20   # Bàn tay vuốt mắt
+    type: scene
+    effects: [{time: "01:30"}, {sanity: -1}]
+    lines:
+      - {ch: sound, src: "sát quan tài", vol: 1, text: "Lẹp xẹp… lẹp xẹp… — tiếng dép lê dừng lại ngay cạnh đầu bạn."}
+      - {ch: npc, who: giong_la, tone: whisper, text: "Mắt chưa khép hẳn. Để bà vuốt cho."}
+      - {ch: env, sense: chạm, text: "Mấy ngón tay lạnh và khô đặt lên mí mắt bạn, vuốt nhẹ xuống."}
+      - {ch: env, sense: chạm, text: "Rồi chúng dừng lại. Và bắt đầu kéo ngược lên."}
+      - {ch: npc, who: chi_mai, tone: whisper, if: {flag: len_tieng}, text: "Bà… bà là ai thế?"}
+    choices:
+      - {text: "Nhắm chặt mắt hết sức", goto: m2_n21}
+      - {text: "Để yên, không phản ứng", goto: m2_d1, effects: [{eyes_closed: false}]}
+      - {text: "Hét lên: \"Buông ra!\"", goto: m2_n21}
+
+  - id: m2_n21   # Bàn tay rút đi
+    type: scene
+    lines:
+      - {ch: env, sense: chạm, text: "Mấy ngón tay rời khỏi mí mắt bạn."}
+      - {ch: sound, src: "sát quan tài", vol: 1, text: "Lẹp xẹp… — tiếng dép lê xa dần. Không có tiếng cửa."}
+      - {ch: npc, who: ba_sau, text: "Vừa nãy ai đứng cạnh quan tài thế?"}
+      - {ch: npc, who: co_lien, text: "Không ai cả, bà ạ. Cả bảy người vẫn ngồi đây."}
+    next: m2_n30
+
+  - id: m2_n30   # Mèo đen
+    type: scene
+    effects: [{time: "03:00"}, {sanity: -1}]
+    lines:
+      - {ch: sound, src: "bậu cửa sổ", vol: 1, text: "Meo…"}
+      - {ch: env, sense: chạm, text: "Phịch. — một thứ mềm và nặng rơi xuống ngực bạn. Bốn bàn chân, móng bấu qua lớp vải."}
+      - {ch: npc, who: ong_quy, tone: shout, text: "Mèo nhảy qua xác! Đuổi nó đi!"}
+      - {ch: npc, who: anh_phong, tone: shout, text: "Để tôi!"}
+      - {ch: sound, src: "cửa phòng", vol: 2, text: "Kéttt… — cửa sắt mở. Tiếng chân chạy xa dần ngoài hành lang."}
+      - {ch: sound, src: "hành lang", vol: 2, text: "Một tiếng thét ngắn. Rồi im."}
+      - {ch: npc, who: co_lien, tone: whisper, text: "Anh Phong ra khỏi phòng rồi… Chưa có tiếng gà nào mà…"}
+      - {ch: narration, text: "Một luồng lạnh chạy dọc sống lưng. Cơ thể bạn muốn bật ngồi dậy."}
+    choices:
+      - {text: "Nằm yên", goto: m2_n31}
+      - {text: "Ngồi dậy (vẫn nhắm mắt)", goto: m2_n32, effects: [{flag: ngoi_day}, {sanity: -1}]}
+
+  - id: m2_n32   # Ngồi dậy
+    type: scene
+    lines:
+      - {ch: npc, who: chi_mai, tone: shout, text: "Xác ngồi dậy! Quỷ nhập tràng!"}
+      - {ch: sound, src: "cửa phòng", vol: 2, text: "Kéttt… — cửa sắt mở rồi đóng."}
+      - {ch: npc, who: phong_gia, text: "Nằm xuống."}
+      - {ch: env, sense: chạm, text: "Một bàn tay ấn lên ngực bạn, lạnh như nước giếng."}
+      - {ch: env, sense: ngửi, text: "Mùi rêu ẩm."}
+      - {ch: npc, who: phong_gia, tone: whisper, text: "Hay mở mắt ra nhìn tôi một cái?"}
+    choices:
+      - {text: "Nằm xuống", goto: m2_n31}
+      - {text: "Mở mắt", goto: m2_d1, effects: [{eyes_closed: false}]}
+
+  - id: m2_n31   # Anh Phong trở về
+    type: scene
+    lines:
+      - {ch: sound, src: "cửa phòng", vol: 2, if: {not_flag: ngoi_day}, text: "Kéttt… — cửa sắt mở. Tiếng bước chân trở vào, chậm và nặng."}
+      - {ch: npc, who: phong_gia, text: "Đuổi được con mèo rồi."}
+      - {ch: env, sense: ngửi, text: "Mùi nước giếng và rêu ẩm lan khắp phòng."}
+      - {ch: npc, who: co_lien, tone: whisper, text: "Một, hai, ba, bốn, năm, sáu, bảy… Vẫn đủ bảy."}
+    next: m2_n40
+
+  - id: m2_n40   # Tiếng gà trong phòng
+    type: scene
+    effects: [{time: "04:30"}, {sanity: -1}]
+    lines:
+      - {ch: sound, src: "ngay trong phòng", vol: 2, text: "Ò… ó… o… — một tiếng gà duy nhất, gần đến mức như phát ra từ cạnh quan tài."}
+      - {ch: npc, who: phong_gia, tone: shout, text: "Gà gáy rồi! Xong rồi, về thôi!"}
+      - {ch: npc, who: chi_mai, text: "Về được rồi à?"}
+      - {ch: sound, src: "cửa phòng", vol: 2, text: "Kéttt… — hai đôi dép chạy ra cửa."}
+      - {ch: sound, src: "hành lang", vol: 3, text: "Hai tiếng thét nối nhau. Rồi im bặt."}
+      - {ch: npc, who: ba_sau, tone: whisper, text: "Mai ơi… chú Tư ơi…"}
+      - {ch: npc, who: phong_gia, tone: whisper, text: "Cậu cũng dậy đi. Mở mắt ra mà xem trời sáng chưa."}
+      - {ch: bloodtext, lines: [L2], if: {sanity_lte: 2, not_highlighted: k2}}
+      - {ch: bloodtext, lines: [L4], if: {sanity_lte: 2, not_highlighted: k6}}
+    choices:
+      - {text: "Mở mắt", goto: m2_d1, effects: [{eyes_closed: false}]}
+      - {text: "Ngồi dậy, lần ra cửa (vẫn nhắm mắt)", goto: m2_d2}
+      - {text: "Nằm yên, đếm tiếng gà", goto: m2_n50}
+
+  - id: m2_n50   # Ba tiếng gà
+    type: scene
+    effects: [{time: "05:30"}]
+    lines:
+      - {ch: sound, src: "rất xa", vol: 1, text: "Ò… ó… o…"}
+      - {ch: narration, text: "Một."}
+      - {ch: sound, src: "rất xa", vol: 1, text: "Ò… ó… o…"}
+      - {ch: narration, text: "Hai."}
+      - {ch: sound, src: "rất xa", vol: 2, text: "Ò… ó… o…"}
+      - {ch: narration, text: "Ba."}
+      - {ch: npc, who: ba_sau, text: "Ba tiếng rồi. Về thôi các con."}
+      - {ch: sound, src: "cửa phòng", vol: 2, text: "Lẹp xẹp… — tiếng dép lê tản ra cửa. Không có tiếng thét nào."}
+      - {ch: env, sense: ngửi, text: "Mùi rêu nhạt dần rồi mất hẳn."}
+      - {ch: narration, text: "Phòng im lặng."}
+    choices:
+      - {text: "Mở mắt", goto: m2_d3, effects: [{eyes_closed: false}]}
+      - {text: "Ngồi dậy, bước ra khỏi quan tài, rồi mới mở mắt", goto: m2_n51}
+
+  - id: m2_n51   # Bước ra
+    type: scene
+    scene: {bg: phong_sinh_hoat_tang, light: dawn}
+    effects: [{eyes_closed: false}]
+    lines:
+      - {ch: env, sense: chạm, text: "Bàn chân trần chạm nền gạch hoa lạnh buốt."}
+      - {ch: narration, text: "Bạn đứng bên ngoài quan tài."}
+      - {ch: env, sense: nhìn, text: "Phòng sinh hoạt chung. Một chiếc quan tài gỗ mở nắp đặt giữa sàn, trống trơn."}
+      - {ch: env, sense: nhìn, text: "Trên bàn thờ, di ảnh là khuôn mặt bạn."}
+    next: m2_e1
+
+  - id: m2_n90   # Hoảng loạn (on_sanity_zero)
+    type: scene
+    effects: [{eyes_closed: false}]
+    lines:
+      - {ch: narration, text: "Bạn không chịu nổi bóng tối nữa."}
+      - {ch: narration, text: "Mắt bạn tự mở ra."}
+    next: m2_d4
+
+  # ---------- Kết cục ----------
+
+  - id: m2_e1
+    type: ending
+    result: survive
+    cause: "Sống sót"
+    scene: {bg: phong_sinh_hoat_tang, light: dawn}
+    lines:
+      - {ch: env, sense: nhìn, text: "Bảy chiếc ghế quanh quan tài. Một chiếc đổ nghiêng, vệt nước loang dưới chân ghế."}
+    reveal: "Bảy người canh đã đủ; bạn là người trong quan tài. L2 ràng buộc bạn chừng nào còn ở trong quan tài, kể cả sau tiếng gà. L4 chỉ cho phép dậy."
+    solution: [k2, k6]
+
+  - id: m2_d1
+    type: ending
+    result: death
+    cause: "Mở mắt giữa đêm"
+    lines:
+      - {ch: env, sense: nhìn, text: "Ngay trên mặt bạn là một khuôn mặt đàn bà, hai hốc mắt trống, đang mỉm cười."}
+    reveal: "Bảy người canh đã đủ. Người còn lại trong phòng là bạn, và bạn đang nằm trong quan tài."
+    violates: [L2]
+    solution: [k2]
+
+  - id: m2_d2
+    type: ending
+    result: death
+    cause: "Rời phòng sớm"
+    lines:
+      - {ch: sound, src: "hành lang", vol: 3, text: "Lẹp xẹp lẹp xẹp — tiếng dép lê đuổi sát sau lưng. Rồi: Ò… ó… o…, ngay bên tai bạn."}
+    reveal: "Mới có một tiếng gà, và nó phát ra từ trong phòng."
+    violates: [L3]
+    solution: [k4]
+
+  - id: m2_d3
+    type: ending
+    result: death
+    cause: "Mở mắt khi còn trong quan tài"
+    lines:
+      - {ch: env, sense: nhìn, text: "Trần nhà, và vành gỗ quan tài bao quanh tầm mắt. Nắp quan tài đang từ từ khép lại."}
+    reveal: "Gà đã gáy đủ ba tiếng, nhưng bạn vẫn ở trong quan tài. L4 cho phép dậy, không cho phép mở mắt."
+    violates: [L2]
+    solution: [k2, k6]
+
+  - id: m2_d4
+    type: ending
+    result: death
+    cause: "Hoảng loạn"
+    lines:
+      - {ch: env, sense: nhìn, text: "Ánh nến. Những khuôn mặt cúi nhìn xuống bạn. Một khuôn mặt ướt sũng."}
+    reveal: "Tỉnh táo về 0 khi bạn vẫn ở trong quan tài."
+    violates: [L2]
+    solution: [k2]
