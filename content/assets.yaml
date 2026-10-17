@@ -1,40 +1,32 @@
 # Ảnh nền. Quy cách: docs/dac-ta-kich-ban.md mục 5; brief: phần "Cảnh và ảnh nền" của từng file màn.
-# `alt` là bản nháp viết từ cột "Góc nhìn và nội dung", chờ duyệt (G21).
-# Khi có ảnh thật trong public/bg/, xoá dòng `placeholder: true` để validator kiểm tra file.
+# `alt` viết từ cột "Góc nhìn và nội dung" (G21), đã duyệt 2026-10-17.
+# Ảnh chưa có thì thêm `placeholder: true`; validator kiểm tra file của mọi ảnh còn lại.
 assets:
   # Màn 1
   - id: phong_sinh_hoat
     file: bg/phong_sinh_hoat.png
     alt: "Bức tường vôi vàng ố của phòng sinh hoạt chung dưới đèn tuýp, đồng hồ quả lắc gỗ bên phải, góc bảng tin bên trái, sàn gạch hoa đỏ."
-    placeholder: true
   - id: bang_tin_cao_pho
     file: bg/bang_tin_cao_pho.png
     alt: "Cận cảnh bảng tin tổ dân phố bằng gỗ, giấy báo họp tổ và lịch trực vệ sinh ghim lộn xộn."
     clue: c1
-    placeholder: true
   - id: bang_tin_cao_pho_7
     file: bg/bang_tin_cao_pho_7.png
     alt: "Cận cảnh bảng tin tổ dân phố bằng gỗ, giấy báo họp tổ và lịch trực vệ sinh ghim lộn xộn."
     clue: c1
-    placeholder: true
   - id: cua_so_kinh
     file: bg/cua_so_kinh.png
     alt: "Cận cảnh ô cửa sổ kính mờ hơi nước, nhìn từ trong phòng ra."
     clue: c2
-    placeholder: true
   - id: hanh_lang_tang_2
     file: bg/hanh_lang_tang_2.png
     alt: "Hành lang tầng 2 nhìn dọc, cửa gỗ sơn xanh hai bên và bếp than tổ ong trước mỗi cửa."
-    placeholder: true
   - id: nha_ve_sinh_chung
     file: bg/nha_ve_sinh_chung.png
     alt: "Bên trong nhà vệ sinh chung, dãy buồng cửa gỗ và bồn rửa xi măng với vòi nước."
-    placeholder: true
   - id: gam_cau_thang
     file: bg/gam_cau_thang.png
     alt: "Gầm cầu thang bê tông nhìn chéo từ dưới lên."
-    placeholder: true
   - id: san_phoi
     file: bg/san_phoi.png
     alt: "Sân phơi tầng thượng về đêm dưới bầu trời xanh đêm."
-    placeholder: true
